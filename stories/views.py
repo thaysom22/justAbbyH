@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, reverse
+from django.contrib.auth.decorators import login_required
 
 
 def stories(request):
@@ -20,8 +21,12 @@ def story_detail(request, story_id):
     return render(request, template, context)
 
 
+@login_required
 def add_story(request):
-    """ Add a story to the database """
+    """ 
+    GET: Display add story form
+    POST: Add a story to the database
+    """
     if request.method == "GET":
         context = {
             # ADD BLANK MODELFORM INSTANCE
@@ -36,8 +41,12 @@ def add_story(request):
     return redirect(reverse('stories'))
 
 
+@login_required
 def edit_story(request, story_id):
-    """ Edit a story in the database """
+    """ 
+    GET: Display edit story form
+    POST: Edit a story in the database
+    """
     if request.method == "GET":
         # GET MODEL INSTANCE FROM DATABASE
         context = {
@@ -53,12 +62,14 @@ def edit_story(request, story_id):
     return redirect(reverse('stories'))
 
 
+@login_required
 def delete_story(request, story_id):
     """ Delete a story in the database """
     # DELETE MODEL INSTANCE FROM DATABASE
     return redirect(reverse('stories'))
 
 
+@login_required
 def download_story(request, story_id):
     """ Download a story pdf file """
     # RETURN PDF FILE DOWNLOAD IN NEW TAB?

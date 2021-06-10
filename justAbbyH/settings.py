@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'pages',
     'stories',
+    'subscribe',
 ]
 
 MIDDLEWARE = [
@@ -72,7 +73,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
             ],
             'builtins': [
-                'django.templatetags.static',  # avoid need to include 'load static' in templates
+                'django.templatetags.static',  # removes 'load static' in templates
             ],
         },
     },
