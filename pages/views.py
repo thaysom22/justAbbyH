@@ -9,3 +9,9 @@ def index(request):
     }
     return render(request, template, context)
 
+
+def about(request):
+    """ Display about page """
+    template = "pages/about.html"
+    return render(request, template)
+
