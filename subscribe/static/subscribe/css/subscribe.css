@@ -1,0 +1,6 @@
+/* remove default help text from UserRegisterForm */
+
+#user-subscribe-form .helptext,
+#user-subscribe-form ul {
+    display: none;
+}

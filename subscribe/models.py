@@ -13,5 +13,10 @@ class Subscription(models.Model):
     first_name = models.CharField(blank=False, null=False, max_length=50)
     last_name = models.CharField(blank=False, null=False, max_length=50)
     start_date = models.DateField(auto_now_add=True)
-    country = CountryField(blank_label='Country', blank=True, null=True)  # relates country names to ISO codes
+    country = CountryField(blank_label='Country (optional)', blank=True, null=True)  # relates country names to ISO codes
     city = models.CharField(blank=True, null=True, max_length=50)
+
+    def __str__(self):
+        return self.user.username
+
+    

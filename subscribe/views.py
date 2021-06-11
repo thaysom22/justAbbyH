@@ -1,15 +1,21 @@
 from django.shortcuts import render, redirect, reverse
 
+from .forms import SubscriptionForm, UserRegisterForm
+
 
 def subscribe(request):
     """ 
-    GET: Display subscribe form 
+    GET: Display user and subscribe forms
     POST: Process payment with Stripe
-    and create subscription in database
+    and create User and Subscription 
+    instances in respective database tables
     """
     if request.method == "GET":
+        user_form = UserRegisterForm()
+        subscribe_form = SubscriptionForm()
         context = {
-            # CREATE NEW INSTANCE OF MODELFORM
+            'user_form': user_form,
+            'subscribe_form': subscribe_form
         }
         template = "subscribe/subscribe.html"
         return render(request, template, context)
@@ -17,7 +23,8 @@ def subscribe(request):
     # POST
 
     # PROCESS STRIPE PAYMENT
-    # CREATE NEW INSTANCE OF SUBSCRIPTION MODEL FROM MODELFORM
+    # CREATE NEW INSTANCE OF USER MODEL FROM USERCREATIONFORM MODELFORM
+    # CREATE NEW INSTANCE OF SUBSCRIPTION MODEL FROM SUBSCRIPTIONFORM MODELFORM
     # SAVE NEW MODEL INSTANCE TO DATABASE
 
     return redirect(reverse('stories'))
