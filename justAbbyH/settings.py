@@ -136,3 +136,8 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)  # must be tuple
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Login and logout
+
+LOGIN_REDIRECT_URL = 'index'
+LOGOUT_REDIRECT_URL = 'index'
