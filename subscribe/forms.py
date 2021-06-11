@@ -13,11 +13,6 @@ class UserRegisterForm(UserCreationForm):
     class Meta:
         model = User
         fields = ("username", "password1", "password2")
-        help_texts = {
-            'username': "",
-            'password1': "",
-            'password2': "",
-        }
 
     def __init__(self, *args, **kwargs):
         """
@@ -28,7 +23,7 @@ class UserRegisterForm(UserCreationForm):
         placeholders = {
             'username': 'Enter a Username',
             'password1': 'Enter a Password',
-            'password2': 'Repeat Password',
+            'password2': 'Repeat the Password',
         }
 
         for field in self.fields:
