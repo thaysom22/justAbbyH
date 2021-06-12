@@ -6,17 +6,17 @@ from django_countries.fields import CountryField
 
 class Subscription(models.Model):
     """
-    Stores data about a user subscription
+    Stores data for a subscription
     """
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    email = models.EmailField(blank=False, null=False, max_length=254)
-    first_name = models.CharField(blank=False, null=False, max_length=50)
-    last_name = models.CharField(blank=False, null=False, max_length=50)
+    email = models.EmailField(max_length=254)
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
     start_date = models.DateField(auto_now_add=True)
     country = CountryField(blank_label='Country (optional)', blank=True, null=True)  # relates country names to ISO codes
     city = models.CharField(blank=True, null=True, max_length=50)
 
-    # def __str__(self):
-    #     return self.user.username
+    def __str__(self):
+        return f"id:{self.id} user:{self.user.username}"
 
     
