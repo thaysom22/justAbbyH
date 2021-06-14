@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, reverse
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 from .forms import StoryForm
 
@@ -38,11 +39,18 @@ def add_story(request):
         return render(request, template, context)
 
     # POST
-
-    # CREATE NEW MODEL INSTANCE FROM COMPLETED MODELFORM
-    # CALCULATE READING_TIME_MINS MODEL FIELD FROM FORM FIELDS: https://stackoverflow.com/questions/45366181/django-input-as-hour-and-minutes-saved-as-minutes
-    # SAVE MODEL TO DATEBASE
-    return redirect(reverse('stories'))
+    
+    add_story_form = StoryForm(
+        request.POST,
+        request.FILES
+    )
+    if add_story_form.is_valid():
+        story = add_story_form.save() 
+        messages.success(request, 'Successfully added story!')
+        return redirect(reverse('story_detail', args=[story.id]))
+    else:
+        messages.error(request, add_story_form.errors)
+        return redirect(reverse('add_story'))
 
 
 @login_required

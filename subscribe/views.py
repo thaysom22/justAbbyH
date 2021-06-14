@@ -28,7 +28,7 @@ def subscribe(request):
 
     # POST
 
-    # CREATE NEW INSTANCE OF USER MODEL FROM MODELFORM
+    # CREATE NEW INSTANCE OF USER MODEL FROM FORM DATA
     user_form_data = {
         'username': request.POST.get('username'),
         'password1': request.POST.get('password1'),
@@ -53,11 +53,11 @@ def subscribe(request):
     if subscription_form.is_valid():
         subscription = Subscription(
             user=user,  # refers to User instance created above
-            first_name=subscribe_form_data.cleaned_data['first_name'],
-            last_name=subscribe_form_data.cleaned_data['last_name'],
-            email=subscribe_form_data.cleaned_data['email'],
-            country=subscribe_form_data.cleaned_data['country'],
-            city=subscribe_form_data.cleaned_data['city'],
+            first_name=subscribe_form.cleaned_data['first_name'],
+            last_name=subscribe_form.cleaned_data['last_name'],
+            email=subscribe_form.cleaned_data['email'],
+            country=subscribe_form.cleaned_data['country'],
+            city=subscribe_form.cleaned_data['city'],
         )
         subscription.save()
     else:

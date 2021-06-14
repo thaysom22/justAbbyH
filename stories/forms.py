@@ -12,13 +12,9 @@ class StoryForm(forms.ModelForm):
         model = Story
         fields = ('title', 'description',
                   'image', 'pdf',
-                  'genre', 'featured',)
-
-        # add hour and min form inputs for reading time
-        reading_time_hours = forms.IntegerField(max_value=1000, min_value=0)
-        reading_time_minutes = forms.IntegerField(max_value=59, min_value=0)
+                  'genre', 'featured',
+                  'reading_time_mins',)
         
-
     def __init__(self, *args, **kwargs):
         """
         Edit placeholders and labels for some inputs
@@ -32,7 +28,8 @@ class StoryForm(forms.ModelForm):
         for field in placeholders.keys():
             self.fields[field].label = False
             self.fields[field].widget.attrs['placeholder'] = placeholders[field]
-        
+            
+        self.fields['reading_time_mins'].label = 'Reading Time (Minutes)'
         self.fields['title'].widget.attrs['autofocus'] = True
 
     
