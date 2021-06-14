@@ -52,12 +52,12 @@ def subscribe(request):
     subscription_form = SubscriptionForm(subscribe_form_data)
     if subscription_form.is_valid():
         subscription = Subscription(
-            user=user,
-            first_name=subscribe_form_data['first_name'],
-            last_name=subscribe_form_data['last_name'],
-            email=subscribe_form_data['email'],
-            country=subscribe_form_data['country'],
-            city=subscribe_form_data['city'],
+            user=user,  # refers to User instance created above
+            first_name=subscribe_form_data.cleaned_data['first_name'],
+            last_name=subscribe_form_data.cleaned_data['last_name'],
+            email=subscribe_form_data.cleaned_data['email'],
+            country=subscribe_form_data.cleaned_data['country'],
+            city=subscribe_form_data.cleaned_data['city'],
         )
         subscription.save()
     else:

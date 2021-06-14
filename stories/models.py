@@ -1,5 +1,7 @@
 from django.db import models
 
+from math import floor
+
 
 class Story(models.Model):
     """
@@ -20,7 +22,7 @@ class Story(models.Model):
         max_length=50,
         choices=GENRE_CHOICES,
         blank=True,
-        default=UNKNOWN,
+        default=None,
     )  # NOT USED IN CURRENT VERSION
 
     title = models.CharField(max_length=254)
@@ -29,7 +31,21 @@ class Story(models.Model):
     image = models.ImageField(upload_to='story_images/', blank=True)
     pdf = models.FileField(upload_to='story_pdfs/')
     featured = models.BooleanField(blank=True, null=False, default=False)  # NOT USED IN CURRENT VERSION
+    reading_time_mins = models.PositiveIntegerField(default=0)  # NOT USED IN CURRENT VERSION
 
     def __str__(self):
         return f"id:{self.id} title:{self.title}"
-    
+
+    def display_reading_time(self):
+        """ 
+        Returns human readable string representing
+        reading time of story in hours and mins
+        """
+        hours = floor(self.reading_time_mins / 60)
+        mins = self.reading_time_mins % 60
+        if hours:
+            return f"{hours} hours and {mins} mins"
+        elif mins:
+            return f"{mins} mins"
+        else:
+            return "Unknown"

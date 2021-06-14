@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect, reverse
 from django.contrib.auth.decorators import login_required
 
+from .forms import StoryForm
+
 
 def stories(request):
     """ Display all stories in database on stories page """
@@ -28,8 +30,9 @@ def add_story(request):
     POST: Add a story to the database
     """
     if request.method == "GET":
+        add_story_form = StoryForm()
         context = {
-            # ADD BLANK MODELFORM INSTANCE
+            'add_story_form': add_story_form,
         }
         template = "stories/add_story.html"
         return render(request, template, context)
@@ -37,6 +40,7 @@ def add_story(request):
     # POST
 
     # CREATE NEW MODEL INSTANCE FROM COMPLETED MODELFORM
+    # CALCULATE READING_TIME_MINS MODEL FIELD FROM FORM FIELDS: https://stackoverflow.com/questions/45366181/django-input-as-hour-and-minutes-saved-as-minutes
     # SAVE MODEL TO DATEBASE
     return redirect(reverse('stories'))
 
