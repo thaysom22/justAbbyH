@@ -1,5 +1,11 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Edit story</h1>
+    <h1>Edit a Story</h1>
+
+    <form method="post" id="edit-story-form" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ edit_story_form.as_p }}
+        <button type="submit">Save Changes</button>
+    </form>
 {% endblock %}

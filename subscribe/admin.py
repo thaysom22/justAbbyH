@@ -7,6 +7,7 @@ class SubscriptionAdmin(admin.ModelAdmin):
     fields = ('user', 'first_name', 'last_name',
               'email', 'country', 'city',
               'start_date',)
+              
     list_display = ('user', 'first_name', 'last_name',
                     'email', 'country', 'city',
                     'start_date',)

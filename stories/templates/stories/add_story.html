@@ -3,9 +3,9 @@
 {% block content %}
     <h1>Add a Story</h1>
 
-    <form method="post" id="add-story-form">
-    {% csrf_token %}
-    {{ add_story_form.as_p }}
-    <button type="submit">Add Story</button>
+    <form method="post" id="add-story-form" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ add_story_form.as_p }}
+        <button type="submit">Add Story</button>
     </form>
 {% endblock %}
