@@ -8,18 +8,31 @@ from .models import Story
 
 def stories(request):
     """ Display all stories in database on stories page """
-
+    stories = Story.objects.all()  # retrieve all Story instances from database
     context = {
-        # ADD STORIES DATA HERE
+        'stories': stories,
     }
     template = "stories/stories.html"
     return render(request, template, context)
 
 
 def story_detail(request, story_id):
-    """ Display detail about a particular story in database """
+    """ 
+    Display detail about a particular story in database.
+    Remove reference to pdf file from Story instance
+    if user is not authenicated.
+    """
+    story = get_object_or_404(Story, pk=story_id)
+    user_is_subscribed = False  # determine if download links will be in template
+    if request.user.is_authenticated:
+        user_is_subscribed = True
+    else:
+        # remove reference to pdf file from local object (no change in database)
+        story.pdf = None
+
     context = {
-        # ADD STORY DATA HERE
+        'story': story,
+        'user_is_subscribed': user_is_subscribed,
     }
     template = "stories/story_detail.html"
     return render(request, template, context)
@@ -28,8 +41,8 @@ def story_detail(request, story_id):
 @login_required
 def add_story(request):
     """ 
-    GET: Display add story form
-    POST: Add a story to the database
+    GET: Display add story form.
+    POST: Add a story to the database.
     """
     if not request.user.is_superuser:
         messages.error(request, 'Sorry, only superusers can do that.')
@@ -63,33 +76,42 @@ def edit_story(request, story_id):
     GET: Find story and populate edit story form 
     POST: Edit a story in the database
     """
-    if not request.user.is_superuser:
-        messages.error(request, 'Sorry, only superusers can do that.')
-        return redirect(reverse('index'))
-    
-    # try to find story in database by story_id url parameter
     story = get_object_or_404(Story, pk=story_id)
+    if request.method == 'POST':
+        edit_story_form = StoryForm(
+            request.POST,
+            request.FILES,
+            instance=story)
+        
+        if edit_story_form.is_valid():
+            edit_story_form.save()
+            messages.success(request, 'Successfully updated story!')
+            return redirect(reverse('story_detail', args=[story.id]))
+        else:
+            messages.error(request, 'Failed to update story - ensure form is valid.')
 
-    if request.method == "GET":
+    else:
+        # GET
         edit_story_form = StoryForm(instance=story)
         messages.info(request, f'You are editing {story.title}')
-        context = {
-            # INSTANTIATE MODELFORM FROM MODEL INSTANCE
-        }
-        template = "stories/edit_story.html"
-        return render(request, template, context)
-
-    # POST
-
-    # UPDATE MODEL INSTANCE USING MODELFORM
-    # SAVE UPDATED MODEL TO DATABASE
-    return redirect(reverse('stories'))
+        
+    context = {
+        'edit_story_form': edit_story_form,
+    }
+    template = "stories/edit_story.html"
+    return render(request, template, context)
 
 
 @login_required
 def delete_story(request, story_id):
     """ Delete a story in the database """
-    # DELETE MODEL INSTANCE FROM DATABASE
+    if not request.user.is_superuser:
+        messages.error(request, 'Sorry, only superusers can do that.')
+        return redirect(reverse('index'))
+    
+    story = get_object_or_404(Story, pk=story_id)
+    story.delete()
+    messages.success(request, 'Story was deleted.')
     return redirect(reverse('stories'))
 
 

@@ -3,7 +3,7 @@
 {% block content %}
     <!-- SAMPLECODE FROM LEARNDJANGO.COM -->
     <h2>Log In</h2>
-    <form method="post">
+    <form method="post" id="login-form">
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit">Log In</button>

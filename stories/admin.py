@@ -10,8 +10,7 @@ class StoryAdmin(admin.ModelAdmin):
               'featured', 'image', 'pdf',)
 
     list_display = ('title', 'publish_date', 'genre',
-                    'description', 'reading_time_mins',
-                    'reading_time_string',
+                    'reading_time_mins',
                     'featured', 'image', 'pdf',)
     
     readonly_fields = ('publish_date', 'reading_time_string',)
