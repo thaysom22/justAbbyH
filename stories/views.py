@@ -1,8 +1,9 @@
-from django.shortcuts import render, redirect, reverse
+from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
 from .forms import StoryForm
+from .models import Story
 
 
 def stories(request):
@@ -30,6 +31,10 @@ def add_story(request):
     GET: Display add story form
     POST: Add a story to the database
     """
+    if not request.user.is_superuser:
+        messages.error(request, 'Sorry, only superusers can do that.')
+        return redirect(reverse('index'))
+
     if request.method == "GET":
         add_story_form = StoryForm()
         context = {
@@ -38,8 +43,7 @@ def add_story(request):
         template = "stories/add_story.html"
         return render(request, template, context)
 
-    # POST
-    
+    # POST 
     add_story_form = StoryForm(
         request.POST,
         request.FILES
@@ -56,11 +60,19 @@ def add_story(request):
 @login_required
 def edit_story(request, story_id):
     """ 
-    GET: Display edit story form
+    GET: Find story and populate edit story form 
     POST: Edit a story in the database
     """
+    if not request.user.is_superuser:
+        messages.error(request, 'Sorry, only superusers can do that.')
+        return redirect(reverse('index'))
+    
+    # try to find story in database by story_id url parameter
+    story = get_object_or_404(Story, pk=story_id)
+
     if request.method == "GET":
-        # GET MODEL INSTANCE FROM DATABASE
+        edit_story_form = StoryForm(instance=story)
+        messages.info(request, f'You are editing {story.title}')
         context = {
             # INSTANTIATE MODELFORM FROM MODEL INSTANCE
         }

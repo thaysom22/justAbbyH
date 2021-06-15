@@ -17,6 +17,6 @@ class Subscription(models.Model):
     city = models.CharField(blank=True, null=True, max_length=50)
 
     def __str__(self):
-        return f"id:{self.id} user:{self.user.username}"
+        return f"Subscription <id:{self.id}> <user:{self.user.username}>"
 
     
