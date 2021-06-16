@@ -1,17 +1,37 @@
 {% extends "base.html" %}
 
 {% block extra_css %}
+    {{ block.super }}
     <link rel="stylesheet" href="{% static 'subscribe/css/subscribe.css' %}">
 {% endblock %}
 
 {% block content %}
     <h1>Subscribe</h1>
+    <p>{{ stripe_public_key }}</p>
+    <p>{{ client_secret }}</p>
 
     <form method="post" id="user-subscribe-form">
-    {% csrf_token %}
-    {{ user_form.as_p }}
-    <hr>
-    {{ subscribe_form.as_p }}
-    <button type="submit">Subscribe</button>
+        {% csrf_token %}
+        {{ user_form.as_p }}
+        <hr>
+        {{ subscribe_form.as_p }}
+        <hr>
+        <div id="card-element">
+            {# Stripe.js injects the Card Element #}
+        </div>
+        {# credit[2] #}
+        <p id="card-errors" role="alert"></p>
+        <button id="subscribe-submit" type="submit">
+            <div class="spinner hidden" id="spinner"></div>
+            <span id="button-text">Subscribe</span>
+        </button>
     </form>
+{% endblock %}
+
+{% block postloadjs %}
+    {{ block.super }}
+    {# output template variables in script element accessible to external javascript #}
+    {{ stripe_public_key|json_script:"id_stripe_public_key" }}
+    {{ client_secret|json_script:"id_client_secret" }}
+    <script src="{% static 'subscribe/js/stripe_elements.js' %}"></script>
 {% endblock %}

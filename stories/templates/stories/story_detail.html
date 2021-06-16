@@ -5,5 +5,10 @@
 
     {{ user_is_subscribed }}
     {{ story }}
+    {% if user_is_subscribed %}
+        <a href="{% url 'download_story' story.id %}">Download story</a>
+    {% else %}
+        <span>Subscribe to download story</span>
+    {% endif %}
     
 {% endblock %}

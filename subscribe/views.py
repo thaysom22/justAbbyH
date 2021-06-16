@@ -1,8 +1,11 @@
 from django.shortcuts import render, redirect, reverse
 from django.contrib import messages
+from django.conf import settings
 
 from .forms import SubscriptionForm, UserRegisterForm
 from .models import Subscription
+
+import stripe
 
 
 def subscribe(request):
@@ -16,12 +19,28 @@ def subscribe(request):
         messages.info(request, "You are already subscribed!")
         return redirect(reverse('stories'))
 
+    stripe_public_key = settings.STRIPE_PUBLIC_KEY
+    stripe_secret_key = settings.STRIPE_SECRET_KEY
+    if not stripe_public_key:
+        messages.warning(request, 'Stripe public key is missing.')
+
     if request.method == "GET":
+
+        stripe_total = round(settings.SUBSCRIPTION_COST * 100)
+        stripe.api_key = stripe_secret_key
+        intent = stripe.PaymentIntent.create(
+            amount=stripe_total,
+            currency=settings.STRIPE_CURRENCY,
+        )
+
+
         user_form = UserRegisterForm()
         subscribe_form = SubscriptionForm()
         context = {
             'user_form': user_form,
-            'subscribe_form': subscribe_form
+            'subscribe_form': subscribe_form,
+            'stripe_public_key': stripe_public_key,
+            'client_secret': intent.client_secret,
         }
         template = "subscribe/subscribe.html"
         return render(request, template, context)

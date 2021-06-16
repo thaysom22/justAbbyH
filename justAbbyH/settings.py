@@ -73,7 +73,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
             ],
             'builtins': [
-                'django.templatetags.static',  # removes 'load static' in templates
+                'django.templatetags.static',  # removes need for 'load static' in templates
             ],
         },
     },
@@ -119,7 +119,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = env('TIME_ZONE')
+TIME_ZONE = 'America/New_York'
 
 USE_I18N = True
 
@@ -146,3 +146,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = 'stories'
 LOGOUT_REDIRECT_URL = 'index'
+
+# Stripe and payments
+
+SUBSCRIPTION_COST = 10.00  # one-time subscription cost in usd
+STRIPE_CURRENCY = 'usd'
+
+STRIPE_PUBLIC_KEY = env('STRIPE_PUBLIC_KEY')
+STRIPE_SECRET_KEY = env('STRIPE_SECRET_KEY')

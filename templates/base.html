@@ -25,6 +25,8 @@
     {% block core_js %}
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.2/umd/popper.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.1/js/bootstrap.min.js"></script>
+        {# load stripe js #}
+        <script src="https://js.stripe.com/v3/"></script>  
     {% endblock %}
 
     {% block extra_js %}
@@ -43,7 +45,7 @@
     {% block content %}
     {% endblock %}
 
-    {% block postload_js %}
+    {% block postloadjs %}
     {% endblock %}
 
 </body>
