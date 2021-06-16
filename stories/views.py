@@ -1,9 +1,12 @@
 from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.http import HttpResponse
 
 from .forms import StoryForm
 from .models import Story
+
+import mimetypes
 
 
 def stories(request):
@@ -27,7 +30,7 @@ def story_detail(request, story_id):
     if request.user.is_authenticated:
         user_is_subscribed = True
     else:
-        # remove reference to pdf file from local object (no change in database)
+        # remove reference to pdf file from object passed to template (no change in database)
         story.pdf = None
 
     context = {
@@ -43,6 +46,7 @@ def add_story(request):
     """ 
     GET: Display add story form.
     POST: Add a story to the database.
+    (superuser only)
     """
     if not request.user.is_superuser:
         messages.error(request, 'Sorry, only superusers can do that.')
@@ -75,7 +79,12 @@ def edit_story(request, story_id):
     """ 
     GET: Find story and populate edit story form 
     POST: Edit a story in the database
+    (superuser only)
     """
+    if not request.user.is_superuser:
+        messages.error(request, 'Sorry, only superusers can do that.')
+        return redirect(reverse('index'))
+    
     story = get_object_or_404(Story, pk=story_id)
     if request.method == 'POST':
         edit_story_form = StoryForm(
@@ -104,7 +113,7 @@ def edit_story(request, story_id):
 
 @login_required
 def delete_story(request, story_id):
-    """ Delete a story in the database """
+    """ Delete a story in the database (superuser only) """
     if not request.user.is_superuser:
         messages.error(request, 'Sorry, only superusers can do that.')
         return redirect(reverse('index'))
@@ -118,5 +127,18 @@ def delete_story(request, story_id):
 @login_required
 def download_story(request, story_id):
     """ Download a story pdf file """
-    # RETURN PDF FILE DOWNLOAD IN NEW TAB?
-    return None
+    
+    story = get_object_or_404(Story, pk=story_id)
+    filepath = story.pdf.path
+    filename = story.pdf.name.split('/')[-1]
+    # credit[1]
+    mime_type, _ = mimetypes.guess_type(filepath)  # guess type incase superuser uploads non-pdf file
+    if not mime_type:
+        mime_type = 'application/pdf'
+
+    f = open(filepath, 'rb')
+    response = HttpResponse(f, headers={
+        'Content-Type': mime_type,
+        'Content-Disposition': f"attachment; filename={filename}",
+    })
+    return response
