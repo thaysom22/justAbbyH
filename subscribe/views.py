@@ -10,9 +10,9 @@ import stripe
 
 def subscribe(request):
     """ 
-    GET: Display user and subscribe forms
-    POST: Process payment with Stripe
-    and create User and Subscription
+    GET: Display user and subscribe forms,
+    create Stripe PaymentIntent
+    POST: Create User and Subscription
     instances in respective database tables
     """
     if request.user.is_authenticated:
@@ -44,7 +44,7 @@ def subscribe(request):
         return render(request, template, context)
 
     # POST
-
+    
     # CREATE NEW INSTANCE OF USER MODEL FROM FORM DATA
     user_form_data = {
         'username': request.POST.get('username'),
@@ -53,9 +53,9 @@ def subscribe(request):
     }
     user_form = UserRegisterForm(user_form_data)
     if user_form.is_valid():
-        user = user_form.save() 
+        user = user_form.save(commit=False)
     else:
-        messages.error(request, user_form.errors)
+        messages.error(request, f"There was an error creating your account: user_form.errors")
         return redirect(reverse('subscribe'))
 
     # CREATE NEW INSTANCE OF SUBSCRIPTION MODEL 
@@ -66,16 +66,18 @@ def subscribe(request):
         'country': request.POST.get('country'),
         'city': request.POST.get('city'),
     }
-    subscription_form = SubscriptionForm(subscription_form_data)
-    if subscription_form.is_valid():
-        subscription = subscription_form.save(commit=False)
-        subscription.user = user,  # refers to User instance created above
-        subscription.stripe_pid = request.POST.get('client_secret').split('_secret')[0]
-        subscription.save()
-    else:
-        messages.error(request, subscribe_form.errors)
+    try:
+        subscription = Subscription(
+            **subscription_form_data,
+            user=user,  # refers to User instance created above
+            stripe_pid=request.POST.get('client_secret').split('_secret')[0],
+        )
+    except Exception as e:
+        messages.error(request, f"There was an error creating your subscription: {e}")
         return redirect(reverse('subscribe'))
 
+    user.save()
+    subscription.save()
     # user and subscription records created successfully
     messages.success(request, "Your payment was successful and you are now subscribed. \
                                Login now to download stories!")
