@@ -25,14 +25,12 @@ def subscribe(request):
         messages.warning(request, 'Stripe public key is missing.')
 
     if request.method == "GET":
-
-        stripe_total = round(settings.SUBSCRIPTION_COST * 100)
+        stripe_total = round(settings.SUBSCRIPTION_COST * 100)  # fixed total
         stripe.api_key = stripe_secret_key
         intent = stripe.PaymentIntent.create(
             amount=stripe_total,
             currency=settings.STRIPE_CURRENCY,
         )
-
 
         user_form = UserRegisterForm()
         subscribe_form = SubscriptionForm()
@@ -61,37 +59,26 @@ def subscribe(request):
         return redirect(reverse('subscribe'))
 
     # CREATE NEW INSTANCE OF SUBSCRIPTION MODEL 
-    subscribe_form_data = {
+    subscription_form_data = {
         'first_name': request.POST.get('first_name'),
         'last_name': request.POST.get('last_name'),
         'email': request.POST.get('email'),
         'country': request.POST.get('country'),
         'city': request.POST.get('city'),
     }
-    subscription_form = SubscriptionForm(subscribe_form_data)
+    subscription_form = SubscriptionForm(subscription_form_data)
     if subscription_form.is_valid():
-        subscription = Subscription(
-            user=user,  # refers to User instance created above
-            first_name=subscribe_form.cleaned_data['first_name'],
-            last_name=subscribe_form.cleaned_data['last_name'],
-            email=subscribe_form.cleaned_data['email'],
-            country=subscribe_form.cleaned_data['country'],
-            city=subscribe_form.cleaned_data['city'],
-        )
+        subscription = subscription_form.save(commit=False)
+        subscription.user = user,  # refers to User instance created above
+        subscription.stripe_pid = request.POST.get('client_secret').split('_secret')[0]
         subscription.save()
     else:
         messages.error(request, subscribe_form.errors)
         return redirect(reverse('subscribe'))
 
-    # PROCESS STRIPE PAYMENT
-    
-    # SAVE NEW MODEL INSTANCES TO DATABASE
-
-    # TESTS
-
-    print(user)
-    print(subscription)
-
+    # user and subscription records created successfully
+    messages.success(request, "Your payment was successful and you are now subscribed. \
+                               Login now to download stories!")
     return redirect(reverse('login'))
         
 

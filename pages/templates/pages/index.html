@@ -4,9 +4,9 @@
 
 {% block content %}
     <h1>Home</h1>
-    <a href="{% url 'stories' %}"></a>
-    <a href="{% url 'subscribe' %}"></a>
-    <a href="{% url 'about' %}"></a>
+    <a href="{% url 'stories' %}">View Stories</a>
+    <a href="{% url 'subscribe' %}">Subscribe</a>
+    <a href="{% url 'about' %}">About justAbbyH</a>
 
     <!-- SAMPLECODE FROM LEARNDJANGO.COM -->
     {% if user.is_authenticated %}

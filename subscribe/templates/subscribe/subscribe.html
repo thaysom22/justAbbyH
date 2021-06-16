@@ -6,11 +6,12 @@
 {% endblock %}
 
 {% block content %}
+    <div id="loading-overlay" class="hidden"></div>
     <h1>Subscribe</h1>
     <p>{{ stripe_public_key }}</p>
     <p>{{ client_secret }}</p>
 
-    <form method="post" id="user-subscribe-form">
+    <form method="post" id="subscribe-form">
         {% csrf_token %}
         {{ user_form.as_p }}
         <hr>
@@ -21,7 +22,8 @@
         </div>
         {# credit[2] #}
         <p id="card-errors" role="alert"></p>
-        <button id="subscribe-submit" type="submit">
+        <input type="hidden" value="{{ client_secret }}" name="client_secret">
+        <button id="submit-button" type="submit" disabled>
             <div class="spinner hidden" id="spinner"></div>
             <span id="button-text">Subscribe</span>
         </button>
@@ -33,5 +35,5 @@
     {# output template variables in script element accessible to external javascript #}
     {{ stripe_public_key|json_script:"id_stripe_public_key" }}
     {{ client_secret|json_script:"id_client_secret" }}
-    <script src="{% static 'subscribe/js/stripe_elements.js' %}"></script>
+    <script src="{% static 'subscribe/js/stripe.js' %}"></script>
 {% endblock %}
