@@ -13,18 +13,17 @@ import dj_database_url
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # get environment variables using django-environ
-env = environ.Env(DEV=(bool, False))
+env = environ.Env(DEVELOPMENT=(bool, False))
 env_file = os.path.join(BASE_DIR, ".env")
 environ.Env.read_env(env_file)
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-=@f(1ej7f+28xd!w^pqm1b0%gi%wj68=qxc+h2f64brijy8e38'
+# SECURITY INFO: development and production env have different SECRET_KEY
+SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env('DEV')
+DEBUG = env('DEVELOPMENT')
 
 ALLOWED_HOSTS = ['just-abby-h.herokuapp.com', 'localhost']  # ADD DOMAIN NAME FOR DEPLOYED SITE
-
 
 # Application definition
 
