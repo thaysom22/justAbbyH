@@ -175,5 +175,6 @@ if 'USE_AWS' in env:
     MEDIAFILES_LOCATION = 'media'
 
     # override static and media urls in production
-    
+    STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{STATICFILES_LOCATION}/'
+    MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{MEDIAFILES_LOCATION}/'
 
