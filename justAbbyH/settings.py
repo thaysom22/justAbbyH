@@ -13,7 +13,7 @@ import dj_database_url
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # get environment variables using django-environ
-env = environ.Env(DEVELOPMENT=(bool, False))
+env = environ.Env(DEVELOPMENT=(bool, False))  # 'true' evaluates to True
 env_file = os.path.join(BASE_DIR, ".env")
 environ.Env.read_env(env_file)
 
@@ -22,6 +22,7 @@ SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEVELOPMENT')
+print(env('DEVELOPMENT'))
 
 ALLOWED_HOSTS = ['just-abby-h.herokuapp.com', 'localhost']  # ADD DOMAIN NAME FOR DEPLOYED SITE
 
@@ -37,6 +38,9 @@ INSTALLED_APPS = [
     'pages',
     'stories',
     'subscribe',
+
+    # other
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -154,3 +158,12 @@ STRIPE_CURRENCY = 'usd'
 
 STRIPE_PUBLIC_KEY = env('STRIPE_PUBLIC_KEY')
 STRIPE_SECRET_KEY = env('STRIPE_SECRET_KEY')
+
+# AWS bucket config
+if 'USE_AWS' in env:
+    AWS_STORAGE_BUCKET_NAME = 'just-abby-h'
+    AWS_S3_REGION_NAME = 'us-east-1'
+    AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
+    AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
+    AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com"
+
