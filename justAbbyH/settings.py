@@ -22,7 +22,6 @@ SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEVELOPMENT')
-print(env('DEVELOPMENT'))
 
 ALLOWED_HOSTS = ['just-abby-h.herokuapp.com', 'localhost']  # ADD DOMAIN NAME FOR DEPLOYED SITE
 
@@ -159,8 +158,16 @@ STRIPE_CURRENCY = 'usd'
 STRIPE_PUBLIC_KEY = env('STRIPE_PUBLIC_KEY')
 STRIPE_SECRET_KEY = env('STRIPE_SECRET_KEY')
 
-# AWS 
+
+# AWS
+
 if 'USE_AWS' in env:
+    # cache control
+    AWS_S3_OBJECT_PARAMETERS = {
+        'Expires': 'Thu, 31 Dec 2099 20:00:00 GMT',
+        'CacheControl': 'max-age=94608000',
+    }
+
     # bucket config
     AWS_STORAGE_BUCKET_NAME = 'just-abby-h'
     AWS_S3_REGION_NAME = 'us-east-1'
