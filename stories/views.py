@@ -1,12 +1,14 @@
 from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.http import HttpResponse
+from django.http import HttpResponseBadRequest
+from django.conf import settings
 
 from .forms import StoryForm
 from .models import Story
+from .storage_helpers import create_presigned_url
 
-import mimetypes
+import mimetypes  # ??
 
 
 def stories(request):
@@ -46,7 +48,7 @@ def add_story(request):
     """ 
     GET: Display add story form.
     POST: Add a story to the database.
-    (superuser only)
+    access: superusers only
     """
     if not request.user.is_superuser:
         messages.error(request, 'Sorry, only superusers can do that.')
@@ -126,19 +128,49 @@ def delete_story(request, story_id):
 
 @login_required
 def download_story(request, story_id):
-    """ Download a story pdf file """
+    """ Logged in user can access url for story pdf file """
     
+    # get story instance from db by pk
     story = get_object_or_404(Story, pk=story_id)
-    filepath = story.pdf.path
-    filename = story.pdf.name.split('/')[-1]
-    # credit[1]
-    mime_type, _ = mimetypes.guess_type(filepath)  # guess type incase superuser uploads non-pdf file
-    if not mime_type:
-        mime_type = 'application/pdf'
+    
+    file_url = story.pdf.url
+    filename = story.pdf.name
 
-    f = open(filepath, 'rb')
-    response = HttpResponse(f, headers={
-        'Content-Type': mime_type,
-        'Content-Disposition': f"attachment; filename={filename}",
-    })
-    return response
+    print("url:", file_url)  # TEST
+    print("filename:", filename)  # TEST
+
+    if settings.USE_AWS:
+        # generate presigned aws url
+        presigned_url = create_presigned_url(
+            settings.AWS_STORAGE_PRIVATE_BUCKET_NAME,
+            filename,
+        )
+        if presigned_url:
+            # file in s3 bucket
+            return redirect(presigned_url)
+        else:
+            return HttpResponseBadRequest(
+                'Sorry - something went wrong. Please try again or \
+                 contact me for assistance'
+            )
+    else:
+        # file on local server
+        return redirect(file_url)
+
+    # CODE TO RETURN LOCAL FILE AS A DOWNLOAD - REMOVE? #  
+
+    # filename = story.pdf.name.split('/')[-1]
+    # # credit[1]
+    # mime_type, _ = mimetypes.guess_type(file_url)  # guess type incase non-pdf file
+
+    # print("mime type:", mime_type)
+
+    # if not mime_type:
+    #     mime_type = 'application/pdf'
+
+    # fl = open(file_field, 'rb')  # read as binary (no encoding)
+    # response = HttpResponse(fl, headers={
+    #     'Content-Type': mime_type,
+    #     'Content-Disposition': f"attachment; filename={filename}",
+    # })
+    # return response

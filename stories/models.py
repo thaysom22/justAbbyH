@@ -1,4 +1,7 @@
 from django.db import models
+from django.conf import settings
+
+from .custom_storages import PublicFileStorage, PrivateFileStorage
 
 from math import floor
 
@@ -28,16 +31,31 @@ class Story(models.Model):
         choices=GENRE_CHOICES,
         blank=True,
         null=True,
-    )  # NOT USED IN CURRENT VERSION
+    )
 
     title = models.CharField(max_length=254)
     publish_date = models.DateField(auto_now_add=True)
     description = models.TextField(max_length=5000, blank=True, null=True)
-    image = models.ImageField(upload_to='story_images/', blank=True)
-    pdf = models.FileField(upload_to='story_pdfs/')
-    featured = models.BooleanField(blank=True, null=False, default=False)  # NOT USED IN CURRENT VERSION
-    reading_time_mins = models.PositiveIntegerField(blank=True, null=True)  # NOT USED IN CURRENT VERSION
-    reading_time_string = models.CharField(max_length=254, null=True)  # NOT USED IN CURRENT VERSION 
+    featured = models.BooleanField(blank=True, null=False, default=False)
+    reading_time_mins = models.PositiveIntegerField(blank=True, null=True) 
+    reading_time_string = models.CharField(max_length=254, null=True)
+    
+    if settings.USE_AWS:
+        # specify custom s3 storages in production
+        # CREDIT [4]
+        image = models.ImageField(
+            upload_to='story_images/',
+            storage=PublicFileStorage(),
+            blank=True
+        )
+        pdf = models.FileField(
+            upload_to='story_pdfs/',
+            storage=PrivateFileStorage()
+        )
+    else:
+        # use default local storage in development
+        image = models.ImageField(upload_to='public/story_images/', blank=True)
+        pdf = models.FileField(upload_to='private/story_pdfs/')
 
     def __str__(self):
         return f"Story <id:{self.id}> <title:{self.title}>"
@@ -50,7 +68,6 @@ class Story(models.Model):
         if self.reading_time_mins:
             self.reading_time_string = self._generate_reading_time_string(self.reading_time_mins)
         super().save(*args, **kwargs)
-
 
     def _generate_reading_time_string(self, reading_time_mins):
         """ 

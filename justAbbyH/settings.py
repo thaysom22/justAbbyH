@@ -83,10 +83,12 @@ WSGI_APPLICATION = 'justAbbyH.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-if 'DATABASE_URL' in env:
+# if 'DATABASE_URL' in env:
+if True:
     print('using production database')  # TEST
     DATABASES = {
-        'default': dj_database_url.parse(env('DATABASE_URL')),
+        # 'default': dj_database_url.parse(env('DATABASE_URL')),
+        'default': dj_database_url.parse("postgres://uzvtsjjoblskbs:1c545089a568e6144f3e5690acedce4d88aa7b3022892720a65893c64a83e7dc@ec2-54-87-34-201.compute-1.amazonaws.com:5432/d86blkjgbcjvvt"),
     }
 else:
     print('using development database')  # TEST
@@ -131,15 +133,6 @@ USE_L10N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/3.2/howto/static-files/
-
-STATIC_URL = '/static/'
-STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
-
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/media/'
-
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
@@ -161,7 +154,19 @@ STRIPE_SECRET_KEY = env('STRIPE_SECRET_KEY')
 
 # AWS
 
-if 'USE_AWS' in env:
+USE_AWS = 'USE_AWS' in env
+
+# if 'USE_AWS':
+if True:
+    # production settings
+    print("Using S3 storage")  # TEST
+
+    AWS_S3_REGION_NAME = 'us-east-1'
+    # AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
+    # AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
+    AWS_ACCESS_KEY_ID = "AKIAYFWDKLXUF4OLBRTO"  # TEST
+    AWS_SECRET_ACCESS_KEY = "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"  # TEST
+
     # cache control
     AWS_S3_OBJECT_PARAMETERS = {
         'Expires': 'Thu, 31 Dec 2099 20:00:00 GMT',
@@ -169,19 +174,34 @@ if 'USE_AWS' in env:
     }
 
     # bucket config
-    AWS_STORAGE_BUCKET_NAME = 'just-abby-h'
-    AWS_S3_REGION_NAME = 'us-east-1'
-    AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
-    AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
-    AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com"
+    AWS_STORAGE_PUBLIC_BUCKET_NAME = 'just-abby-h-public'
+    AWS_STORAGE_PRIVATE_BUCKET_NAME = 'just-abby-h-private'
 
-    # static and media files
+    # domain config
+    AWS_S3_CUSTOM_PUBLIC_DOMAIN = f"{AWS_STORAGE_PUBLIC_BUCKET_NAME}.s3.amazonaws.com"
+    AWS_S3_CUSTOM_PRIVATE_DOMAIN = f"{AWS_STORAGE_PRIVATE_BUCKET_NAME}.s3.amazonaws.com"
+
+    # static files in production
     STATICFILES_STORAGE = 'custom_storages.StaticStorage'
-    DEFAULT_FILE_STORAGE = 'custom_storages.MediaStorage'
     STATICFILES_LOCATION = 'static'
-    MEDIAFILES_LOCATION = 'media'
+    STATIC_URL = f'https://{AWS_S3_CUSTOM_PUBLIC_DOMAIN}/{STATICFILES_LOCATION}/'
 
-    # override static and media urls in production
-    STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{STATICFILES_LOCATION}/'
-    MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{MEDIAFILES_LOCATION}/'
+    # media files in production
+    MEDIAFILES_PUBLIC_LOCATION = 'media/public'   
+    MEDIAFILES_PRIVATE_LOCATION = 'media/private'    
+    MEDIA_PUBLIC_URL = f'https://{AWS_S3_CUSTOM_PUBLIC_DOMAIN}/{MEDIAFILES_LOCATION}/'
+    MEDIA_PRIVATE_URL = f'https://{AWS_S3_CUSTOM_PRIVATE_DOMAIN}/{MEDIAFILES_LOCATION}/'
+    PUBLIC_FILE_STORAGE = 'custom_storages.PublicFileStorage'
+    PRIVATE_FILE_STORAGE = 'custom_storages.PrivateFileStorage'
+    
+    
+else:
+    # development settings
+    print("Using default local storage")  # TEST
 
+    # static and media in development
+    STATIC_URL = '/static/'
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+    MEDIA_URL = '/media/'
+
+STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
