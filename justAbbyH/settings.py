@@ -83,12 +83,10 @@ WSGI_APPLICATION = 'justAbbyH.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-# if 'DATABASE_URL' in env:
-if True:
+if 'DATABASE_URL' in env:
     print('using production database')  # TEST
     DATABASES = {
-        # 'default': dj_database_url.parse(env('DATABASE_URL')),
-        'default': dj_database_url.parse("postgres://uzvtsjjoblskbs:1c545089a568e6144f3e5690acedce4d88aa7b3022892720a65893c64a83e7dc@ec2-54-87-34-201.compute-1.amazonaws.com:5432/d86blkjgbcjvvt"),
+        'default': dj_database_url.parse(env('DATABASE_URL')),
     }
 else:
     print('using development database')  # TEST
@@ -156,16 +154,14 @@ STRIPE_SECRET_KEY = env('STRIPE_SECRET_KEY')
 
 USE_AWS = 'USE_AWS' in env
 
-# if 'USE_AWS':
-if True:
+if 'USE_AWS':
     # production settings
     print("Using S3 storage")  # TEST
 
     AWS_S3_REGION_NAME = 'us-east-1'
-    # AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
-    # AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
-    AWS_ACCESS_KEY_ID = "AKIAYFWDKLXUF4OLBRTO"  # TEST
-    AWS_SECRET_ACCESS_KEY = "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"  # TEST
+    AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
+    AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
+    AWS_DEFAULT_ACL = None
 
     # cache control
     AWS_S3_OBJECT_PARAMETERS = {
@@ -182,26 +178,28 @@ if True:
     AWS_S3_CUSTOM_PRIVATE_DOMAIN = f"{AWS_STORAGE_PRIVATE_BUCKET_NAME}.s3.amazonaws.com"
 
     # static files in production
-    STATICFILES_STORAGE = 'custom_storages.StaticStorage'
+    STATICFILES_STORAGE = 'custom_storages.StaticStorage'  # where 'collect static' command will put static files in production
     STATICFILES_LOCATION = 'static'
     STATIC_URL = f'https://{AWS_S3_CUSTOM_PUBLIC_DOMAIN}/{STATICFILES_LOCATION}/'
 
     # media files in production
     MEDIAFILES_PUBLIC_LOCATION = 'media/public'   
     MEDIAFILES_PRIVATE_LOCATION = 'media/private'    
-    MEDIA_PUBLIC_URL = f'https://{AWS_S3_CUSTOM_PUBLIC_DOMAIN}/{MEDIAFILES_LOCATION}/'
-    MEDIA_PRIVATE_URL = f'https://{AWS_S3_CUSTOM_PRIVATE_DOMAIN}/{MEDIAFILES_LOCATION}/'
+    MEDIA_PUBLIC_URL = f'https://{AWS_S3_CUSTOM_PUBLIC_DOMAIN}/{MEDIAFILES_PUBLIC_LOCATION}/'
+    MEDIA_PRIVATE_URL = f'https://{AWS_S3_CUSTOM_PRIVATE_DOMAIN}/{MEDIAFILES_PRIVATE_LOCATION}/'
     PUBLIC_FILE_STORAGE = 'custom_storages.PublicFileStorage'
-    PRIVATE_FILE_STORAGE = 'custom_storages.PrivateFileStorage'
-    
+    PRIVATE_FILE_STORAGE = 'custom_storages.PrivateFileStorage' 
     
 else:
     # development settings
     print("Using default local storage")  # TEST
 
     # static and media in development
-    STATIC_URL = '/static/'
+    STATIC_URL = '/static/'  # url prefix for referring to static files in development
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # where 'collect static' command will put static files locally
     MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
     MEDIA_URL = '/media/'
 
+# search this folder in addition to static files
+# within each app when 'collect static' command is run
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
