@@ -1,7 +1,7 @@
 from django.db import models
 from django.conf import settings
 
-from .custom_storages import PublicFileStorage, PrivateFileStorage
+from custom_storages import PublicFileStorage, PrivateFileStorage
 
 from math import floor
 
@@ -46,11 +46,11 @@ class Story(models.Model):
         image = models.ImageField(
             upload_to='story_images/',
             storage=PublicFileStorage(),
-            blank=True
+            blank=True,
         )
         pdf = models.FileField(
             upload_to='story_pdfs/',
-            storage=PrivateFileStorage()
+            storage=PrivateFileStorage(),
         )
     else:
         # use default local storage in development

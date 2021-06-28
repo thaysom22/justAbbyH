@@ -8,8 +8,6 @@
 {% block content %}
     <div id="loading-overlay" class="hidden"></div>
     <h1>Subscribe</h1>
-    <p>{{ stripe_public_key }}</p>
-    <p>{{ client_secret }}</p>
 
     <form method="post" id="subscribe-form">
         {% csrf_token %}

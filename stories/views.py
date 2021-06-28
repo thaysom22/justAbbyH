@@ -51,7 +51,7 @@ def add_story(request):
     access: superusers only
     """
     if not request.user.is_superuser:
-        messages.error(request, 'Sorry, only superusers can do that.')
+        messages.error(request, 'Sorry, only the author can do that!')
         return redirect(reverse('index'))
 
     if request.method == "GET":
@@ -84,7 +84,7 @@ def edit_story(request, story_id):
     (superuser only)
     """
     if not request.user.is_superuser:
-        messages.error(request, 'Sorry, only superusers can do that.')
+        messages.error(request, 'Sorry, only the author can do that!')
         return redirect(reverse('index'))
     
     story = get_object_or_404(Story, pk=story_id)
@@ -117,7 +117,7 @@ def edit_story(request, story_id):
 def delete_story(request, story_id):
     """ Delete a story in the database (superuser only) """
     if not request.user.is_superuser:
-        messages.error(request, 'Sorry, only superusers can do that.')
+        messages.error(request, 'Sorry, only the author can do that!')
         return redirect(reverse('index'))
     
     story = get_object_or_404(Story, pk=story_id)
@@ -140,10 +140,11 @@ def download_story(request, story_id):
     print("filename:", filename)  # TEST
 
     if settings.USE_AWS:
+        object_key = 'media/private/' + filename
         # generate presigned aws url
         presigned_url = create_presigned_url(
             settings.AWS_STORAGE_PRIVATE_BUCKET_NAME,
-            filename,
+            object_key,
         )
         if presigned_url:
             # file in s3 bucket
