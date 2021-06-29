@@ -40,12 +40,12 @@ var form = document.getElementById("subscribe-form");
 form.addEventListener("submit", function(event) {
     event.preventDefault();
     awaitingPaymentResult(true);
-    payWithCard(stripe, card, clientSecret);
+    createUserSubscription(stripe, card, clientSecret);
 });
 
 // Calls stripe.confirmCardPayment
 // If the card requires authentication Stripe shows a pop-up modal
-var payWithCard = function(stripe, card, clientSecret) {
+var createUserSubscription = function(stripe, card, clientSecret) {
     stripe.confirmCardPayment(
         clientSecret, 
         {

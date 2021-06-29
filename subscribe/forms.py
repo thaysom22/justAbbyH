@@ -12,23 +12,30 @@ class UserRegisterForm(UserCreationForm):
     """
     class Meta:
         model = User
-        fields = ("username", "password1", "password2")
+        fields = ("username", "first_name", 
+                  "last_name", "email", 
+                  "password1", "password2")
 
     def __init__(self, *args, **kwargs):
         """
         Add placeholders, remove labels,
-        set autofocus on first input
+        set autofocus on first input, make 
+        all fields required
         """
         super().__init__(*args, **kwargs)
         placeholders = {
-            'username': 'Enter a Username',
-            'password1': 'Enter a Password',
-            'password2': 'Repeat the Password',
+            'username': 'Username*',
+            'first_name': 'First Name*',
+            'last_name': 'Last Name*',
+            'email': 'Email Address*',
+            'password1': 'Password*',
+            'password2': 'Repeat Password*',
         }
 
         for field in self.fields:
             self.fields[field].label = False
             self.fields[field].widget.attrs['placeholder'] = placeholders[field]
+            self.fields[field].required = True
 
         self.fields['username'].widget.attrs['autofocus'] = True
 
@@ -40,8 +47,7 @@ class SubscriptionForm(forms.ModelForm):
     """
     class Meta:
         model = Subscription
-        fields = ('first_name', 'last_name',
-                  'email', 'country', 'city',)
+        fields = ('country', 'city',)
 
     def __init__(self, *args, **kwargs):
         """
@@ -49,10 +55,7 @@ class SubscriptionForm(forms.ModelForm):
         """
         super().__init__(*args, **kwargs)
         placeholders = {
-            'first_name': 'First Name',
-            'last_name': 'Last Name',
-            'email': 'Email Address',
-            'city': 'City (optional)',
+            'city': 'City',
         }
 
         for field in self.fields:

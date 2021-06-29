@@ -4,15 +4,13 @@ from .models import Subscription
 
 
 class SubscriptionAdmin(admin.ModelAdmin):
-    fields = ('user', 'first_name', 'last_name',
-              'email', 'country', 'city',
+    fields = ('user', 'country', 'city',
               'start_date', 'stripe_pid',)
               
-    list_display = ('user', 'first_name', 'last_name',
-                    'email', 'country', 'city',
+    list_display = ('user', 'country', 'city',
                     'start_date', 'stripe_pid',)
     
-    readonly_fields = ('start_date',)
+    readonly_fields = ('start_date', 'stripe_pid',)
     ordering = ('-start_date',)
 
 
