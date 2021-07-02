@@ -35,15 +35,15 @@ card.mount('#card-element');
 
 /****** DELAY FORM SUBMIT TO COMPLETE PAYMENT ON CLIENT ******/
 
-// handle subscription form submit event
+// handle subscription form submit event via ajax
 var form = document.getElementById("subscribe-form");
 form.addEventListener("submit", function(event) {
     event.preventDefault();
     awaitingPaymentResult(true);
-    // send ajax post request to cache inactive user endpoint
+    // send ajax post request to 'cache-inactive-user/' url
     // credit[6]
     $.ajax({
-        url: '/subscribe/cache-inactive-user/',
+        url: '/subscribe/cache-inactive-user/',  // prepend '/' to route relative to host
         method: 'POST',
         data: getCacheUserData(),
         dataType: "json",  // data from server parsed to JS object
@@ -51,59 +51,96 @@ form.addEventListener("submit", function(event) {
         success: ajaxSuccess,
         error: ajaxFailure,
     });    
+
+    var getCacheUserData = function() {
+        /**
+         * gather data required for post request to cache-inactive-user 
+         * endpoint to create inactive user in database prior to attempting payment
+         * @return {object} object containing data for post request
+         */
+        var subscribeForm = document.getElementById('subscribe-form');
+        // using {% csrf_token %} in the subscribe form
+        var csrfToken = subscribeForm.querySelector('input[name="csrfmiddlewaretoken"]').value;
+        var postData = {
+            'csrfmiddlewaretoken': csrfToken,
+            'username': subscribeForm.querySelector('input[name="username"]').value,
+            'first_name': subscribeForm.querySelector('input[name="first_name"]').value,
+            'last_name': subscribeForm.querySelector('input[name="last_name"]').value,
+            'email': subscribeForm.querySelector('input[name="email"]').value,
+            'password1': subscribeForm.querySelector('input[name="password1"]').value,
+            'password2': subscribeForm.querySelector('input[name="password2"]').value,
+        };
+        return postData;
+    }
+
+    var ajaxFailure = function() {
+        // if not timeout, error will be in django messages
+        location.reload();
+    }
+
+    var ajaxSuccess = function(data) {
+        var userId = data.userId;  // used by getSubscribeData()
+        processPayment();
+        
+
+        var processPayment = function() {
+            // if card requires authentication Stripe shows a pop-up modal
+            stripe.confirmCardPayment(
+                clientSecret, 
+                {
+                    payment_method: {
+                        card: card,
+                    },
+                },
+            ).then(function(result) {
+                if (result.error) {
+                    // show error to customer
+                    showError(result.error.message);
+                } else {
+                    completeSubscription();
+                }
+            });
+
+            var completeSubscription = function() {
+                // send ajax post request to 'subscribe/' url
+                $.ajax({
+                    url: '/subscribe/',
+                    method: 'POST',
+                    data: getSubscribeData(),
+                    dataType: "json",  // data from server parsed to JS object
+                    timeout: 500,
+                    success: ajaxSuccess,
+                    error: ajaxFailure,
+                });  
+
+                var getSubscribeData = function() {
+                    /**
+                     * gather data required for post request to cache-inactive-user 
+                     * endpoint to create inactive user in database prior to attempting payment
+                     * @return {object} object containing data for post request
+                     */
+                    var subscribeForm = document.getElementById('subscribe-form');
+                    // using {% csrf_token %} in the subscribe form
+                    var csrfToken = subscribeForm.querySelector('input[name="csrfmiddlewaretoken"]').value;
+                    var postData = {
+                        'user_id': userId,
+                        'csrfmiddlewaretoken': csrfToken,
+                        'country': subscribeForm.querySelector('input[name="country"]').value,
+                        'city': subscribeForm.querySelector('input[name="city"]').value,
+                    };
+                    return postData;
+                }
+
+            }
+
+
+        };
+    }
+
+    
+
 });
 
-var ajaxSuccess = function(data) {
-    
-}
-
-var ajaxFailure = function() {
-    // if not timeout, error will be in django messages
-    location.reload();
-}
-
-var getCacheUserData = function() {
-    /**
-     * gather data required for post request to cache-inactive-user 
-     * endpoint to create inactive user in database prior to attempting payment
-     * @return {object} object containing data for post request
-     */
-    var subscribeForm = document.getElementById('subscribe-form');
-    // using {% csrf_token %} in the subscribe form
-    var csrfToken = subscribeForm.querySelector('input[name="csrfmiddlewaretoken"]').value;
-    var postData = {
-        'csrfmiddlewaretoken': csrfToken,
-        'username': subscribeForm.querySelector('input[name="username"]').value,
-        'first_name': subscribeForm.querySelector('input[name="first_name"]').value,
-        'last_name': subscribeForm.querySelector('input[name="last_name"]').value,
-        'email': subscribeForm.querySelector('input[name="email"]').value,
-        'password1': subscribeForm.querySelector('input[name="password1"]').value,
-        'password2': subscribeForm.querySelector('input[name="password2"]').value,
-    };
-    return postData;
-}
-
-
-var createUserSubscription = function() {
-
-    // If card requires authentication Stripe shows a pop-up modal
-    stripe.confirmCardPayment(
-        clientSecret, 
-        {
-            payment_method: {
-                card: card,
-            },
-        },
-    ).then(function(result) {
-        if (result.error) {
-            // Show error to your customer
-            showError(result.error.message);
-        } else {
-            // The payment succeeded: post form data
-            form.submit();  
-        }
-    });
-};
 
 // show the customer the error from Stripe if their card fails to charge
 var showError = function(errorMsgText) {

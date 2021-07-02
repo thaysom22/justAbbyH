@@ -37,7 +37,7 @@ def cache_inactive_user(request):
 
             # ajax success
             return JsonResponse(
-                {'user_id': user.id}, 
+                {'userId': user.id},
                 status=200
             )  # return id of user parsed as json
         else:
