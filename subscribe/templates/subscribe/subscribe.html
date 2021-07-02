@@ -18,7 +18,7 @@
         <div id="card-element">
             {# Stripe.js injects the Card Element #}
         </div>
-        {# credit[2] #}
+        {# credit [2] #}
         <p id="card-errors" role="alert"></p>
         <input type="hidden" value="{{ client_secret }}" name="client_secret">
         <button id="submit-button" type="submit" disabled>
@@ -28,8 +28,7 @@
     </form>
 {% endblock %}
 
-{% block postloadjs %}
-    {{ block.super }}
+{% block extra_postloadjs %}
     {# output template variables in script element accessible to external javascript #}
     {{ stripe_public_key|json_script:"id_stripe_public_key" }}
     {{ client_secret|json_script:"id_client_secret" }}

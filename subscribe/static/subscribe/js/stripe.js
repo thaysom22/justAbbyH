@@ -33,19 +33,60 @@ var card = elements.create('card', {style: style});
 card.mount('#card-element');
 
 
-/****** HANDLE FORM SUBMIT AND COMPLETE PAYMENT ON CLIENT ******/
+/****** DELAY FORM SUBMIT TO COMPLETE PAYMENT ON CLIENT ******/
 
 // handle subscription form submit event
 var form = document.getElementById("subscribe-form");
 form.addEventListener("submit", function(event) {
     event.preventDefault();
     awaitingPaymentResult(true);
-    createUserSubscription(stripe, card, clientSecret);
+    // send ajax post request to cache inactive user endpoint
+    // credit[6]
+    $.ajax({
+        url: '/subscribe/cache-inactive-user/',
+        method: 'POST',
+        data: getCacheUserData(),
+        dataType: "json",  // data from server parsed to JS object
+        timeout: 500,
+        success: ajaxSuccess,
+        error: ajaxFailure,
+    });    
 });
 
-// Calls stripe.confirmCardPayment
-// If the card requires authentication Stripe shows a pop-up modal
-var createUserSubscription = function(stripe, card, clientSecret) {
+var ajaxSuccess = function(data) {
+    
+}
+
+var ajaxFailure = function() {
+    // if not timeout, error will be in django messages
+    location.reload();
+}
+
+var getCacheUserData = function() {
+    /**
+     * gather data required for post request to cache-inactive-user 
+     * endpoint to create inactive user in database prior to attempting payment
+     * @return {object} object containing data for post request
+     */
+    var subscribeForm = document.getElementById('subscribe-form');
+    // using {% csrf_token %} in the subscribe form
+    var csrfToken = subscribeForm.querySelector('input[name="csrfmiddlewaretoken"]').value;
+    var postData = {
+        'csrfmiddlewaretoken': csrfToken,
+        'username': subscribeForm.querySelector('input[name="username"]').value,
+        'first_name': subscribeForm.querySelector('input[name="first_name"]').value,
+        'last_name': subscribeForm.querySelector('input[name="last_name"]').value,
+        'email': subscribeForm.querySelector('input[name="email"]').value,
+        'password1': subscribeForm.querySelector('input[name="password1"]').value,
+        'password2': subscribeForm.querySelector('input[name="password2"]').value,
+    };
+    return postData;
+}
+
+
+var createUserSubscription = function() {
+
+    // If card requires authentication Stripe shows a pop-up modal
     stripe.confirmCardPayment(
         clientSecret, 
         {

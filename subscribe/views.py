@@ -15,11 +15,11 @@ import stripe
 @require_POST
 def cache_inactive_user(request):
     """
-    Create User record in database from POST data and 
-    set User.is_active field to False 
+    Create User record in database from POST data
+    Set User.is_active field to False
     """
     try:
-        # collect required POST data for User model
+        # create ModelForm instance from POST data and check validity
         user_form_data = {
             'username': request.POST.get('username'),
             'first_name': request.POST.get('first_name'),
@@ -28,22 +28,33 @@ def cache_inactive_user(request):
             'password1': request.POST.get('password1'),
             'password2': request.POST.get('password2'),
         }
-        # create ModelForm instance from POST data and check validity
         user_form = UserRegisterForm(user_form_data)
         if user_form.is_valid():
-            # create model instance from ModelForm and deactivate 
+            # create and save inactive model instance from ModelForm 
             user = user_form.save(commit=False)
             user.is_active = False
-            user.save()  # create database record
-            return JsonResponse(content=user.id, status=200)  # return id of inactive user as json
+            user.save()
+
+            # ajax success
+            return JsonResponse(
+                {'user_id': user.id}, 
+                status=200
+            )  # return id of user parsed as json
         else:
             messages.error(request, "Please check your form for errors!")
-            return HttpResponse(status=400)
         
-    except Exception as e:
-        messages.error(request, "There was an error when creating your account! \
-                                 Please try again or contact me for assistance.")
-        return HttpResponse(content=e, status=400)
+    except Exception:
+        messages.error(
+            request, 
+            "There was an error when creating your account! \
+            Please try again or contact me for assistance."
+        )
+
+    # ajax failure
+    return JsonResponse(
+        {},  # ajax parser expects non-empty data param
+        status=400,
+    )
 
 
 def subscribe(request):
@@ -62,7 +73,7 @@ def subscribe(request):
     stripe_public_key = settings.STRIPE_PUBLIC_KEY
     stripe_secret_key = settings.STRIPE_SECRET_KEY
     if not stripe_public_key:
-            messages.warning(request, 'Stripe public key is missing.')
+        messages.warning(request, 'Stripe public key is missing.')
 
     if request.method == "GET":
         # create payment intent object
