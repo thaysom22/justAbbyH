@@ -3,6 +3,7 @@ from django.shortcuts import (
 )
 from django.http.response import JsonResponse
 from django.contrib import messages
+from django.contrib.auth.models import User
 from django.conf import settings
 from django.views.decorators.http import require_POST
 
@@ -15,57 +16,95 @@ import stripe
 @require_POST
 def cache_inactive_user(request):
     """
-    Create User record in database from POST data
-    Set User.is_active field to False
+    Create User and Subscription records from POST data
+    with User.is_active field set to False
     """
+    user_data = {
+        'username': request.POST.get('username'),
+        'first_name': request.POST.get('first_name'),
+        'last_name': request.POST.get('last_name'),
+        'email': request.POST.get('email'),
+        'password1': request.POST.get('password1'),
+        'password2': request.POST.get('password2'),
+    }
     try:
-        # create ModelForm instance from POST data and check validity
-        user_form_data = {
-            'username': request.POST.get('username'),
-            'first_name': request.POST.get('first_name'),
-            'last_name': request.POST.get('last_name'),
-            'email': request.POST.get('email'),
-            'password1': request.POST.get('password1'),
-            'password2': request.POST.get('password2'),
-        }
-        user_form = UserRegisterForm(user_form_data)
+        # create User instance from POST data
+        user_form = UserRegisterForm(user_data)
         if user_form.is_valid():
-            # create and save inactive model instance from ModelForm 
             user = user_form.save(commit=False)
             user.is_active = False
-            user.save()
+            user_id = user.id
+    
+            # create Subscription instance from POST data
+            subscription_data = {
+                'country': request.POST.get('country'),
+                'city': request.POST.get('city'),
+                'stripe_pid': request.POST.get('client_secret').split('_secret')[0],
+            }
+            
+            # instantiate Subscription model directly 
+            # and point to User instance created above
+            subscription = Subscription(
+                **subscription_data,
+                user=user,
+            )
 
-            # ajax success
+            # finally, commit user and subscription records to database
+            user.save()
+            subscription.save()
+
+            # user and subscription records created successfully
+            # trigger ajax success on client return id of user parsed as json 
+            # to activate user after payment
             return JsonResponse(
-                {'userId': user.id},
+                {'userId': user_id},
                 status=200
-            )  # return id of user parsed as json
+            )  
         else:
-            messages.error(request, "Please check your form for errors!")
+            # user form not valid
+            messages.error(request, "Please check your form for errors and try again.")
         
     except Exception:
         messages.error(
-            request, 
+            request,
             "There was an error when creating your account! \
             Please try again or contact me for assistance."
         )
 
-    # ajax failure
+    # trigger ajax failure on client
     return JsonResponse(
-        {},  # ajax parser expects non-empty data param
+        {},  # ajax parser expects non-empty first parameter
         status=400,
     )
 
 
+@require_POST
+def activate_cached_user(request):
+    """
+    Set User.is_active field to True when payment
+    completes successfully on client
+    """
+    # when this code runs payment has already completed on client
+    user_id = request.POST.get('user_id')  # id for previously cached user
+    # try:
+    inactive_user = User.objects.get(id=user_id)
+
+@require_POST
+def delete_cached_user(request):
+    """
+    Delete User record (and associated 
+    Subscription record by cascade) from database 
+    when payment is unsuccessful on client
+    """
+
+
 def subscribe(request):
     """ 
-    GET: Display user and subscribe forms,
+    Display user and subscribe forms and
     create Stripe PaymentIntent
-    POST: Create User and Subscription
-    instances in respective database tables
     """
     if request.user.is_authenticated:
-        messages.info(request, "Can't do that! \
+        messages.info(request, "Sorry, can't do that! \
             Logout first to create a new subscription.")
         return redirect(reverse('stories'))
 
@@ -97,36 +136,3 @@ def subscribe(request):
         }
         template = "subscribe/subscribe.html"
         return render(request, template, context)
-
-    # POST
-    
-
-    subscription_form_data = {
-        'country': request.POST.get('country'),
-        'city': request.POST.get('city'),
-    }
-    try:
-         # construct instance of Subscription model directly
-        subscription = Subscription(
-            **subscription_form_data,
-            user=user,  # refers to User instance created above
-            stripe_pid=request.POST.get('client_secret').split('_secret')[0],
-        )
-    except Exception as e:
-        messages.error(
-            request, 
-            "There was an error creating your subscription. \
-             Please contact us to rectify."
-        )
-        return redirect(reverse('subscribe'))
-
-    # finally, add user and subscription records to database
-    user.save()
-    subscription.save()
-
-    # user and subscription records created successfully
-    messages.success(request, "Your payment was successful and you are now subscribed. \
-                               Login now to download stories!")
-    return redirect(reverse('login'))
-        
-

@@ -40,120 +40,141 @@ var form = document.getElementById("subscribe-form");
 form.addEventListener("submit", function(event) {
     event.preventDefault();
     awaitingPaymentResult(true);
-    // send ajax post request to 'cache-inactive-user/' url
-    // credit[6]
-    $.ajax({
-        url: '/subscribe/cache-inactive-user/',  // prepend '/' to route relative to host
-        method: 'POST',
-        data: getCacheUserData(),
-        dataType: "json",  // data from server parsed to JS object
-        timeout: 500,
-        success: ajaxSuccess,
-        error: ajaxFailure,
-    });    
+    cacheInactiveUser();
 
-    var getCacheUserData = function() {
-        /**
-         * gather data required for post request to cache-inactive-user 
-         * endpoint to create inactive user in database prior to attempting payment
-         * @return {object} object containing data for post request
-         */
-        var subscribeForm = document.getElementById('subscribe-form');
-        // using {% csrf_token %} in the subscribe form
-        var csrfToken = subscribeForm.querySelector('input[name="csrfmiddlewaretoken"]').value;
-        var postData = {
-            'csrfmiddlewaretoken': csrfToken,
-            'username': subscribeForm.querySelector('input[name="username"]').value,
-            'first_name': subscribeForm.querySelector('input[name="first_name"]').value,
-            'last_name': subscribeForm.querySelector('input[name="last_name"]').value,
-            'email': subscribeForm.querySelector('input[name="email"]').value,
-            'password1': subscribeForm.querySelector('input[name="password1"]').value,
-            'password2': subscribeForm.querySelector('input[name="password2"]').value,
-        };
-        return postData;
-    }
-
-    var ajaxFailure = function() {
-        // if not timeout, error will be in django messages
-        location.reload();
-    }
-
-    var ajaxSuccess = function(data) {
-        var userId = data.userId;  // used by getSubscribeData()
-        processPayment();
+    var cacheInactiveUser = function() {
+        // send ajax post request to 'cache-inactive-user/' url
+        // credit[6]
+        $.ajax({
+            url: '/subscribe/cache-inactive-user/',  // prepend '/' to make route relative to host
+            method: 'POST',
+            data: getCacheUserData(),
+            dataType: "json",  // data returned from server parsed to JS object
+            timeout: 500,
+            success: cacheUserAjaxSuccess,
+            error: cacheUserAjaxFailure,
+        });
         
+        var getCacheUserData = function() {
+            /**
+             * gather data required for post request to cache-inactive-user 
+             * endpoint to create inactive user in database prior to attempting payment
+             * @return {object} object containing data for post request
+             */
+            var subscribeForm = document.getElementById('subscribe-form');
+            // using {% csrf_token %} in the subscribe form
+            var csrfToken = subscribeForm.querySelector('input[name="csrfmiddlewaretoken"]').value;
+            var postData = {
+                'csrfmiddlewaretoken': csrfToken,
+                'username': subscribeForm.querySelector('input[name="username"]').value,
+                'first_name': subscribeForm.querySelector('input[name="first_name"]').value,
+                'last_name': subscribeForm.querySelector('input[name="last_name"]').value,
+                'email': subscribeForm.querySelector('input[name="email"]').value,
+                'password1': subscribeForm.querySelector('input[name="password1"]').value,
+                'password2': subscribeForm.querySelector('input[name="password2"]').value,
+                'country': subscribeForm.querySelector('input[name="country"]').value,
+                'city': subscribeForm.querySelector('input[name="city"]').value,
+                'client_secret': clientSecret,  // read from global scope
+            };
+            return postData;
+        }
 
-        var processPayment = function() {
-            // if card requires authentication Stripe shows a pop-up modal
-            stripe.confirmCardPayment(
-                clientSecret, 
-                {
-                    payment_method: {
-                        card: card,
+        var cacheUserAjaxFailure = function() {
+            // if not timeout, error message from server 
+            // will be shown in django messages
+            window.location.reload();
+        };
+
+        var cacheUserAjaxSuccess = function(data) {
+            var userId = data.userId;  // used to activate or delete cached user
+            processPayment();
+            
+            var processPayment = function() {
+                // if card requires authentication Stripe shows a pop-up modal
+                stripe.confirmCardPayment(
+                    clientSecret, 
+                    {
+                        payment_method: {
+                            card: card,
+                        },
                     },
-                },
-            ).then(function(result) {
-                if (result.error) {
-                    // show error to customer
-                    showError(result.error.message);
-                } else {
-                    completeSubscription();
+                ).then(function(result) {
+                    if (result.error) {
+                        // show error to customer
+                        showError(result.error.message);
+                        deleteCachedUser();
+                    } else {
+                        // payment was successful
+                        activateCachedUser();
+                    }
+                });
+
+                var activateCachedUser = function() {
+                    // send ajax post request to '/activate-cached-user/' url
+                    $.ajax({
+                        url: '/activate-cached-user/',
+                        method: 'POST',
+                        data: getActivateOrDeleteUserData(),
+                        dataType: "json",
+                        timeout: 500,
+                        success: activateOrDeleteUserAjaxSuccess,
+                        error: activateOrDeleteUserAjaxFailure,
+                    });
+                };
+
+                var deleteCachedUser = function() {
+                    // send ajax post request to '/delete-cached-user/' url
+                    $.ajax({
+                        url: '/delete-cached-user/',
+                        method: 'POST',
+                        data: getActivateOrDeleteUserData(),
+                        dataType: "json",
+                        timeout: 500,
+                        success: activateOrDeleteUserAjaxSuccess,
+                        error: activateOrDeleteUserAjaxFailure,
+                    });
+                };
+
+                var activateOrDeleteUserAjaxSuccess = function(data) {
+                    // redirect to url returned from server
+                    window.location.replace(data.redirectUrl);
                 }
-            });
 
-            var completeSubscription = function() {
-                // send ajax post request to 'subscribe/' url
-                $.ajax({
-                    url: '/subscribe/',
-                    method: 'POST',
-                    data: getSubscribeData(),
-                    dataType: "json",  // data from server parsed to JS object
-                    timeout: 500,
-                    success: ajaxSuccess,
-                    error: ajaxFailure,
-                });  
+                var activateOrDeleteUserAjaxFailure = function() {
+                    window.location.reload();
+                }
 
-                var getSubscribeData = function() {
+                var getActivateOrDeleteUserData = function() {
                     /**
-                     * gather data required for post request to cache-inactive-user 
-                     * endpoint to create inactive user in database prior to attempting payment
+                     * gather data required for post request to activate-cached-user 
                      * @return {object} object containing data for post request
                      */
                     var subscribeForm = document.getElementById('subscribe-form');
                     // using {% csrf_token %} in the subscribe form
                     var csrfToken = subscribeForm.querySelector('input[name="csrfmiddlewaretoken"]').value;
                     var postData = {
-                        'user_id': userId,
                         'csrfmiddlewaretoken': csrfToken,
-                        'country': subscribeForm.querySelector('input[name="country"]').value,
-                        'city': subscribeForm.querySelector('input[name="city"]').value,
+                        'user_id': userId,
                     };
                     return postData;
-                }
+                };
 
-            }
-
-
+                // UI feedback if payment is unsuccessful
+                var showError = function(errorMsgText) {
+                    awaitingPaymentResult(false);
+                    var errorDiv = document.getElementById("card-errors");
+                    var html = `
+                        <span class="icon" role="alert">
+                            <i class="fas fa-times"></i>
+                        </span>
+                        <span>${errorMsgText}</span>
+                    `;
+                    errorDiv.innerHTML = html;
+                };
+            };
         };
-    }
-
-    
-
+    };
 });
-
-
-// show the customer the error from Stripe if their card fails to charge
-var showError = function(errorMsgText) {
-    awaitingPaymentResult(false);
-    var errorDiv = document.getElementById("card-errors");
-    var html = `
-        <span class="icon" role="alert">
-            <i class="fas fa-times"></i>
-        </span>
-        <span>${errorMsgText}</span>
-    `;
-    errorDiv.innerHTML = html;
-};
 
 
 /****** UI HELPERS ******/
@@ -175,6 +196,7 @@ card.addEventListener('change', function (event) {
         document.getElementById('submit-button').disabled = event.empty;  // will enable if not error and not empty
     }
 });
+
 
 // display overlay, disable button and card element on form submit
 var awaitingPaymentResult = function(isLoading) {  
