@@ -8,7 +8,7 @@ class Subscription(models.Model):
     """
     Stores data for a subscription
     """
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)  # related_name='subscription'
     start_date = models.DateField(auto_now_add=True)
     country = CountryField(blank_label='Country', blank=True, null=True)  # relates country names to ISO codes
     city = models.CharField(blank=True, max_length=50)

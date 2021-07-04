@@ -33,31 +33,31 @@ var card = elements.create('card', {style: style});
 card.mount('#card-element');
 
 
-/****** DELAY FORM SUBMIT TO COMPLETE PAYMENT ON CLIENT ******/
+/****** PAYMENT PROCESS ******/
 
-// handle subscription form submit event via ajax
+// handle subscription form submit event using Ajax
 var form = document.getElementById("subscribe-form");
 form.addEventListener("submit", function(event) {
     event.preventDefault();
     awaitingPaymentResult(true);
-    cacheInactiveUser();
+    createInactiveUser();
 
-    var cacheInactiveUser = function() {
-        // send ajax post request to 'cache-inactive-user/' url
+    var createInactiveUser = function() {
+        // send ajax post request to 'create-inactive-user/' url
         // credit[6]
         $.ajax({
-            url: '/subscribe/cache-inactive-user/',  // prepend '/' to make route relative to host
+            url: '/subscribe/create-inactive-user/',  // prepend '/' to make route relative to host
             method: 'POST',
-            data: getCacheUserData(),
+            data: getCreateInactiveUserData(),
             dataType: "json",  // data returned from server parsed to JS object
             timeout: 500,
             success: cacheUserAjaxSuccess,
             error: cacheUserAjaxFailure,
         });
         
-        var getCacheUserData = function() {
+        var getCreateInactiveUserData = function() {
             /**
-             * gather data required for post request to cache-inactive-user 
+             * gather data required for post request to create-inactive-user 
              * endpoint to create inactive user in database prior to attempting payment
              * @return {object} object containing data for post request
              */
@@ -66,15 +66,17 @@ form.addEventListener("submit", function(event) {
             var csrfToken = subscribeForm.querySelector('input[name="csrfmiddlewaretoken"]').value;
             var postData = {
                 'csrfmiddlewaretoken': csrfToken,
+                // User Model data
                 'username': subscribeForm.querySelector('input[name="username"]').value,
                 'first_name': subscribeForm.querySelector('input[name="first_name"]').value,
                 'last_name': subscribeForm.querySelector('input[name="last_name"]').value,
                 'email': subscribeForm.querySelector('input[name="email"]').value,
                 'password1': subscribeForm.querySelector('input[name="password1"]').value,
                 'password2': subscribeForm.querySelector('input[name="password2"]').value,
+                // Subscription Model data
                 'country': subscribeForm.querySelector('input[name="country"]').value,
                 'city': subscribeForm.querySelector('input[name="city"]').value,
-                'client_secret': clientSecret,  // read from global scope
+                'client_secret': clientSecret,  // from global vars
             };
             return postData;
         }
@@ -105,7 +107,8 @@ form.addEventListener("submit", function(event) {
                         deleteCachedUser();
                     } else {
                         // payment was successful
-                        activateCachedUser();
+                        // cached user will be activated by webhook handler
+                        form.submit();
                     }
                 });
 
