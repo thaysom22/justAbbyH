@@ -12,7 +12,6 @@ from django.views.decorators.http import (
 )
 
 from .forms import SubscriptionForm, UserRegisterForm
-from .models import Subscription
 
 import stripe
 
@@ -39,7 +38,8 @@ def subscribe(request):
 
     if request.method == "GET":
         # create payment intent object
-        stripe_total = round(settings.SUBSCRIPTION_COST * 100)  # fixed payment amount defined on server
+        # fixed payment amount defined on server
+        stripe_total = round(settings.SUBSCRIPTION_COST * 100)
         stripe.api_key = stripe_secret_key
         payment_intent = stripe.PaymentIntent.create(
             amount=stripe_total,
@@ -103,7 +103,7 @@ def create_inactive_user(request):
         # deactivate user
         user.is_active = False
         # save inactive user and linked subscription to database
-        user.save() # user must be saved before subscription to avoid ValueError
+        user.save()  # user must be saved before subscription
         subscription.save()
         user_id = user.id  # default pk for user is added AFTER save
         # add user_id as metadata to paymentIntent to 
@@ -114,8 +114,13 @@ def create_inactive_user(request):
         })
         # user record and linked subscription record created
         # and metadata added to paymentIntent
+        # return user_id and redirect_url for 
+        # if payment is successful in response
         return JsonResponse(
-            data={"userId": user_id},
+            data={
+                "userId": user_id,
+                "redirectUrl": "/subscribe/subscription-created/",
+                },
             status=200,
         )
 
@@ -138,77 +143,49 @@ def delete_inactive_user(request):
     Subscription record by cascade) after payment 
     attempt was unsuccessful on client
     """
-    user_id = int(request.POST.get('user_id'))  # id for previously cached user
     try:
-        user = User.objects.get(id=user_id)  # get inactive user instance
-        user.delete()  # subscription also deleted
-    except Exception:
-
-
-
-
-            # create Subscription instance from POST data
-            subscription_data = {
-                'country': request.POST.get('country'),
-                'city': request.POST.get('city'),
-                'stripe_pid': request.POST.get('client_secret').split('_secret')[0],
-            }
-            
-            # instantiate Subscription model directly 
-            # and point to User instance created above
-            subscription = Subscription(
-                **subscription_data,
-                user=user,
+        user_id = int(request.POST.get('user_id'))  # id for inactive user
+        try:
+            user = User.objects.get(id=user_id)  # get inactive user instance
+        except User.DoesNotExist:
+            messages.error(
+                request,
+                "There was an error creating your account. \
+                Please try again or contact me for help!"
             )
-
-            # finally, commit user and subscription records to database
-            user.save()
-            subscription.save()
-
-            
-
-
-
-
-
-
-
-
-@require_POST
-def activate_cached_user(request):
-    """
-    Set User.is_active field to True after payment
-    completes successfully on client
-    """
-    user_id = int(request.POST.get('user_id'))  # id for previously cached user
-    activate_success_redirect_url = '/login/'
-    try:
-        user = User.objects.get(id=user_id)  # get inactive user instance
-        user.is_active = True
-        user.save()
-        messages.success(
-            request,
-            "Your account was created successfully. \
-            Login now to download stories!"
-        )
-
-        return JsonResponse(
-            {
-                'redirectUrl': activate_success_redirect_url,
-            },
-            status=200,
-        )
-
-    except Exception:
+            return HttpResponse(
+                content="Error: User record was not \
+                    found and therefore could not be \
+                    deleted from database.",
+                status=400,
+            )
+        # confirm that user instance to be deleted is inactive
+        # this prevents malicious POST requests to delete active
+        # user accounts
+        if not user.is_active:
+            user.delete()  # linked subscription also deleted by CASCADE
+            return HttpResponse(
+                content=f"user with id:{user_id} was deleted from database",
+                status=200,
+            )
+        else:
+            messages.error(
+                request,
+                "There was an error creating your account. \
+                Please try again or contact me for help!"
+            )
+            return HttpResponse(
+                content="Error: User record is active and \
+                    therefore cannot be deleted from the database.",
+                status=400,
+            )
+    except Exception as error:
         messages.error(
             request,
-            "There was an error when creating your account! \
-            Please try again or contact me for assistance."
+            "Your account could not be created. \
+            Please try again or contact me for help!"
         )
-    
-    return JsonResponse(
-        {},
-        status=500,
-    )
-
-
+        return HttpResponse(
+            content=f"Error: {error}",
+            status=500,
+        )

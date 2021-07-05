@@ -83,12 +83,13 @@ form.addEventListener("submit", function(event) {
 
         var createInactiveUserAjaxFailure = function() {
             // (if not timeout) error message from server 
-            // will be shown in django messages
+            // will be in django messages
             window.location.reload();
         };
 
         var createInactiveUserAjaxSuccess = function(data) {
-            var userId = data.userId  // required by deleteInactiveUser function
+            var userId = data.userId;  // required by deleteInactiveUser function
+            var redirectUrl = data.redirectUrl;
             
             /* ATTEMPT PAYMENT */
             processPayment();
@@ -113,14 +114,14 @@ form.addEventListener("submit", function(event) {
                 });
 
                 var paymentSuccess = function() {
-                    // route to '/subscription-created/'
+                    // route to redirectUrl retruned from request to '/create_inactive_user/'
                     // inactive user in database will be activated by webhook handler
-                    window.location.replace('/subscribe/subscription-created/'); 
+                    window.location.replace(redirectUrl); 
                 }
 
                 var deleteInactiveUser = function() {
                     // send ajax post request to '/delete-inactive-user/' url
-                    // to delete inactive user just created
+                    // to delete the inactive user instance just created
                     $.ajax({
                         url: '/subscribe/delete-inactive-user/',
                         method: 'POST',
@@ -139,6 +140,7 @@ form.addEventListener("submit", function(event) {
                 var deleteInactiveUserAjaxFailure = function() {
                     // delete failed and inactive user remains in database 
                     // so reload to allow webhook handler to attempt delete
+                    // error message from server will be in django messages
                     window.location.reload();
                 }
 
