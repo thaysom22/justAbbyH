@@ -1,10 +1,15 @@
 from django.shortcuts import (
-    render, redirect, reverse, HttpResponse
+    render, redirect, reverse,
+)
+from django.http import (
+    HttpResponse, JsonResponse,
 )
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.conf import settings
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import (
+    require_POST, require_GET
+)
 
 from .forms import SubscriptionForm, UserRegisterForm
 from .models import Subscription
@@ -12,13 +17,11 @@ from .models import Subscription
 import stripe
 
 
+@require_GET
 def subscribe(request):
     """ 
     GET: Display User and Subscribe forms and
     create Stripe paymentIntent.
-    POST: Create subscribe instance linked to 
-    user instance. 
-    Redirect to subscription success page.
     """
     if request.user.is_authenticated:
         messages.info(
@@ -34,15 +37,6 @@ def subscribe(request):
     if not stripe_public_key:
         messages.warning(request, 'Stripe public key is missing.')
 
-    # POST
-    if request.method == "POST":
-        # 
-        user_id = int(request.POST.get('user_id'))  # id for previously cached user
-
-
-
-    
-    #GET
     if request.method == "GET":
         # create payment intent object
         stripe_total = round(settings.SUBSCRIPTION_COST * 100)  # fixed payment amount defined on server
@@ -75,6 +69,7 @@ def create_inactive_user(request):
     Set user.is_active field is set to False.
     """
     try:
+        # parse POST data to create models
         user_data = {
             'username': request.POST.get('username'),
             'first_name': request.POST.get('first_name'),
@@ -83,53 +78,55 @@ def create_inactive_user(request):
             'password1': request.POST.get('password1'),
             'password2': request.POST.get('password2'),
         }
+        subscription_data = {
+            'country': request.POST.get('country'),
+            'city': request.POST.get('city'),
+        }
         user_form = UserRegisterForm(user_data)
-        if user_form.is_valid():
+        subscription_form = SubscriptionForm(subscription_data)
+        if user_form.is_valid() and subscription_form.is_valid():
             user = user_form.save(commit=False)
+            subscription = subscription_form.save(commit=False)
         else:
             messages.error(
                 request,
                 "Please check your form for errors and try again."
             )
-            return HttpResponse(
-                content="User form could not be validated",
+            return JsonResponse(
+                data={"error": "Form was invalid"},
                 status=400,
             )
+        stripe_pid = request.POST.get('client_secret').split('_secret')[0]
+        # add fields to subscription instance
+        subscription.user = user
+        subscription.stripe_pid = stripe_pid
         # deactivate user
         user.is_active = False
-        user.save()
-        user_id = user.id  # pk is added AFTER model is saved
-
-        # add user_id as metadata to paymentIntent so user can be
-        # activated later by webhook handler after successful payment
-        stripe_pid = request.POST.get('client_secret').split('_secret')[0]
+        # save inactive user and linked subscription to database
+        user.save() # user must be saved before subscription to avoid ValueError
+        subscription.save()
+        user_id = user.id  # default pk for user is added AFTER save
+        # add user_id as metadata to paymentIntent to 
+        # facilitate webhook handler functionality
         stripe.api_key = settings.STRIPE_SECRET_KEY
         stripe.PaymentIntent.modify(stripe_pid, metadata={
             'user_id': user_id,
         })
+        # user record and linked subscription record created
+        # and metadata added to paymentIntent
+        return JsonResponse(
+            data={"userId": user_id},
+            status=200,
+        )
 
-        subscription_data = {
-            'country': request.POST.get('country'),
-            'city': request.POST.get('city'),
-        }
-        subscription_form = SubscriptionForm(subscription_data)
-        if subscription_form.is_valid():
-        
-        else:
-
-        
-        # user record and linked subscription record created/confirmed
-        # and paymentIntent modified successfully
-        return HttpResponse(status=200)
-
-    except Exception as e:
+    except Exception as error:
         messages.error(
             request,
             "Your account could not be created. \
             Please try again or contact me for help!"
         )
-        return HttpResponse(
-            content=e,
+        return JsonResponse(
+            data={"error": error},
             status=500,
         )
 
@@ -142,7 +139,6 @@ def delete_inactive_user(request):
     attempt was unsuccessful on client
     """
     user_id = int(request.POST.get('user_id'))  # id for previously cached user
-    delete_success_redirect_url = '/subscribe/'
     try:
         user = User.objects.get(id=user_id)  # get inactive user instance
         user.delete()  # subscription also deleted

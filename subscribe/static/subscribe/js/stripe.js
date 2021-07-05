@@ -51,15 +51,15 @@ form.addEventListener("submit", function(event) {
             data: getCreateInactiveUserData(),
             dataType: "json",  // data returned from server parsed to JS object
             timeout: 500,
-            success: cacheUserAjaxSuccess,
-            error: cacheUserAjaxFailure,
+            success: createInactiveUserAjaxSuccess,
+            error: createInactiveUserAjaxFailure,
         });
         
         var getCreateInactiveUserData = function() {
             /**
              * gather data required for post request to create-inactive-user 
              * endpoint to create inactive user in database prior to attempting payment
-             * @return {object} object containing data for post request
+             * @return {object} object containing data for post request body
              */
             var subscribeForm = document.getElementById('subscribe-form');
             // using {% csrf_token %} in the subscribe form
@@ -81,14 +81,16 @@ form.addEventListener("submit", function(event) {
             return postData;
         }
 
-        var cacheUserAjaxFailure = function() {
-            // if not timeout, error message from server 
+        var createInactiveUserAjaxFailure = function() {
+            // (if not timeout) error message from server 
             // will be shown in django messages
             window.location.reload();
         };
 
-        var cacheUserAjaxSuccess = function(data) {
-            var userId = data.userId;  // used to activate or delete cached user
+        var createInactiveUserAjaxSuccess = function(data) {
+            var userId = data.userId  // required by deleteInactiveUser function
+            
+            /* ATTEMPT PAYMENT */
             processPayment();
             
             var processPayment = function() {
@@ -102,77 +104,58 @@ form.addEventListener("submit", function(event) {
                     },
                 ).then(function(result) {
                     if (result.error) {
-                        // show error to customer
-                        showError(result.error.message);
-                        deleteCachedUser();
+                        /* PAYMENT FAILED */
+                        deleteInactiveUser();
                     } else {
-                        // payment was successful
-                        // cached user will be activated by webhook handler
-                        form.submit();
+                        /* PAYMENT SUCCEEDED */
+                        paymentSuccess();
                     }
                 });
 
-                var activateCachedUser = function() {
-                    // send ajax post request to '/activate-cached-user/' url
-                    $.ajax({
-                        url: '/activate-cached-user/',
-                        method: 'POST',
-                        data: getActivateOrDeleteUserData(),
-                        dataType: "json",
-                        timeout: 500,
-                        success: activateOrDeleteUserAjaxSuccess,
-                        error: activateOrDeleteUserAjaxFailure,
-                    });
-                };
-
-                var deleteCachedUser = function() {
-                    // send ajax post request to '/delete-cached-user/' url
-                    $.ajax({
-                        url: '/delete-cached-user/',
-                        method: 'POST',
-                        data: getActivateOrDeleteUserData(),
-                        dataType: "json",
-                        timeout: 500,
-                        success: activateOrDeleteUserAjaxSuccess,
-                        error: activateOrDeleteUserAjaxFailure,
-                    });
-                };
-
-                var activateOrDeleteUserAjaxSuccess = function(data) {
-                    // redirect to url returned from server
-                    window.location.replace(data.redirectUrl);
+                var paymentSuccess = function() {
+                    // route to '/subscription-created/'
+                    // inactive user in database will be activated by webhook handler
+                    window.location.replace('/subscribe/subscription-created/'); 
                 }
 
-                var activateOrDeleteUserAjaxFailure = function() {
+                var deleteInactiveUser = function() {
+                    // send ajax post request to '/delete-inactive-user/' url
+                    // to delete inactive user just created
+                    $.ajax({
+                        url: '/subscribe/delete-inactive-user/',
+                        method: 'POST',
+                        data: getDeleteInactiveUserData(),
+                        timeout: 500,
+                        success: deleteInactiveUserAjaxSuccess,
+                        error: deleteInactiveUserAjaxFailure,  
+                    });
+                };
+
+                var deleteInactiveUserAjaxSuccess = function() {
+                    showError(result.error.message);  // show feedback for failed payment
+                    awaitingPaymentResult(false);  // re-enable UI so user can reattempt payment
+                }
+
+                var deleteInactiveUserAjaxFailure = function() {
+                    // delete failed and inactive user remains in database 
+                    // so reload to allow webhook handler to attempt delete
                     window.location.reload();
                 }
 
-                var getActivateOrDeleteUserData = function() {
+                var getDeleteInactiveUserData = function() {
                     /**
-                     * gather data required for post request to activate-cached-user 
-                     * @return {object} object containing data for post request
+                     * gather data required for post request to delete-inactive-user 
+                     * @return {object} object containing data for post request body
                      */
                     var subscribeForm = document.getElementById('subscribe-form');
                     // using {% csrf_token %} in the subscribe form
-                    var csrfToken = subscribeForm.querySelector('input[name="csrfmiddlewaretoken"]').value;
+                    var csrfToken = subscribeForm.querySelector(
+                        'input[name="csrfmiddlewaretoken"]').value;
                     var postData = {
                         'csrfmiddlewaretoken': csrfToken,
                         'user_id': userId,
                     };
                     return postData;
-                };
-
-                // UI feedback if payment is unsuccessful
-                var showError = function(errorMsgText) {
-                    awaitingPaymentResult(false);
-                    var errorDiv = document.getElementById("card-errors");
-                    var html = `
-                        <span class="icon" role="alert">
-                            <i class="fas fa-times"></i>
-                        </span>
-                        <span>${errorMsgText}</span>
-                    `;
-                    errorDiv.innerHTML = html;
                 };
             };
         };
@@ -201,8 +184,25 @@ card.addEventListener('change', function (event) {
 });
 
 
-// display overlay, disable button and card element on form submit
+// UI feedback for unsuccessful payment
+var showError = function(errorMsgText) {
+    var errorDiv = document.getElementById("card-errors");
+    var html = `
+        <span class="icon" role="alert">
+            <i class="fas fa-times"></i>
+        </span>
+        <span>${errorMsgText}</span>
+    `;
+    errorDiv.innerHTML = html;
+};
+
+
 var awaitingPaymentResult = function(isLoading) {  
+    /**
+     * enable/disable UI on subscription page while Stripe attempts payment.
+     * display overlay, disable button and card element.
+     * @param {Boolean} isLoading - flag to enable or disable.
+     */
     if (isLoading) {
         document.getElementById('submit-button').disabled = true;
         card.update({ 'disabled': true });
