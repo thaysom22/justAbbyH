@@ -29,8 +29,8 @@
 {% endblock %}
 
 {% block extra_postloadjs %}
-    {# output template variables in script element accessible to external script #}
+    {# output template variables in script element accessible to external script via id attributes #}
     {{ stripe_public_key|json_script:"id_stripe_public_key" }}
     {{ client_secret|json_script:"id_client_secret" }}
-    <script src="{% static 'subscribe/js/stripe.js' %}"></script>
+    <script src="{% static 'subscribe/js/subscribe.js' %}"></script>
 {% endblock %}

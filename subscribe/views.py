@@ -119,7 +119,7 @@ def create_inactive_user(request):
         return JsonResponse(
             data={
                 "userId": user_id,
-                "redirectUrl": "/subscribe/subscription-created/",
+                "redirectUrlPath": "/subscribe/subscription-created",
                 },
             status=200,
         )
@@ -189,3 +189,6 @@ def delete_inactive_user(request):
             content=f"Error: {error}",
             status=500,
         )
+
+
+
