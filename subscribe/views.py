@@ -191,4 +191,16 @@ def delete_inactive_user(request):
         )
 
 
+@require_GET
+def subscription_created(request):
+    """ 
+    Parse URL query parameters to render user and
+    subscription details in template
+    """
+    # parse url query parameters and pass to template context
+    context = {}
+
+    template = "subscribe/subscription_created.html"
+    return render(request, template, context)
+
 
