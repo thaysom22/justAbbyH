@@ -198,6 +198,7 @@ def subscription_created(request):
     subscription details in template
     """
     # parse url query parameters and pass to template context
+    
     context = {}
 
     template = "subscribe/subscription_created.html"
