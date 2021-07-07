@@ -1,9 +1,14 @@
 from django.db import models
 from django.conf import settings
 
-from custom_storages import PublicFileStorage, PrivateFileStorage
-
 from math import floor
+
+USE_AWS = settings.USE_AWS
+
+USE_AWS = False  # REMOVE
+
+if USE_AWS:
+    from custom_storages import PublicFileStorage, PrivateFileStorage
 
 
 class Story(models.Model):
@@ -35,12 +40,16 @@ class Story(models.Model):
 
     title = models.CharField(max_length=254)
     publish_date = models.DateField(auto_now_add=True)
-    description = models.TextField(max_length=5000, blank=True, null=True)
+    description = models.TextField(max_length=6000, blank=True, null=True)
     featured = models.BooleanField(blank=True, null=False, default=False)
     reading_time_mins = models.PositiveIntegerField(blank=True, null=True) 
     reading_time_string = models.CharField(max_length=254, null=True)
     
-    if settings.USE_AWS:
+    USE_AWS = settings.USE_AWS
+
+    USE_AWS = False  # REMOVE
+
+    if USE_AWS:
         # specify custom s3 storages in production
         # CREDIT [4]
         image = models.ImageField(

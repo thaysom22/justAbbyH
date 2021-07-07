@@ -50,7 +50,7 @@ form.addEventListener("submit", function (event) {
     function createInactiveUser() {
         // send ajax post request to 'create-inactive-user/' url
         // credit[6]
-        var formData = getCreateInactiveUserData(); // store form data in scope accessible to success callback
+        var formData = getCreateInactiveUserData(); // store form data in scope accessible to paymentSuccess callback
         $.ajax({
             url: '/subscribe/create-inactive-user/', // prepend '/' to make route relative to host
             method: 'POST',
@@ -94,10 +94,6 @@ form.addEventListener("submit", function (event) {
 
         function createInactiveUserAjaxSuccess(data) {
             var userId = data.userId; // required by deleteInactiveUser function
-            var redirectUrl = `${data.redirectUrlPath}?first_name=${formData.first_name}&last_name=${formData.last_name}&email=${formData.email}`;
-            redirectUrl = encodeURI(redirectUrl);  // credit[7]
-            window.location.replace(redirectUrl);
-
             /* ATTEMPT PAYMENT */
             processPayment();
 
@@ -120,7 +116,12 @@ form.addEventListener("submit", function (event) {
                 });
 
                 function paymentSuccess() {
-                    // route to redirectUrl returned from request to '/create_inactive_user/'
+                    // construct url (relative to host) for redirect
+                    var firstNameEncoded = encodeURIComponent(formData.first_name);  // encode url params credit[7]
+                    var lastNameEncoded = encodeURIComponent(formData.last_name);
+                    var emailEncoded = encodeURIComponent(formData.email);
+                    var redirectUrlQueryString = `?first_name=${firstNameEncoded}&last_name=${lastNameEncoded}&email=${emailEncoded}`;
+                    var redirectUrl = data.redirectUrlPath + redirectUrlQueryString;
                     // inactive user in database will be activated by webhook handler
                     window.location.replace(redirectUrl);
                 }

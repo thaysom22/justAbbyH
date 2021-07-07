@@ -23,7 +23,7 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEVELOPMENT')
 
-ALLOWED_HOSTS = ['just-abby-h.herokuapp.com', 'localhost']  # ADD DOMAIN NAME FOR DEPLOYED SITE
+ALLOWED_HOSTS = ['just-abby-h.herokuapp.com', 'localhost']
 
 # Application definition
 
@@ -80,13 +80,22 @@ MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 WSGI_APPLICATION = 'justAbbyH.wsgi.application'
 
 
-# Database
+# DATABASE AND MIGRATIONS
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-if 'DATABASE_URL' in env:
+USE_POSTGRES = 'DATABASE_URL' in env
+
+USE_POSTGRES = False  # REMOVE
+
+if USE_POSTGRES:
     print('using production database')  # TEST
     DATABASES = {
         'default': dj_database_url.parse(env('DATABASE_URL')),
+    }
+    # separate stories app migrations production/development packages
+    # note: makemigrations command must be passed app_label argument 
+    MIGRATION_MODULES = {
+        'stories': 'stories.migrations_production',
     }
 else:
     print('using development database')  # TEST
@@ -96,7 +105,9 @@ else:
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
-
+    MIGRATION_MODULES = {
+        'stories': 'stories.migrations_development',
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -145,16 +156,22 @@ LOGOUT_REDIRECT_URL = 'index'
 
 SUBSCRIPTION_COST = 10.00  # one-time subscription cost in usd
 STRIPE_CURRENCY = 'usd'
-
 STRIPE_PUBLIC_KEY = env('STRIPE_PUBLIC_KEY')
 STRIPE_SECRET_KEY = env('STRIPE_SECRET_KEY')
 
+# STATIC AND MEDIA STORAGE
 
-# AWS
+# search this folder in addition to static files
+# within each app when 'collect static' command is run
+STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
 USE_AWS = 'USE_AWS' in env
 
-if 'USE_AWS':
+USE_AWS = False  # REMOVE
+
+# production s3 storage
+
+if USE_AWS:
     # production settings
     print("Using S3 storage")  # TEST
 
@@ -191,6 +208,19 @@ if 'USE_AWS':
     PRIVATE_FILE_STORAGE = 'custom_storages.PrivateFileStorage' 
     
 else:
+
+    # local filesystem storage
+
+    # REMOVE
+
+    # # prevent errors in migrations
+    # STATICFILES_LOCATION = None
+    # AWS_STORAGE_PUBLIC_BUCKET_NAME = None
+    # AWS_STORAGE_PRIVATE_BUCKET_NAME = None
+    # AWS_S3_CUSTOM_PUBLIC_DOMAIN = None
+    # MEDIAFILES_PUBLIC_LOCATION = None
+    # MEDIAFILES_PRIVATE_LOCATION = None
+
     # development settings
     print("Using default local storage")  # TEST
 
@@ -200,6 +230,4 @@ else:
     MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
     MEDIA_URL = '/media/'
 
-# search this folder in addition to static files
-# within each app when 'collect static' command is run
-STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
+
