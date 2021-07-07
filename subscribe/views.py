@@ -83,9 +83,26 @@ def create_inactive_user(request):
             'city': request.POST.get('city'),
         }
         user_form = UserRegisterForm(user_data)
-        subscription_form = SubscriptionForm(subscription_data)
-        if user_form.is_valid() and subscription_form.is_valid():
+        if user_form.is_valid():
             user = user_form.save(commit=False)
+        else:
+            messages.error(
+                request,
+                "Please check your form for errors and try again."
+            )
+            return JsonResponse(
+                data={"error": "Form was invalid"},
+                status=400,
+            )
+        
+        # deactivate user
+        user.is_active = False
+        stripe_pid = request.POST.get('client_secret').split('_secret')[0]
+        # create SubscriptionForm instance and add field values manually
+        subscription_form = SubscriptionForm(subscription_data)
+        subscription_form.data["user"] = user
+        subscription_form.data["stripe_pid"] = stripe_pid
+        if subscription_form.is_valid():
             subscription = subscription_form.save(commit=False)
         else:
             messages.error(
@@ -96,13 +113,8 @@ def create_inactive_user(request):
                 data={"error": "Form was invalid"},
                 status=400,
             )
-        stripe_pid = request.POST.get('client_secret').split('_secret')[0]
-        # add fields to subscription instance
-        subscription.user = user
-        subscription.stripe_pid = stripe_pid
-        # deactivate user
-        user.is_active = False
-        # save inactive user and linked subscription to database
+        
+        # if both forms validate, save inactive user and linked subscription to database
         user.save()  # user must be saved before subscription
         subscription.save()
         user_id = user.id  # default pk for user is added AFTER save

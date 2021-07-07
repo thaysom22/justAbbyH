@@ -70,6 +70,12 @@ form.addEventListener("submit", function (event) {
             var subscribeForm = document.getElementById('subscribe-form');
             // using {% csrf_token %} in the subscribe form
             var csrfToken = subscribeForm.querySelector('input[name="csrfmiddlewaretoken"]').value;
+            var countrySelectElem = subscribeForm.querySelector('#id_country');
+
+            // TESTS
+            console.log("countrySelectElem:", countrySelectElem);
+            console.log(countrySelectElem.options[countrySelectElem.selectedIndex].textContent);
+
             var postData = {
                 'csrfmiddlewaretoken': csrfToken,
                 // User Model data
@@ -80,7 +86,7 @@ form.addEventListener("submit", function (event) {
                 'password1': subscribeForm.querySelector('input[name="password1"]').value,
                 'password2': subscribeForm.querySelector('input[name="password2"]').value,
                 // Subscription Model data
-                'country': subscribeForm.querySelector('input[name="country"]').value,
+                'country': countrySelectElem.options[countrySelectElem.selectedIndex].text,
                 'city': subscribeForm.querySelector('input[name="city"]').value,
                 'client_secret': clientSecret, // from global vars
             };
