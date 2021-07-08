@@ -51,15 +51,17 @@ form.addEventListener("submit", function (event) {
         // send ajax post request to 'create-inactive-user/' url
         // credit[6]
         var formData = getCreateInactiveUserData(); // store form data in scope accessible to paymentSuccess callback
+        
         $.ajax({
             url: '/subscribe/create-inactive-user/', // prepend '/' to make route relative to host
             method: 'POST',
             data: formData,
             dataType: "json", // data returned from server parsed to JS object
-            timeout: 500,
             success: createInactiveUserAjaxSuccess,
             error: createInactiveUserAjaxFailure,
         });
+
+        console.log("ajax call to create-inactive-user was made");  // TEST
 
         function getCreateInactiveUserData() {
             /**
@@ -71,13 +73,10 @@ form.addEventListener("submit", function (event) {
             // using {% csrf_token %} in the subscribe form
             var csrfToken = subscribeForm.querySelector('input[name="csrfmiddlewaretoken"]').value;
             var countrySelectElem = subscribeForm.querySelector('#id_country');
-
-            // TESTS
-            console.log("countrySelectElem:", countrySelectElem);
-            console.log(countrySelectElem.options[countrySelectElem.selectedIndex].textContent);
-
             var postData = {
                 'csrfmiddlewaretoken': csrfToken,
+                // used in subscription_created view
+                'country_verbose': countrySelectElem.options[countrySelectElem.selectedIndex].text,
                 // User Model data
                 'username': subscribeForm.querySelector('input[name="username"]').value,
                 'first_name': subscribeForm.querySelector('input[name="first_name"]').value,
@@ -86,7 +85,7 @@ form.addEventListener("submit", function (event) {
                 'password1': subscribeForm.querySelector('input[name="password1"]').value,
                 'password2': subscribeForm.querySelector('input[name="password2"]').value,
                 // Subscription Model data
-                'country': countrySelectElem.options[countrySelectElem.selectedIndex].text,
+                'country': countrySelectElem.value,
                 'city': subscribeForm.querySelector('input[name="city"]').value,
                 'client_secret': clientSecret, // from global vars
             };
@@ -94,7 +93,7 @@ form.addEventListener("submit", function (event) {
         }
 
         function createInactiveUserAjaxFailure() {
-            // (if not timeout) error message will be in django messages
+            // error message will be in django messages
             window.location.reload();
         };
 
@@ -126,7 +125,9 @@ form.addEventListener("submit", function (event) {
                     var firstNameEncoded = encodeURIComponent(formData.first_name);  // encode url params credit[7]
                     var lastNameEncoded = encodeURIComponent(formData.last_name);
                     var emailEncoded = encodeURIComponent(formData.email);
-                    var redirectUrlQueryString = `?first_name=${firstNameEncoded}&last_name=${lastNameEncoded}&email=${emailEncoded}`;
+                    var cityEncoded = encodeURIComponent(formData.city);
+                    var countryVerboseEncoded = encodeURIComponent(formData.country_verbose);
+                    var redirectUrlQueryString = `?first_name=${firstNameEncoded}&last_name=${lastNameEncoded}&email=${emailEncoded}&city=${cityEncoded}&country_verbose=${countryVerboseEncoded}`;
                     var redirectUrl = data.redirectUrlPath + redirectUrlQueryString;
                     // inactive user in database will be activated by webhook handler
                     window.location.replace(redirectUrl);
@@ -139,10 +140,12 @@ form.addEventListener("submit", function (event) {
                         url: '/subscribe/delete-inactive-user/',
                         method: 'POST',
                         data: getDeleteInactiveUserData(),
-                        timeout: 500,
                         success: deleteInactiveUserAjaxSuccess,
                         error: deleteInactiveUserAjaxFailure,
                     });
+
+                    console.log("ajax call to delete-inactive-user was made");  // TEST
+
                 };
 
                 function deleteInactiveUserAjaxSuccess() {

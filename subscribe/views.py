@@ -22,43 +22,53 @@ def subscribe(request):
     GET: Display User and Subscribe forms and
     create Stripe paymentIntent.
     """
-    if request.user.is_authenticated:
-        messages.info(
-            request, 
-            "Sorry, can't do that! \
-            Logout first to create a new subscription."
+    try:
+        if request.user.is_authenticated:
+            messages.info(
+                request, 
+                "Sorry, can't do that! \
+                Logout first to create a new subscription."
+            )
+            return redirect(reverse('stories'))
+
+        # get Stripe credentials from environment
+        stripe_public_key = settings.STRIPE_PUBLIC_KEY
+        stripe_secret_key = settings.STRIPE_SECRET_KEY
+        if not stripe_public_key:
+            messages.warning(request, 'Stripe public key is missing.')
+
+        if request.method == "GET":
+            # create payment intent object
+            # fixed payment amount defined on server
+            stripe_total = round(settings.SUBSCRIPTION_COST * 100)
+            stripe.api_key = stripe_secret_key
+            payment_intent = stripe.PaymentIntent.create(
+                amount=stripe_total,
+                currency=settings.STRIPE_CURRENCY,
+            )
+
+            # create blank forms for User and Subscription models
+            user_form = UserRegisterForm()
+            subscribe_form = SubscriptionForm()
+
+            # return client secret and public_key to template
+            context = {
+                'user_form': user_form,
+                'subscribe_form': subscribe_form,
+                'stripe_public_key': stripe_public_key,
+                'client_secret': payment_intent.client_secret,
+            }
+            template = "subscribe/subscribe.html"
+            return render(request, template, context)
+        
+    except Exception:
+        messages.error(
+            request,
+            "There was a server error. \
+            Please try again or contact me for help!"
         )
-        return redirect(reverse('stories'))
+        return redirect(reverse('index'))
 
-    # get Stripe credentials from environment
-    stripe_public_key = settings.STRIPE_PUBLIC_KEY
-    stripe_secret_key = settings.STRIPE_SECRET_KEY
-    if not stripe_public_key:
-        messages.warning(request, 'Stripe public key is missing.')
-
-    if request.method == "GET":
-        # create payment intent object
-        # fixed payment amount defined on server
-        stripe_total = round(settings.SUBSCRIPTION_COST * 100)
-        stripe.api_key = stripe_secret_key
-        payment_intent = stripe.PaymentIntent.create(
-            amount=stripe_total,
-            currency=settings.STRIPE_CURRENCY,
-        )
-
-        # create blank forms for User and Subscription models
-        user_form = UserRegisterForm()
-        subscribe_form = SubscriptionForm()
-
-        # return client secret and public_key to template
-        context = {
-            'user_form': user_form,
-            'subscribe_form': subscribe_form,
-            'stripe_public_key': stripe_public_key,
-            'client_secret': payment_intent.client_secret,
-        }
-        template = "subscribe/subscribe.html"
-        return render(request, template, context)
 
 
 @require_POST
@@ -68,6 +78,9 @@ def create_inactive_user(request):
     database before attempting payment on client. 
     Set user.is_active field is set to False.
     """
+
+    print("request made to create_inactive_user")  # TEST
+
     try:
         # parse POST data to create models
         user_data = {
@@ -83,6 +96,11 @@ def create_inactive_user(request):
             'city': request.POST.get('city'),
         }
         user_form = UserRegisterForm(user_data)
+
+        print("user form data", user_form.data)  # TEST
+        print("user form isvalid", user_form.is_valid())  # TEST
+        print("user form errors", user_form.errors)  # TEST
+
         if user_form.is_valid():
             user = user_form.save(commit=False)
         else:
@@ -102,6 +120,11 @@ def create_inactive_user(request):
         subscription_form = SubscriptionForm(subscription_data)
         subscription_form.data["user"] = user
         subscription_form.data["stripe_pid"] = stripe_pid
+
+        print("subscription form data", subscription_form.data)  # TEST
+        print("subscription form isvalid", subscription_form.is_valid())  # TEST
+        print("subscription form errors", subscription_form.errors)  # TEST
+
         if subscription_form.is_valid():
             subscription = subscription_form.save(commit=False)
         else:
@@ -142,8 +165,11 @@ def create_inactive_user(request):
             "Your account could not be created. \
             Please try again or contact me for help!"
         )
+        
+        print(error)  # TEST
+
         return JsonResponse(
-            data={"error": error},
+            data={"error": str(error)},
             status=500,
         )
 
@@ -155,6 +181,9 @@ def delete_inactive_user(request):
     Subscription record by cascade) after payment 
     attempt was unsuccessful on client
     """
+
+    print("request made to delete_inactive_user")  # TEST
+
     try:
         user_id = int(request.POST.get('user_id'))  # id for inactive user
         try:
@@ -198,7 +227,7 @@ def delete_inactive_user(request):
             Please try again or contact me for help!"
         )
         return HttpResponse(
-            content=f"Error: {error}",
+            content=f"Error: {str(error)}",
             status=500,
         )
 
@@ -209,6 +238,9 @@ def subscription_created(request):
     Parse URL query parameters to render user and
     subscription details in template
     """
+
+    print("request made to subscription_created")  # TEST
+
     # parse url query parameters and pass to template context
     
     context = {}
