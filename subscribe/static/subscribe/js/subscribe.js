@@ -61,8 +61,6 @@ form.addEventListener("submit", function (event) {
             error: createInactiveUserAjaxFailure,
         });
 
-        console.log("ajax call to create-inactive-user was made");  // TEST
-
         function getCreateInactiveUserData() {
             /**
              * gather data required for post request to create-inactive-user 
@@ -143,9 +141,6 @@ form.addEventListener("submit", function (event) {
                         success: deleteInactiveUserAjaxSuccess,
                         error: deleteInactiveUserAjaxFailure,
                     });
-
-                    console.log("ajax call to delete-inactive-user was made");  // TEST
-
                 };
 
                 function deleteInactiveUserAjaxSuccess() {

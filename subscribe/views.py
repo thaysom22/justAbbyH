@@ -12,7 +12,9 @@ from django.views.decorators.http import (
 )
 
 from .forms import SubscriptionForm, UserRegisterForm
+from .models import Subscription
 
+import urllib
 import stripe
 
 
@@ -83,6 +85,7 @@ def create_inactive_user(request):
 
     try:
         # parse POST data to create models
+
         user_data = {
             'username': request.POST.get('username'),
             'first_name': request.POST.get('first_name'),
@@ -96,51 +99,53 @@ def create_inactive_user(request):
             'city': request.POST.get('city'),
         }
         user_form = UserRegisterForm(user_data)
+        subscription_form = SubscriptionForm(subscription_data)
 
         print("user form data", user_form.data)  # TEST
         print("user form isvalid", user_form.is_valid())  # TEST
         print("user form errors", user_form.errors)  # TEST
 
-        if user_form.is_valid():
-            user = user_form.save(commit=False)
-        else:
-            messages.error(
-                request,
-                "Please check your form for errors and try again."
-            )
-            return JsonResponse(
-                data={"error": "Form was invalid"},
-                status=400,
-            )
-        
-        # deactivate user
-        user.is_active = False
-        stripe_pid = request.POST.get('client_secret').split('_secret')[0]
-        # create SubscriptionForm instance and add field values manually
-        subscription_form = SubscriptionForm(subscription_data)
-        subscription_form.data["user"] = user
-        subscription_form.data["stripe_pid"] = stripe_pid
-
         print("subscription form data", subscription_form.data)  # TEST
         print("subscription form isvalid", subscription_form.is_valid())  # TEST
         print("subscription form errors", subscription_form.errors)  # TEST
 
-        if subscription_form.is_valid():
+        # validates city and country fields only for subscription_form
+        if user_form.is_valid() and subscription_form.is_valid():
+
+            print("user_form and subscription_form both validate")
+            
+            user = user_form.save(commit=False)
+            user.is_active = False  # deactivate user to prevent login
+            user.save()  # user must be saved in database before it is used as subscription's foreign key
+            user_id = user.id  # default pk for user is added AFTER save
+
+            # create instance of subscription model w/o user
             subscription = subscription_form.save(commit=False)
+            # add non-form subscription fields pre-save
+            subscription.user = user
+            stripe_pid = request.POST.get('client_secret').split('_secret')[0]
+            subscription.stripe_pid = stripe_pid
+
+            print("subscription with user and stripe_pid", subscription)  # TEST
+
+            subscription.save()  # start_date field is set when saved to DB
+
         else:
             messages.error(
                 request,
                 "Please check your form for errors and try again."
             )
             return JsonResponse(
-                data={"error": "Form was invalid"},
+                data={
+                    "errors": {
+                        **user_form.errors,
+                        **subscription_form.errors,
+                    }
+                },
                 status=400,
             )
+
         
-        # if both forms validate, save inactive user and linked subscription to database
-        user.save()  # user must be saved before subscription
-        subscription.save()
-        user_id = user.id  # default pk for user is added AFTER save
         # add user_id as metadata to paymentIntent to 
         # facilitate webhook handler functionality
         stripe.api_key = settings.STRIPE_SECRET_KEY
@@ -235,15 +240,23 @@ def delete_inactive_user(request):
 @require_GET
 def subscription_created(request):
     """ 
-    Parse URL query parameters to render user and
-    subscription details in template
+    Render user and subscription details in template
     """
 
     print("request made to subscription_created")  # TEST
 
-    # parse url query parameters and pass to template context
-    
-    context = {}
+    # parse raw url query parameters and pass to template context
+    context = {
+        'first_name': request.GET.get('first_name', ''),
+        'last_name': request.GET.get('last_name', ''),
+        'email': request.GET.get('email', ''),
+        'city': request.GET.get('city', ''),
+        'country_verbose': request.GET.get('country_verbose', ''),
+    }
+    # decode values
+    # CREDIT[8]
+    for k, v in context.items():
+        context[k] = urllib.parse.unquote(v)
 
     template = "subscribe/subscription_created.html"
     return render(request, template, context)
