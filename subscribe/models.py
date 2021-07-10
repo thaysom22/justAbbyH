@@ -15,6 +15,9 @@ class Subscription(models.Model):
     stripe_pid = models.CharField(max_length=254, unique=True)
 
     def __str__(self):
-        return f"Subscription <created:{self.start_date}> for <user:{self.user.username}>"
+        if hasattr(self, 'id'):
+            return f"Subscription <id:{self.id}>"
+        else:
+            return "Unsaved Subscription object"
 
     

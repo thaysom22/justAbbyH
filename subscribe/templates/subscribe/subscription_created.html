@@ -10,5 +10,9 @@
         <li>city = {{ city }}</li>
         <li>country_verbose = {{ country_verbose }}</li>
     </ul>
+
+    <p>You are not logged in</p>
+    <a href="{% url 'login' %}">Log In</a>
+    
 {% endblock %}
 

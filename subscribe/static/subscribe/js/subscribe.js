@@ -96,11 +96,10 @@ form.addEventListener("submit", function (event) {
         };
 
         function createInactiveUserAjaxSuccess(data) {
-            var userId = data.userId; // required by deleteInactiveUser function
             /* ATTEMPT PAYMENT */
             processPayment();
 
-            function processPayment () {
+            function processPayment() {
                 // if card requires authentication Stripe shows a pop-up modal
                 stripe.confirmCardPayment(
                     clientSecret, {
@@ -111,7 +110,8 @@ form.addEventListener("submit", function (event) {
                 ).then(function (result) {
                     if (result.error) {
                         /* PAYMENT FAILED */
-                        deleteInactiveUser();
+                        // createInactiveUser succeeded so inactive user exists in db
+                        confirmDeletionOfInactiveUser(data.inactiveUserId);
                     } else {
                         /* PAYMENT SUCCEEDED */
                         paymentSuccess();
@@ -131,42 +131,43 @@ form.addEventListener("submit", function (event) {
                     window.location.replace(redirectUrl);
                 }
 
-                function deleteInactiveUser() {
-                    // send ajax post request to '/delete-inactive-user/' url
-                    // to delete the inactive user instance just created
+                function confirmDeletionOfInactiveUser(inactiveUserId) {
+                    // send ajax post request to '/confirm-deletion-of-inactive-user/' url
                     $.ajax({
                         url: '/subscribe/delete-inactive-user/',
                         method: 'POST',
-                        data: getDeleteInactiveUserData(),
-                        success: deleteInactiveUserAjaxSuccess,
-                        error: deleteInactiveUserAjaxFailure,
+                        data: getConfirmDeletionOfInactiveUserData(inactiveUserId),
+                        success: confirmDeletionOfInactiveUserAjaxSuccess,
+                        error: confirmDeletionOfInactiveUserAjaxFailure,
                     });
                 };
 
-                function deleteInactiveUserAjaxSuccess() {
+                function confirmDeletionOfInactiveUserAjaxSuccess() {
+                    // confirmed inactive user not in DB 
                     showError(result.error.message); // show feedback for failed payment
                     awaitingPaymentResult(false); // re-enable UI so user can reattempt payment
                 }
 
-                function deleteInactiveUserAjaxFailure() {
-                    // delete failed and inactive user remains in database 
-                    // so reload to allow webhook handler to attempt delete
+                function confirmDeletionOfInactiveUserAjaxFailure() {
+                    // could not confirm deletion of inactive user from database...
+                    // reload page to allow time for webhook handler to confirm delete
                     // error message from server will be in django messages
                     window.location.reload();
                 }
 
-                function getDeleteInactiveUserData() {
+                function getConfirmDeletionOfInactiveUserData(inactiveUserId) {
                     /**
-                     * gather data required for post request to delete-inactive-user 
+                     * serialize data required for post request
+                     * @param {int} id for inactive user in DB (from createInactiveUser response)
                      * @return {object} object containing data for post request body
                      */
                     var subscribeForm = document.getElementById('subscribe-form');
-                    // using {% csrf_token %} in the subscribe form
+                    // include {% csrf_token %} in the subscribe form
                     var csrfToken = subscribeForm.querySelector(
                         'input[name="csrfmiddlewaretoken"]').value;
                     var postData = {
                         'csrfmiddlewaretoken': csrfToken,
-                        'user_id': userId,
+                        'inactive_user_id': inactiveUserId,
                     };
                     return postData;
                 };

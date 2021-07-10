@@ -12,7 +12,6 @@ from django.views.decorators.http import (
 )
 
 from .forms import SubscriptionForm, UserRegisterForm
-from .models import Subscription
 
 import urllib
 import stripe
@@ -72,7 +71,6 @@ def subscribe(request):
         return redirect(reverse('index'))
 
 
-
 @require_POST
 def create_inactive_user(request):
     """
@@ -80,12 +78,9 @@ def create_inactive_user(request):
     database before attempting payment on client. 
     Set user.is_active field is set to False.
     """
-
-    print("request made to create_inactive_user")  # TEST
-
+    user = None  # avoid later error when checking if user is in db
     try:
         # parse POST data to create models
-
         user_data = {
             'username': request.POST.get('username'),
             'first_name': request.POST.get('first_name'),
@@ -101,23 +96,12 @@ def create_inactive_user(request):
         user_form = UserRegisterForm(user_data)
         subscription_form = SubscriptionForm(subscription_data)
 
-        print("user form data", user_form.data)  # TEST
-        print("user form isvalid", user_form.is_valid())  # TEST
-        print("user form errors", user_form.errors)  # TEST
-
-        print("subscription form data", subscription_form.data)  # TEST
-        print("subscription form isvalid", subscription_form.is_valid())  # TEST
-        print("subscription form errors", subscription_form.errors)  # TEST
-
         # validates city and country fields only for subscription_form
-        if user_form.is_valid() and subscription_form.is_valid():
-
-            print("user_form and subscription_form both validate")
-            
+        if user_form.is_valid() and subscription_form.is_valid():            
             user = user_form.save(commit=False)
             user.is_active = False  # deactivate user to prevent login
-            user.save()  # user must be saved in database before it is used as subscription's foreign key
-            user_id = user.id  # default pk for user is added AFTER save
+            user.save()  # user must be saved in db before it is used as subscription's foreign key
+            inactive_user_id = user.id  # default pk for user is added AFTER save
 
             # create instance of subscription model w/o user
             subscription = subscription_form.save(commit=False)
@@ -125,9 +109,6 @@ def create_inactive_user(request):
             subscription.user = user
             stripe_pid = request.POST.get('client_secret').split('_secret')[0]
             subscription.stripe_pid = stripe_pid
-
-            print("subscription with user and stripe_pid", subscription)  # TEST
-
             subscription.save()  # start_date field is set when saved to DB
 
         else:
@@ -145,34 +126,38 @@ def create_inactive_user(request):
                 status=400,
             )
 
-        
-        # add user_id as metadata to paymentIntent to 
+        # add inactive_user_id as metadata to paymentIntent to 
         # facilitate webhook handler functionality
         stripe.api_key = settings.STRIPE_SECRET_KEY
-        stripe.PaymentIntent.modify(stripe_pid, metadata={
-            'user_id': user_id,
+        stripe.PaymentIntent.modify(
+            stripe_pid,
+            metadata={
+            'inactive_user_id': inactive_user_id,
         })
         # user record and linked subscription record created
         # and metadata added to paymentIntent
-        # return user_id and redirect_url for 
-        # if payment is successful in response
+        # include inactive_user_id and redirect_url in response
         return JsonResponse(
             data={
-                "userId": user_id,
+                "inactiveUserId": inactive_user_id,
                 "redirectUrlPath": "/subscribe/subscription-created",
                 },
             status=200,
         )
 
     except Exception as error:
+        # delete user if try block created it in database
+        if hasattr(user, 'id'):
+            try:
+                user.delete()
+            except Exception:
+                pass
+
         messages.error(
             request,
             "Your account could not be created. \
             Please try again or contact me for help!"
         )
-        
-        print(error)  # TEST
-
         return JsonResponse(
             data={"error": str(error)},
             status=500,
@@ -180,59 +165,48 @@ def create_inactive_user(request):
 
 
 @require_POST
-def delete_inactive_user(request):
+def confirm_deletion_of_inactive_user(request):
     """
-    Delete inactive User record (and associated
-    Subscription record by cascade) after payment 
+    Delete or confirm non-existance of inactive User record 
+    (and associated Subscription record by cascade) after payment
     attempt was unsuccessful on client
     """
-
-    print("request made to delete_inactive_user")  # TEST
-
     try:
-        user_id = int(request.POST.get('user_id'))  # id for inactive user
+        inactive_user_id = int(request.POST.get('inactive_user_id'))  # id for inactive user
         try:
-            user = User.objects.get(id=user_id)  # get inactive user instance
+            user = User.objects.get(id=inactive_user_id)  # get inactive user instance
         except User.DoesNotExist:
-            messages.error(
-                request,
-                "There was an error creating your account. \
-                Please try again or contact me for help!"
-            )
             return HttpResponse(
-                content="Error: User record was not \
-                    found and therefore could not be \
-                    deleted from database.",
-                status=400,
+                content=f"Confirmed that no user with id:{inactive_user_id} exists in database",
+                status=200,
             )
-        # confirm that user instance to be deleted is inactive
-        # this prevents malicious POST requests to delete active
-        # user accounts
+        # confirm that existing user instance to be deleted is inactive
+        # this prevents malicious POST requests to delete active users
         if not user.is_active:
             user.delete()  # linked subscription also deleted by CASCADE
             return HttpResponse(
-                content=f"user with id:{user_id} was deleted from database",
+                content=f"User with id:{inactive_user_id} was successfully deleted from database",
                 status=200,
             )
         else:
             messages.error(
                 request,
-                "There was an error creating your account. \
+                "I'm sorry your payment was not successful. \
                 Please try again or contact me for help!"
             )
             return HttpResponse(
-                content="Error: User record is active and \
+                content="Denied: User instance is active and \
                     therefore cannot be deleted from the database.",
                 status=400,
             )
     except Exception as error:
         messages.error(
             request,
-            "Your account could not be created. \
+            "I'm sorry your payment was not successful. \
             Please try again or contact me for help!"
         )
         return HttpResponse(
-            content=f"Error: {str(error)}",
+            content=f"{str(error)}",
             status=500,
         )
 
@@ -242,10 +216,7 @@ def subscription_created(request):
     """ 
     Render user and subscription details in template
     """
-
-    print("request made to subscription_created")  # TEST
-
-    # parse raw url query parameters and pass to template context
+    # parse raw url query parameters
     context = {
         'first_name': request.GET.get('first_name', ''),
         'last_name': request.GET.get('last_name', ''),
@@ -253,7 +224,7 @@ def subscription_created(request):
         'city': request.GET.get('city', ''),
         'country_verbose': request.GET.get('country_verbose', ''),
     }
-    # decode values
+    # decode values and pass to template context
     # CREDIT[8]
     for k, v in context.items():
         context[k] = urllib.parse.unquote(v)

@@ -67,7 +67,10 @@ class Story(models.Model):
         pdf = models.FileField(upload_to='private/story_pdfs/')
 
     def __str__(self):
-        return f"Story <id:{self.id}> <title:{self.title}>"
+        if hasattr(self, 'id'):
+            return f"Story <id:{self.id}>"
+        else:
+            return "Unsaved Story object"
 
     def save(self, *args, **kwargs):
         """ 
