@@ -189,17 +189,19 @@ def confirm_deletion_of_inactive_user(request):
                 status=200,
             )
         else:
+            # page is reloaded by js, so inform user about failed payment
             messages.error(
                 request,
                 "I'm sorry your payment was not successful. \
                 Please try again or contact me for help!"
             )
             return HttpResponse(
-                content="Denied: User instance is active and \
+                content="Request denied: User instance is active and \
                     therefore cannot be deleted from the database.",
                 status=400,
             )
     except Exception as error:
+        # page is reloaded by js, so inform user about failed payment
         messages.error(
             request,
             "I'm sorry your payment was not successful. \
@@ -224,7 +226,7 @@ def subscription_created(request):
         'city': request.GET.get('city', ''),
         'country_verbose': request.GET.get('country_verbose', ''),
     }
-    # decode values and pass to template context
+    # decode query string values and pass to template context
     # CREDIT[8]
     for k, v in context.items():
         context[k] = urllib.parse.unquote(v)
