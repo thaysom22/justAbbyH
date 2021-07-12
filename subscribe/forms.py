@@ -35,7 +35,7 @@ class UserRegisterForm(UserCreationForm):
         for field in self.fields:
             self.fields[field].label = False
             self.fields[field].widget.attrs['placeholder'] = placeholders[field]
-            self.fields[field].required = True  # first_name, last_name and email not required on default User model
+            self.fields[field].required = True  # make all fields required by form validation
 
         self.fields['username'].widget.attrs['autofocus'] = True
 

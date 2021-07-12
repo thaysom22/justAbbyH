@@ -1,5 +1,11 @@
 from django.http import HttpResponse
 from django.contrib.auth.models import User
+from django.contrib.sites.shortcuts import get_current_site
+from django.template.loader import render_to_string
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
+
+from .tokens import account_activation_token_generator
 
 import time
 
@@ -9,6 +15,22 @@ class Stripe_WH_Handler:
 
     def __init__(self, request):
         self.request = request
+
+    def _send_activation_email(self, user):
+        """
+        Send an email to user with a secure 
+        link which activates their account
+        """
+        # CREDIT[9]
+        current_site = get_current_site(self.request)
+        subject = 'Just a Message From JustAbbyH: Please Activate Your Account To Start Reading Now!'
+        body = render_to_string('emails/account_activation_email.html', {
+            'user': user,
+            'domain': current_site.domain,
+            'encoded_uid': urlsafe_base64_encode(force_bytes(user.id)),
+            'token': account_activation_token_generator.make_token(user),
+        })
+        user.email_user(subject, body)
 
     def handle_other_event(self, event):
         """
@@ -37,13 +59,13 @@ class Stripe_WH_Handler:
             # get id of inactive user in db from payment intent metadata
             intent = event.data.object
             inactive_user_id = int(intent.metadata.get('inactive_user_id'))
-            inactive_user_found = False
+            user_found = False
             activation_email_sent = False
             attempt = 1
             while attempt <= 10:
                 try:
                     user = User.objects.get(id=inactive_user_id)  # get inactive user instance
-                    inactive_user_found = True
+                    user_found = True
                 except User.DoesNotExist:
                     attempt += 1
                     time.sleep(.5)
@@ -51,14 +73,11 @@ class Stripe_WH_Handler:
 
                 if not user.is_active:
                     try:
-                        # send email to activate user instance via separate endpoint
-                        # (OR just set user.is_active=True and save)
-                        user.is_active = True
-                        user.save()
+                        # send email with link to activate user instance 
+                        # via separate 'activate_user' endpoint
                         activation_email_sent = True
-
-                        print(f"User: {inactive_user_id} was activated / activation email was sent")  # TEST
-
+                        self._send_activation_email(user)
+                        print(f"User: {inactive_user_id} activation email was sent")  # TEST
                         break
                     except Exception as e:
                         email_error = e  # capture Exception info
@@ -71,7 +90,7 @@ class Stripe_WH_Handler:
                             Request denied: User instance is already activated",
                         status=400,)
 
-            if inactive_user_found:
+            if user_found:
                 if activation_email_sent:
                     return HttpResponse(
                         content=f"Webhook received: {event['type']} | SUCCESS: \

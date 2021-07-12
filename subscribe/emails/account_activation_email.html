@@ -1,0 +1,21 @@
+{% autoescape off %}
+
+Dear {{ user.first_name }},
+
+Thank you for subscribing to JustAbbyH Stories - your support means alot to me!
+
+Please click the link below to activate your account and then simply login get access to all my stories! 
+
+http://{{ domain }}{% url 'activate_user' uidb64=encoded_uid token=token %}
+
+I hope you enjoy reading.
+
+With gratitude,
+
+Abby H
+
+
+p.s I kindly request that you do not share my stories publically. Instead, please direct others to subscribe
+on my website http://{{ domain }}, so that I am able to continue to write for you :)
+
+{% endautoescape %}

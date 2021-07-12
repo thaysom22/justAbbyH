@@ -127,7 +127,7 @@ form.addEventListener("submit", function (event) {
                     var countryVerboseEncoded = encodeURIComponent(formData.country_verbose);
                     var redirectUrlQueryString = `?first_name=${firstNameEncoded}&last_name=${lastNameEncoded}&email=${emailEncoded}&city=${cityEncoded}&country_verbose=${countryVerboseEncoded}`;
                     var redirectUrl = data.redirectUrlPath + redirectUrlQueryString;
-                    // inactive user in database will be activated by webhook handler
+                    // inactive user in database will be activated via webhook handler
                     window.location.replace(redirectUrl);
                 }
 

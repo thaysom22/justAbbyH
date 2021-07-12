@@ -36,7 +36,7 @@ def webhook_listener(request):
     except Exception as e:
         return HttpResponse(content=e, status=400)
 
-    # construct instance of webhook handler
+    # construct instance of webhook handler with request object
     wh_handler = Stripe_WH_Handler(request)
 
     # map webhook events to relevant handler functions

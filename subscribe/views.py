@@ -10,6 +10,9 @@ from django.conf import settings
 from django.views.decorators.http import (
     require_POST, require_GET
 )
+from django.utils.encoding import force_text
+from django.utils.http import urlsafe_base64_decode
+from .tokens import account_activation_token_generator
 
 from .forms import SubscriptionForm, UserRegisterForm
 
@@ -236,10 +239,21 @@ def subscription_created(request):
     for k, v in context.items():
         context[k] = urllib.parse.unquote(v)
 
-    # add subscription_cost to context after decoding occurs
+    # add other data to context after decoding url params
     context['subscription_cost'] = settings.SUBSCRIPTION_COST
 
     template = "subscribe/subscription_created.html"
     return render(request, template, context)
 
 
+@require_GET
+def activate_user(request, uidb64, token):
+    """
+    If onetime token encoded as url parameter verifies:
+    activate user account and render login template
+    """
+    # CREDIT[9]
+    try:
+        inactive_user_id = force_text(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(id=inactive_user_id)
+    except:

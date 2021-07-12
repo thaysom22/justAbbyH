@@ -205,20 +205,7 @@ if USE_AWS:
     PRIVATE_FILE_STORAGE = 'custom_storages.PrivateFileStorage' 
     
 else:
-
     # local filesystem storage
-
-    # REMOVE
-
-    # # prevent errors in migrations
-    # STATICFILES_LOCATION = None
-    # AWS_STORAGE_PUBLIC_BUCKET_NAME = None
-    # AWS_STORAGE_PRIVATE_BUCKET_NAME = None
-    # AWS_S3_CUSTOM_PUBLIC_DOMAIN = None
-    # MEDIAFILES_PUBLIC_LOCATION = None
-    # MEDIAFILES_PRIVATE_LOCATION = None
-
-    # development settings
     print("Using default local storage")  # TEST
 
     # static and media in development
@@ -228,3 +215,12 @@ else:
     MEDIA_URL = '/media/'
 
 
+# EMAIL
+
+if env('DEVELOPMENT'):
+    # in development, print email to terminal instead of sending
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+    DEFAULT_FROM_EMAIL = 'justabbyh@example.com'
+else:
+    # use a smtp server
+    pass
