@@ -14,6 +14,9 @@ class Stripe_WH_Handler:
         """
         Handle a generic/unknown/unexpected webhook event
         """
+
+        print("Generic webhook received")  # TEST
+
         return HttpResponse(
             content=f'Unhandled webhook received: {event["type"]}',
             status=200
@@ -22,8 +25,14 @@ class Stripe_WH_Handler:
     def handle_payment_intent_succeeded_event(self, event):
         """
         Handle the payment_intent.succeeded webhook from Stripe
-
+        Check if a record identified by inactive_user_id from payment intent's
+        metadata exists in the database, if so make up to 10 attempts to send 
+        an activation email to email address provided by user in subscribe form,
+        at 500ms intervals
         """
+
+        print("Payment intent succeeded webhook received")  # TEST
+
         try:
             # get id of inactive user in db from payment intent metadata
             intent = event.data.object
@@ -42,8 +51,14 @@ class Stripe_WH_Handler:
 
                 if not user.is_active:
                     try:
-                        # send email to activate user instance (or just set user.is_active = True)
+                        # send email to activate user instance via separate endpoint
+                        # (OR just set user.is_active=True and save)
+                        user.is_active = True
+                        user.save()
                         activation_email_sent = True
+
+                        print(f"User: {inactive_user_id} was activated / activation email was sent")  # TEST
+
                         break
                     except Exception as e:
                         email_error = e  # capture Exception info
@@ -52,30 +67,30 @@ class Stripe_WH_Handler:
                         continue
                 else:
                     return HttpResponse(
-                        content=f"Webhook received: {event["type"]} | FAILED \
+                        content=f"Webhook received: {event['type']} | FAILED \
                             Request denied: User instance is already activated",
                         status=400,)
 
             if inactive_user_found:
                 if activation_email_sent:
                     return HttpResponse(
-                        content=f"Webhook received: {event["type"]} | SUCCESS: \
+                        content=f"Webhook received: {event['type']} | SUCCESS: \
                             User with id:{inactive_user_id} was found and an \
                             activation email was sent",
                         status=200,)
                 else:
                     return HttpResponse(
-                        content=f"Webhook received: {event["type"]} | ERROR: \
+                        content=f"Webhook received: {event['type']} | ERROR: \
                             Activation email could not be sent: {str(email_error)}",
                         status=500,)
             else:
                 return HttpResponse(
-                        content=f"Webhook received: {event["type"]} | FAILED \
+                        content=f"Webhook received: {event['type']} | FAILED \
                             Inactive user instance could not be found in database",
                         status=400,)
         except Exception as e:
             return HttpResponse(
-                content=f"Webhook received: {event["type"]} | ERROR {str(e)}",
+                content=f"Webhook received: {event['type']} | ERROR {str(e)}",
                 status=500,)
 
     def handle_payment_intent_payment_failed_event(self, event):
@@ -85,6 +100,9 @@ class Stripe_WH_Handler:
         metadata exists in the database, if so make up to 10 attempts
         to delete, at 500ms intervals
         """
+
+        print("Payment intent failed webhook received")  # TEST
+
         try:
             # get id of inactive user in db from payment intent metadata
             intent = event.data.object
@@ -107,24 +125,24 @@ class Stripe_WH_Handler:
                         continue
                 else:
                     return HttpResponse(
-                        content=f"Webhook received: {event["type"]} | FAILED \
+                        content=f"Webhook received: {event['type']} | FAILED \
                             Request denied: User instance is active and \
                             therefore cannot be deleted from the database",
                         status=400,)
 
             if confirm_inactive_user_deleted:
                 return HttpResponse(
-                    content=f"Webhook received: {event["type"]} | SUCCESS: \
+                    content=f"Webhook received: {event['type']} | SUCCESS: \
                         Confirmed that no user with id:{inactive_user_id} \
                         exists in database",
                     status=200,)
             else:
                 return HttpResponse(
-                    content=f"Webhook received: {event["type"]} | ERROR \
+                    content=f"Webhook received: {event['type']} | ERROR \
                         Could not confirm deletion of inactive user \
                         from database: {str(deletion_error)}",
                     status=500,)
         except Exception as e:
             return HttpResponse(
-                content=f"Webhook received: {event["type"]} | ERROR {str(e)}",
+                content=f"Webhook received: {event['type']} | ERROR {str(e)}",
                 status=500,)

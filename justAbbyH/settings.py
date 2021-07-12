@@ -132,13 +132,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'America/New_York'
-
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
 
 
@@ -158,6 +154,7 @@ SUBSCRIPTION_COST = 10.00  # one-time subscription cost in usd
 STRIPE_CURRENCY = 'usd'
 STRIPE_PUBLIC_KEY = env('STRIPE_PUBLIC_KEY')
 STRIPE_SECRET_KEY = env('STRIPE_SECRET_KEY')
+STRIPE_WH_SECRET = env('STRIPE_WH_SECRET')
 
 # STATIC AND MEDIA STORAGE
 

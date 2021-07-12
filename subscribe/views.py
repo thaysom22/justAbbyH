@@ -116,6 +116,10 @@ def create_inactive_user(request):
                 request,
                 "Please check your form for errors and try again."
             )
+
+            print("user form errors:", user_form.errors)  #TEST
+            print("subscription form errors:", subscription_form.errors)  #TEST
+
             return JsonResponse(
                 data={
                     "errors": {
@@ -132,8 +136,9 @@ def create_inactive_user(request):
         stripe.PaymentIntent.modify(
             stripe_pid,
             metadata={
-            'inactive_user_id': inactive_user_id,
-        })
+                'inactive_user_id': inactive_user_id,
+            },
+        )
         # user record and linked subscription record created
         # and metadata added to paymentIntent
         # include inactive_user_id and redirect_url in response
@@ -230,6 +235,9 @@ def subscription_created(request):
     # CREDIT[8]
     for k, v in context.items():
         context[k] = urllib.parse.unquote(v)
+
+    # add subscription_cost to context after decoding occurs
+    context['subscription_cost'] = settings.SUBSCRIPTION_COST
 
     template = "subscribe/subscription_created.html"
     return render(request, template, context)
