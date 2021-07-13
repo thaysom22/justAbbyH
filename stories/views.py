@@ -48,9 +48,9 @@ def add_story(request):
     """ 
     GET: Display add story form.
     POST: Add a story to the database.
-    access: superusers only
+    Access: staff only
     """
-    if not request.user.is_superuser:
+    if not request.user.is_staff:
         messages.error(request, 'Sorry, only the author can do that!')
         return redirect(reverse('index'))
 
@@ -81,9 +81,9 @@ def edit_story(request, story_id):
     """ 
     GET: Find story and populate edit story form 
     POST: Edit a story in the database
-    (superuser only)
+    (staff only)
     """
-    if not request.user.is_superuser:
+    if not request.user.is_staff:
         messages.error(request, 'Sorry, only the author can do that!')
         return redirect(reverse('index'))
     
@@ -115,8 +115,8 @@ def edit_story(request, story_id):
 
 @login_required
 def delete_story(request, story_id):
-    """ Delete a story in the database (superuser only) """
-    if not request.user.is_superuser:
+    """ Delete a story in the database (staff only) """
+    if not request.user.is_staff:
         messages.error(request, 'Sorry, only the author can do that!')
         return redirect(reverse('index'))
     
