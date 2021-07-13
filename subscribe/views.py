@@ -29,7 +29,7 @@ def subscribe(request):
     try:
         if request.user.is_authenticated:
             messages.info(
-                request, 
+                request,
                 "Sorry, can't do that! \
                 Logout first to create a new subscription."
             )
@@ -100,12 +100,11 @@ def create_inactive_user(request):
         subscription_form = SubscriptionForm(subscription_data)
 
         # validates city and country fields only for subscription_form
-        if user_form.is_valid() and subscription_form.is_valid():            
+        if user_form.is_valid() and subscription_form.is_valid():      
             user = user_form.save(commit=False)
             user.is_active = False  # deactivate user to prevent login
             user.save()  # user must be saved in db before it is used as subscription's foreign key
             inactive_user_id = user.id  # default pk for user is added AFTER save
-
             # create instance of subscription model w/o user
             subscription = subscription_form.save(commit=False)
             # add non-form subscription fields pre-save
@@ -166,6 +165,9 @@ def create_inactive_user(request):
             "Your account could not be created. \
             Please try again or contact me for help!"
         )
+
+        print(error)  # TEST
+
         return JsonResponse(
             data={"error": str(error)},
             status=500,
@@ -254,6 +256,23 @@ def activate_user(request, uidb64, token):
     """
     # CREDIT[9]
     try:
+        # get uid from url and use to query db
         inactive_user_id = force_text(urlsafe_base64_decode(uidb64))
         user = User.objects.get(id=inactive_user_id)
-    except:
+    except (TypeError, ValueError,
+            OverflowError, User.DoesNotExist):
+        user = None
+
+    if (user and
+            account_activation_token_generator.check_token(user, token) and not
+            user.is_active):
+        # ACTIVATE USER
+        user.is_active = True
+        user.save()
+        messages.success(request,
+            "Your account has been activated. Please login to start reading!")
+        return redirect(reverse('login'))
+    else:
+        messages.warning(request,
+            "The activation link was invalid. Please contact me for assistance.")
+        return redirect(reverse('index'))

@@ -4,9 +4,11 @@ Dear {{ user.first_name }},
 
 Thank you for subscribing to JustAbbyH Stories - your support means alot to me!
 
-Please click the link below to activate your account and then simply login get access to all my stories! 
+Please click the link below to activate your account, then login get access to all my stories! 
 
 http://{{ domain }}{% url 'activate_user' uidb64=encoded_uid token=token %}
+
+Your username is: {{ user.username }}
 
 I hope you enjoy reading.
 

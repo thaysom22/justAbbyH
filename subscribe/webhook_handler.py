@@ -24,13 +24,15 @@ class Stripe_WH_Handler:
         # CREDIT[9]
         current_site = get_current_site(self.request)
         subject = 'Just a Message From JustAbbyH: Please Activate Your Account To Start Reading Now!'
-        body = render_to_string('emails/account_activation_email.html', {
+        body = render_to_string('subscribe/emails/account_activation_email.html', {
             'user': user,
             'domain': current_site.domain,
             'encoded_uid': urlsafe_base64_encode(force_bytes(user.id)),
             'token': account_activation_token_generator.make_token(user),
         })
-        user.email_user(subject, body)
+        user.email_user(subject, body, fail_silently=False)
+
+        print('activation email was sent') # TEST
 
     def handle_other_event(self, event):
         """
@@ -75,9 +77,8 @@ class Stripe_WH_Handler:
                     try:
                         # send email with link to activate user instance 
                         # via separate 'activate_user' endpoint
-                        activation_email_sent = True
                         self._send_activation_email(user)
-                        print(f"User: {inactive_user_id} activation email was sent")  # TEST
+                        activation_email_sent = True
                         break
                     except Exception as e:
                         email_error = e  # capture Exception info

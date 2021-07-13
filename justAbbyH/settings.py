@@ -218,6 +218,9 @@ else:
 # EMAIL
 
 if env('DEVELOPMENT'):
+
+    print('printing activation emails to console')  # TEST
+
     # in development, print email to terminal instead of sending
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
     DEFAULT_FROM_EMAIL = 'justabbyh@example.com'
