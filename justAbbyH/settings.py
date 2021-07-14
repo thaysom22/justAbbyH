@@ -1,7 +1,3 @@
-"""
-Django settings for justAbbyH project.
-"""
-
 from pathlib import Path
 import os
 
@@ -21,7 +17,7 @@ environ.Env.read_env(env_file)
 SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env('DEVELOPMENT')
+DEBUG = 'DEVELOPMENT' in env
 
 ALLOWED_HOSTS = ['just-abby-h.herokuapp.com', 'localhost']
 
@@ -217,13 +213,26 @@ else:
 
 # EMAIL
 
-if env('DEVELOPMENT'):
+if 'DEVELOPMENT' not in env:  # REMOVE NOT
 
     print('printing activation emails to console')  # TEST
-
+    CURRENT_SITE_DOMAIN = '8000-tan-armadillo-vlqwczfi.ws-eu10.gitpod.io/'  # $gp url 8000
     # in development, print email to terminal instead of sending
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-    DEFAULT_FROM_EMAIL = 'justabbyh@example.com'
+    DEFAULT_FROM_EMAIL = 'justabbyh.stories@example.com'
 else:
-    # use a smtp server
-    pass
+
+    print('sending activation emails using gmail smtp server')  # TEST
+
+    # use gmail smtp server
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+    EMAIL_USE_TLS = True
+    EMAIL_USE_SSL = False
+    EMAIL_PORT = 587
+    EMAIL_HOST = 'smtp.gmail.com'  # OR 'smtp-relay.sendinblue.com'
+    EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+    EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD_GMAIL')
+    DEFAULT_FROM_EMAIL = env('EMAIL_HOST_USER')
+    CURRENT_SITE_DOMAIN = None  # webhook handler will get domain from request object
+    
+    CURRENT_SITE_DOMAIN = '8000-tan-armadillo-vlqwczfi.ws-eu10.gitpod.io/'  # TEST

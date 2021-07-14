@@ -1,9 +1,10 @@
 from django.http import HttpResponse
 from django.contrib.auth.models import User
-from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
+from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
+from django.conf import settings
 
 from .tokens import account_activation_token_generator
 
@@ -22,11 +23,15 @@ class Stripe_WH_Handler:
         link which activates their account
         """
         # CREDIT[9]
-        current_site = get_current_site(self.request)
+        current_site_domain = settings.CURRENT_SITE_DOMAIN  # will be set in development
+        if current_site_domain is None:
+            # get site domain of hosted app from request
+            current_site_domain = get_current_site(self.request).domain
+
         subject = 'Just a Message From JustAbbyH: Please Activate Your Account To Start Reading Now!'
         body = render_to_string('subscribe/emails/account_activation_email.html', {
             'user': user,
-            'domain': current_site.domain,
+            'domain': current_site_domain,
             'encoded_uid': urlsafe_base64_encode(force_bytes(user.id)),
             'token': account_activation_token_generator.make_token(user),
         })
