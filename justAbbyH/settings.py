@@ -79,31 +79,37 @@ WSGI_APPLICATION = 'justAbbyH.wsgi.application'
 # DATABASE AND MIGRATIONS
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-USE_POSTGRES = 'DATABASE_URL' in env
+USE_PRODUCTION_DATABASE = 'DATABASE_URL' in env
+if USE_PRODUCTION_DATABASE:
 
-USE_POSTGRES = False  # REMOVE
+    print("Using posgres database URL:", env('DATABASE_URL'))  # TEST
 
-if USE_POSTGRES:
-    print('using production database')  # TEST
+    # use postgres remote
     DATABASES = {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'default': dj_database_url.parse(env('DATABASE_URL')),
     }
     # separate stories app migrations production/development packages
-    # note: makemigrations command must be passed app_label argument 
+    # note: makemigrations command must be passed an app_label argument 
     MIGRATION_MODULES = {
         'stories': 'stories.migrations_production',
     }
 else:
-    print('using development database')  # TEST
+
+    print("Using sqlite database")  # TEST
+
+    # use sqlite locally
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
+
     MIGRATION_MODULES = {
         'stories': 'stories.migrations_development',
     }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -144,7 +150,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = 'stories'
 LOGOUT_REDIRECT_URL = 'index'
 
-# Stripe and payments
+# Stripe
 
 SUBSCRIPTION_COST = 10.00  # one-time subscription cost in usd
 STRIPE_CURRENCY = 'usd'
@@ -159,13 +165,9 @@ STRIPE_WH_SECRET = env('STRIPE_WH_SECRET')
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
 USE_AWS = 'USE_AWS' in env
-
-USE_AWS = False  # REMOVE
-
-# production s3 storage
-
 if USE_AWS:
     # production settings
+
     print("Using S3 storage")  # TEST
 
     AWS_S3_REGION_NAME = 'us-east-1'
@@ -198,10 +200,10 @@ if USE_AWS:
     MEDIA_PUBLIC_URL = f'https://{AWS_S3_CUSTOM_PUBLIC_DOMAIN}/{MEDIAFILES_PUBLIC_LOCATION}/'
     MEDIA_PRIVATE_URL = f'https://{AWS_S3_CUSTOM_PRIVATE_DOMAIN}/{MEDIAFILES_PRIVATE_LOCATION}/'
     PUBLIC_FILE_STORAGE = 'custom_storages.PublicFileStorage'
-    PRIVATE_FILE_STORAGE = 'custom_storages.PrivateFileStorage' 
-    
+    PRIVATE_FILE_STORAGE = 'custom_storages.PrivateFileStorage'
 else:
     # local filesystem storage
+
     print("Using default local storage")  # TEST
 
     # static and media in development
@@ -212,15 +214,8 @@ else:
 
 
 # EMAIL
-
-if 'DEVELOPMENT' not in env:  # REMOVE NOT
-
-    print('printing activation emails to console')  # TEST
-    CURRENT_SITE_DOMAIN = '8000-tan-armadillo-vlqwczfi.ws-eu10.gitpod.io/'  # $gp url 8000
-    # in development, print email to terminal instead of sending
-    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-    DEFAULT_FROM_EMAIL = 'justabbyh.stories@example.com'
-else:
+USE_SMTP = 'USE_SMTP' in env
+if USE_SMTP:
 
     print('sending activation emails using gmail smtp server')  # TEST
 
@@ -231,8 +226,14 @@ else:
     EMAIL_PORT = 587
     EMAIL_HOST = 'smtp.gmail.com'  # OR 'smtp-relay.sendinblue.com'
     EMAIL_HOST_USER = env('EMAIL_HOST_USER')
-    EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD_GMAIL')
+    EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')  # using app password with 2FA
     DEFAULT_FROM_EMAIL = env('EMAIL_HOST_USER')
     CURRENT_SITE_DOMAIN = None  # webhook handler will get domain from request object
-    
-    CURRENT_SITE_DOMAIN = '8000-tan-armadillo-vlqwczfi.ws-eu10.gitpod.io/'  # TEST
+else:
+
+    print('printing activation emails to console')  # TEST
+
+    CURRENT_SITE_DOMAIN = '8000-tan-armadillo-vlqwczfi.ws-eu10.gitpod.io/'  # from $gp url 8000
+    # in development, print email to terminal instead of sending
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+    DEFAULT_FROM_EMAIL = 'justabbyh.stories@example.com'
