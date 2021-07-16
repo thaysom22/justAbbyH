@@ -86,7 +86,6 @@ if USE_PRODUCTION_DATABASE:
 
     # use postgres remote
     DATABASES = {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'default': dj_database_url.parse(env('DATABASE_URL')),
     }
     # separate stories app migrations production/development packages
