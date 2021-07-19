@@ -89,7 +89,6 @@ if USE_PRODUCTION_DATABASE:
         'default': dj_database_url.parse(env('DATABASE_URL')),
     }
     # separate stories app migrations production/development packages
-    # note: makemigrations command must be passed an app_label argument 
     MIGRATION_MODULES = {
         'stories': 'stories.migrations_production',
     }
@@ -232,7 +231,7 @@ else:
 
     print('printing activation emails to console')  # TEST
 
-    CURRENT_SITE_DOMAIN = '8000-tan-armadillo-vlqwczfi.ws-eu10.gitpod.io/'  # from $gp url 8000
+    CURRENT_SITE_DOMAIN = '8000-tan-armadillo-vlqwczfi.ws-eu11.gitpod.io/'  # from $gp url 8000
     # in development, print email to terminal instead of sending
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
     DEFAULT_FROM_EMAIL = 'justabbyh.stories@example.com'

@@ -25,7 +25,7 @@ class Stripe_WH_Handler:
         # CREDIT[9]
         current_site_domain = settings.CURRENT_SITE_DOMAIN  # will be set in development
         if current_site_domain is None:
-            # get site domain of hosted app from request
+            # get site domain of heroku app from request object
             current_site_domain = get_current_site(self.request).domain
 
         subject = 'Just a Message From JustAbbyH: Please Activate Your Account To Start Reading Now!'

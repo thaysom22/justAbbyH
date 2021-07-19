@@ -4,9 +4,6 @@ from django.conf import settings
 from math import floor
 
 USE_AWS = settings.USE_AWS
-
-USE_AWS = False  # REMOVE
-
 if USE_AWS:
     from custom_storages import PublicFileStorage, PrivateFileStorage
 
@@ -29,7 +26,7 @@ class Story(models.Model):
         (NON_FICTION, 'Non-fiction'),
         (UNKNOWN, 'Unknown'),
         (OTHER, 'Other'),
-    ]  # genre widget is select box
+    ]  # widget is select box
     
     genre = models.CharField(
         max_length=100,
@@ -45,12 +42,9 @@ class Story(models.Model):
     reading_time_mins = models.PositiveIntegerField(blank=True, null=True) 
     reading_time_string = models.CharField(max_length=254, null=True)
     
-    USE_AWS = settings.USE_AWS
-
-    USE_AWS = False  # REMOVE
-
     if USE_AWS:
         # specify custom s3 storages in production
+        # for story image and pdf fields
         # CREDIT [4]
         image = models.ImageField(
             upload_to='story_images/',
@@ -83,8 +77,8 @@ class Story(models.Model):
 
     def _generate_reading_time_string(self, reading_time_mins):
         """ 
-        Internal class method. Returns human readable 
-        string represention of reading time of story 
+        Internal class method. Returns human readable
+        string represention of reading time of story
         """
         hours = floor(reading_time_mins / 60)
         mins = reading_time_mins % 60

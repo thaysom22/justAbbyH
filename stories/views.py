@@ -132,12 +132,8 @@ def download_story(request, story_id):
     
     # get story instance from db by pk
     story = get_object_or_404(Story, pk=story_id)
-    
     file_url = story.pdf.url
     filename = story.pdf.name
-
-    print("url:", file_url)  # TEST
-    print("filename:", filename)  # TEST
 
     if settings.USE_AWS:
         object_key = 'media/private/' + filename
