@@ -3,7 +3,7 @@ from botocore.exceptions import ClientError
 
 
 # CREDIT [5]
-def create_presigned_url(bucket_name, object_key, expiration=300):
+def create_presigned_url(bucket_name, object_key, expiration):
     """
     Generate a presigned URL to share an S3 object
     :param bucket_name: string

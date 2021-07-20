@@ -73,7 +73,9 @@ class Story(models.Model):
         """
         if self.reading_time_mins:
             self.reading_time_string = self._generate_reading_time_string(self.reading_time_mins)
+
         super().save(*args, **kwargs)
+
 
     def _generate_reading_time_string(self, reading_time_mins):
         """ 

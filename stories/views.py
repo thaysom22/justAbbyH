@@ -8,8 +8,6 @@ from .forms import StoryForm
 from .models import Story
 from .storage_helpers import create_presigned_url
 
-import mimetypes  # ??
-
 
 def stories(request):
     """ Display all stories in database on stories page """
@@ -128,20 +126,30 @@ def delete_story(request, story_id):
 
 @login_required
 def download_story(request, story_id):
-    """ Logged in user can access url for story pdf file """
-    
+    """
+    Logged in user can access url to story pdf file
+    """
     # get story instance from db by pk
     story = get_object_or_404(Story, pk=story_id)
-    file_url = story.pdf.url
-    filename = story.pdf.name
+    filename = story.pdf.name  # story.pdf is FileField
 
     if settings.USE_AWS:
         object_key = 'media/private/' + filename
-        # generate presigned aws url
-        presigned_url = create_presigned_url(
-            settings.AWS_STORAGE_PRIVATE_BUCKET_NAME,
-            object_key,
-        )
+        # generate presigned aws s3 url with expiry 
+        if request.user.is_staff:
+            # staff can access s3 object until max expiry limit allowed
+            presigned_url = create_presigned_url(
+                settings.AWS_STORAGE_PRIVATE_BUCKET_NAME,
+                object_key,
+                300
+            )
+        else:
+            # other users can access object until 5 mins expiry
+            presigned_url = create_presigned_url(
+                settings.AWS_STORAGE_PRIVATE_BUCKET_NAME,
+                object_key,
+                604800  # 7 days in seconds
+            )
         if presigned_url:
             # file in s3 bucket
             return redirect(presigned_url)
@@ -152,22 +160,6 @@ def download_story(request, story_id):
             )
     else:
         # file on local server
+        file_url = story.pdf.url
         return redirect(file_url)
 
-    # CODE TO RETURN LOCAL FILE AS A DOWNLOAD - REMOVE? #  
-
-    # filename = story.pdf.name.split('/')[-1]
-    # # credit[1]
-    # mime_type, _ = mimetypes.guess_type(file_url)  # guess type incase non-pdf file
-
-    # print("mime type:", mime_type)
-
-    # if not mime_type:
-    #     mime_type = 'application/pdf'
-
-    # fl = open(file_field, 'rb')  # read as binary (no encoding)
-    # response = HttpResponse(fl, headers={
-    #     'Content-Type': mime_type,
-    #     'Content-Disposition': f"attachment; filename={filename}",
-    # })
-    # return response
