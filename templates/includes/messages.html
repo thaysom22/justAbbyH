@@ -1,5 +1,8 @@
 {% if messages %}
     {% for message in messages %}
-        <p>{{ message }}</p>    
+        <div class="message">
+            <span class="message-content">{{ message }}</span>
+            <span class="message-dismiss-icon fa-icon-center"><i class="fas fa-times"></i></span>  
+        </div>   
     {% endfor %}
 {% endif %}

@@ -37,6 +37,10 @@
 
     <div id="hide-when-nav-expanded">
 
+        <div id="navbar-collapsed-messages" class="messages">
+            {% include 'includes/messages.html' %}
+        </div>
+
         {% block content %}
         {% endblock %}
 
@@ -54,6 +58,7 @@
 
     {% block extra_postloadjs %}
         <script src="{% static 'js/navbar.js' %}"></script>
+        <script src="{% static 'js/messages.js' %}"></script>
     {% endblock %}
 </body>
 </html>

@@ -6,6 +6,9 @@
 {% endblock %}
 
 {% block navbar %}
+<nav class="navbar">
+    <a class="navbar-brand" href="{% url 'index' %}">AbbyH Stories</a>
+</nav>
 {% endblock %}
 
 {% block content %}
@@ -36,6 +39,7 @@
 
 {% block extra_postloadjs %}
     {# overwrite parent block #}
+    <script src="{% static 'js/messages.js' %}"></script>
     {# output template variables in script element accessible to external script via id attributes #}
     {{ stripe_public_key|json_script:"id_stripe_public_key" }}
     {{ client_secret|json_script:"id_client_secret" }}

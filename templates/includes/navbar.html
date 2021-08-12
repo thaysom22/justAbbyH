@@ -4,27 +4,25 @@
         <span class="navbar-toggler-icon fa-icon-center"><i class="fas fa-bars"></i></span>
     </button>
     <div class="navbar-collapse collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav">
-            <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="{% url 'index' %}">Home</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'stories' %}">Stories</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'about' %}">About</a>
-            </li>
-            <li class="nav-item">
-                {% if user.is_authenticated %}
-                    <a class="nav-link" href="{% url 'logout' %}">Log out</a>
-                {% else %}
-                    <a class="nav-link" href="{% url 'login' %}">Log in</a>
-                {% endif %}
-            </li>
-            <li class="nav-item">
-                <a class="nav-link btn" href="{% url 'subscribe' %}">Subscribe</a>
-            </li>
-        </ul>
+        <div class="navbar-nav">
+            {% url 'index' as url_index %}
+            <a class="nav-link{% if request.path == url_index %} active" aria-current="page"{% else %}"{% endif %} href="{{ url_index }}">Home</a>
+            {% url 'stories' as url_stories %}
+            <a class="nav-link{% if request.path == url_stories %} active" aria-current="page"{% else %}"{% endif %} href="{{ url_stories }}">Stories</a>
+            {% url 'about' as url_about %}
+            <a class="nav-link{% if request.path == url_about %} active" aria-current="page"{% else %}"{% endif %} href="{{ url_about }}">About</a>
+            {% if user.is_authenticated %}
+                <a class="nav-link" href="{% url 'logout' %}">Log out</a>
+            {% else %}
+                {% url 'login' as url_login %}
+                <a class="nav-link{% if request.path == url_login %} active" aria-current="page"{% else %}"{% endif %} href="{{ url_login }}">Log in</a>
+            {% endif %}
+            <a class="nav-link subscribe-btn btn" href="{% url 'subscribe' %}">Subscribe</a>
+            <a class="nav-link nav-instagram hide" href="https://www.instagram.com/">
+                <span class="socialmedia-icon fa-icon-center"><i class="fab fa-instagram"></i></span>
+            </a>
+            
+        
     </div>
 </nav>
 

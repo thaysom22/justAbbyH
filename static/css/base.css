@@ -1,3 +1,7 @@
+/*** IMPORTS ***/
+
+@import url('https://fonts.googleapis.com/css2?family=Benne&family=Over+the+Rainbow&display=swap');
+
 /*** GLOBAL ***/
 
 * {
@@ -8,16 +12,33 @@ a {
     text-decoration: none;
 }
 
+body {
+    font-family: 'Benne', serif;
+}
+
+/* colors */
+:root {
+    --off-white: #FDF9F2;
+    --light-blue: #A4C0C4;
+    --dark-blue: #061234;
+}
+
 /*** UTILITY ***/
 
 .hide {
-    display: none;
+    display: none !important;  /* override more specific 'display' rules */
 }
 
 .fa-icon-center {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+/*** BUTTONS ***/
+.btn {
+    background-color: var(--light-blue);
+    color: var(--off-white);
 }
 
 /*** NAVBAR ***/
@@ -34,6 +55,11 @@ a {
 
 .navbar .navbar-collapse .navbar-nav {
     align-items: center;
+    margin-right: .75rem;
+}
+
+.navbar .navbar-brand {
+    font-family: 'Over the Rainbow', cursive;
 }
 
 .navbar .navbar-brand,
@@ -45,6 +71,8 @@ a {
     display: flex;
     align-items: center;
     justify-content: center;
+    color: var(--dark-blue);
+}
 }
 
 .navbar .navbar-toggler {
@@ -72,5 +100,48 @@ a {
     justify-content: center;
     height: 100vh;
     width: 100vw;
+}
+
+.navbar-nav .nav-link {
+    font-size: 16px;
+    line-height: 40px;
+    height: 40px;
+    padding: .2rem .5rem;
+}
+
+.navbar-nav .nav-link:not(.btn) {
+    color: var(--dark-blue);
+}
+
+.nav-link.active {
+    border-bottom: .25px lightslategray solid;
+}
+
+/*** MESSAGES ***/
+
+.messages {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.message {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    margin-bottom: .5rem;
+    padding: 0 1rem;
+}
+
+.message .message-content {
+    margin-left: auto;
+}
+
+.message .message-dismiss-icon {
+    margin-left: auto;
+}
+
+.message .message-dismiss-icon i {
+    font-size: 20px;
 }
 
