@@ -214,10 +214,10 @@ else:
 # EMAIL
 USE_SMTP = 'USE_SMTP' in env
 if USE_SMTP:
+    # use gmail smtp server
 
     print('sending activation emails using gmail smtp server')  # TEST
-
-    # use gmail smtp server
+    
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
     EMAIL_USE_TLS = True
     EMAIL_USE_SSL = False
@@ -228,10 +228,10 @@ if USE_SMTP:
     DEFAULT_FROM_EMAIL = env('EMAIL_HOST_USER')
     CURRENT_SITE_DOMAIN = None  # webhook handler will get domain from request object
 else:
-
+    # print email to terminal instead of sending
+    
     print('printing activation emails to console')  # TEST
 
-    CURRENT_SITE_DOMAIN = '8000-tan-armadillo-vlqwczfi.ws-eu11.gitpod.io/'  # from $gp url 8000
-    # in development, print email to terminal instead of sending
+    CURRENT_SITE_DOMAIN = env('CURRENT_SITE_DOMAIN')  # from $gp url 8000
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
     DEFAULT_FROM_EMAIL = 'justabbyh.stories@example.com'

@@ -23,11 +23,11 @@ class Stripe_WH_Handler:
         link which activates their account
         """
         # CREDIT[9]
-        current_site_domain = settings.CURRENT_SITE_DOMAIN  # will be set in development
-        if current_site_domain is None:
-            # get site domain of heroku app from request object
+        if settings.USE_SMTP:
             current_site_domain = get_current_site(self.request).domain
-
+        else:
+            current_site_domain = settings.CURRENT_SITE_DOMAIN  # get local domain from settings
+        
         subject = 'Just a Message From JustAbbyH: Please Activate Your Account To Start Reading Now!'
         body = render_to_string('subscribe/emails/account_activation_email.html', {
             'user': user,
