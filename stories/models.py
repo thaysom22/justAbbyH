@@ -18,29 +18,27 @@ class Story(models.Model):
     
     FICTION = 'Fiction'
     NON_FICTION = 'Non-fiction'
-    OTHER = 'Other'
     UNKNOWN = 'Unknown'
 
     GENRE_CHOICES = [
         (FICTION, 'Fiction'),
         (NON_FICTION, 'Non-fiction'),
         (UNKNOWN, 'Unknown'),
-        (OTHER, 'Other'),
     ]  # widget is select box
     
     genre = models.CharField(
-        max_length=100,
         choices=GENRE_CHOICES,
-        blank=True,
-        null=True,
+        max_length=254,
+        default='',
     )
 
-    title = models.CharField(max_length=254)
+    title = models.CharField(max_length=254, default='')
     publish_date = models.DateField(auto_now_add=True)
-    description = models.TextField(max_length=6000, blank=True, null=True)
-    featured = models.BooleanField(blank=True, null=False, default=False)
-    reading_time_mins = models.PositiveIntegerField(blank=True, null=True) 
-    reading_time_string = models.CharField(max_length=254, null=True)
+    description = models.TextField(default='')
+    featured = models.BooleanField(default=False)
+    reading_time_mins = models.PositiveIntegerField(null=True)
+    reading_time_string = models.CharField(max_length=254, default='')
+    image_credit = models.CharField(max_length=254, blank=True, default='')
     
     if USE_AWS:
         # specify custom s3 storages in production
@@ -49,7 +47,6 @@ class Story(models.Model):
         image = models.ImageField(
             upload_to='story_images/',
             storage=PublicFileStorage(),
-            blank=True,
         )
         pdf = models.FileField(
             upload_to='story_pdfs/',
@@ -72,13 +69,13 @@ class Story(models.Model):
         reading_time_string attribute on class
         """
         if self.reading_time_mins:
-            self.reading_time_string = self._generate_reading_time_string(self.reading_time_mins)
+            self.reading_time_string = self._generate_reading_time_string(
+                self.reading_time_mins)
 
         super().save(*args, **kwargs)
 
-
     def _generate_reading_time_string(self, reading_time_mins):
-        """ 
+        """
         Internal class method. Returns human readable
         string represention of reading time of story
         """
@@ -88,4 +85,3 @@ class Story(models.Model):
             return f"{hours} hours and {mins} mins"
         elif mins:
             return f"{mins} mins"
-        

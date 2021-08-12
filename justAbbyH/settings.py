@@ -19,7 +19,7 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = 'DEVELOPMENT' in env
 
-ALLOWED_HOSTS = ['just-abby-h.herokuapp.com', 'localhost']
+ALLOWED_HOSTS = [env('PRODUCTION_HOST'), 'localhost']
 
 # Application definition
 
@@ -180,8 +180,8 @@ if USE_AWS:
     }
 
     # bucket config
-    AWS_STORAGE_PUBLIC_BUCKET_NAME = 'just-abby-h-public'
-    AWS_STORAGE_PRIVATE_BUCKET_NAME = 'just-abby-h-private'
+    AWS_STORAGE_PUBLIC_BUCKET_NAME = env('AWS_STORAGE_PUBLIC_BUCKET_NAME')
+    AWS_STORAGE_PRIVATE_BUCKET_NAME = env('AWS_STORAGE_PRIVATE_BUCKET_NAME')
 
     # domain config
     AWS_S3_CUSTOM_PUBLIC_DOMAIN = f"{AWS_STORAGE_PUBLIC_BUCKET_NAME}.s3.amazonaws.com"
