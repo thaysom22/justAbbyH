@@ -4,16 +4,5 @@
 
 {% block content %}
     <h1>Home</h1>
-    <a href="{% url 'stories' %}">View Stories</a>
-    <a href="{% url 'subscribe' %}">Subscribe</a>
-    <a href="{% url 'about' %}">About justAbbyH</a>
-
-    <!-- SAMPLECODE FROM LEARNDJANGO.COM -->
-    {% if user.is_authenticated %}
-    Hi {{ user.first_name }}!
-    <p><a href="{% url 'logout' %}">Log Out</a></p>
-    {% else %}
-    <p>You are not logged in</p>
-    <a href="{% url 'login' %}">Log In</a>
-    {% endif %}
+    
 {% endblock %}

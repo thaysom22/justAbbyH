@@ -5,6 +5,9 @@
     <link rel="stylesheet" href="{% static 'subscribe/css/subscribe.css' %}">
 {% endblock %}
 
+{% block navbar %}
+{% endblock %}
+
 {% block content %}
     <div id="loading-overlay" class="hidden"></div>
     <h1>Subscribe</h1>
@@ -26,6 +29,9 @@
             <span id="button-text">Subscribe</span>
         </button>
     </form>
+{% endblock %}
+
+{% block footer %}
 {% endblock %}
 
 {% block extra_postloadjs %}

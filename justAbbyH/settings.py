@@ -13,13 +13,13 @@ env = environ.Env(DEVELOPMENT=(bool, False))  # 'true' evaluates to True
 env_file = os.path.join(BASE_DIR, ".env")
 environ.Env.read_env(env_file)
 
-# SECURITY INFO: development and production env have different SECRET_KEY
+# SECURITY INFO: SECRET_KEY different in production
 SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = 'DEVELOPMENT' in env
 
-ALLOWED_HOSTS = [env('PRODUCTION_HOST'), 'localhost']
+ALLOWED_HOSTS = ['just-abby-h.herokuapp.com', 'localhost']
 
 # Application definition
 

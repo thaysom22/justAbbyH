@@ -31,15 +31,19 @@
     <title>justAbbyH | {% block extra_title %}{% endblock %}</title>
 </head>
 <body>
-    {% include 'includes/navbar.html' %}
+    {% block navbar %}
+        {% include 'includes/navbar.html' %}
+    {% endblock %}
 
-    {% if messages %}
-        {% for message in messages %}
-            <p>{{ message }}</p>    
-        {% endfor %}
-    {% endif %}
+    {% block messages %}
+        {% include 'includes/messages.html' %}
+    {% endblock %}
 
     {% block content %}
+    {% endblock %}
+
+    {% block footer %}
+        {% include 'includes/footer.html' %}
     {% endblock %}
 
     {% block core_postloadjs %}
@@ -50,7 +54,5 @@
 
     {% block extra_postloadjs %}
     {% endblock %}
-
-    {% include 'includes/footer.html' %}
 </body>
 </html>

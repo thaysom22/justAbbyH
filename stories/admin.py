@@ -24,8 +24,9 @@ class StoryAdmin(admin.ModelAdmin):
     # CREDIT[10]
     def _pdf_download(self, obj):
         """ 
-        Display url to download story view which
-        generates signed s3 url
+        download story view url which
+        provides signed url access to 
+        s3 bucket from admin list display 
         """
         url_string = reverse('download_story', args=[obj.id])
         return format_html(
