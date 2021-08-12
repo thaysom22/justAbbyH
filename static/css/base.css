@@ -27,32 +27,27 @@ a {
     max-height: 100vh;  /* prevent overflow due to 100vh + 70px content height */
 }
 
-.navbar .navbar-collapse .navbar-nav {
+.navbar .navbar-collapse {
     justify-content: flex-end;
     align-items: center;
 }
 
-.navbar .navbar-brand-wrapper,
-.navbar .navbar-toggler-wrapper {
-    padding: .25rem;
-    z-index: 100;
-    height: 70px;
-    display: flex;
+.navbar .navbar-collapse .navbar-nav {
     align-items: center;
-    justify-content: center;
-    margin: 0 .5rem;
 }
 
 .navbar .navbar-brand,
-.navbar .navbar-toggler {
+.navbar .navbar-toggler:not(.collapsed) {
+    z-index: 100;
+    height: 50px;
     padding: .25rem;
+    margin: 10px .25rem;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
 .navbar .navbar-toggler {
-    transition: none;
     border: none;
 }
 
@@ -78,3 +73,4 @@ a {
     height: 100vh;
     width: 100vw;
 }
+

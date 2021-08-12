@@ -35,16 +35,16 @@
         {% include 'includes/navbar.html' %}
     {% endblock %}
 
-    {% block messages %}
-        {% include 'includes/messages.html' %}
-    {% endblock %}
+    <div id="hide-when-nav-expanded">
 
-    {% block content %}
-    {% endblock %}
+        {% block content %}
+        {% endblock %}
 
-    {% block footer %}
-        {% include 'includes/footer.html' %}
-    {% endblock %}
+        {% block footer %}
+            {% include 'includes/footer.html' %}
+        {% endblock %}
+
+    </div>
 
     {% block core_postloadjs %}
         <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
@@ -53,6 +53,7 @@
     {% endblock %}
 
     {% block extra_postloadjs %}
+        <script src="{% static 'js/navbar.js' %}"></script>
     {% endblock %}
 </body>
 </html>
