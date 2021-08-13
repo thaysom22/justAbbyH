@@ -36,6 +36,7 @@ INSTALLED_APPS = [
 
     # other
     'storages',
+    'crispy_forms',
 ]
 
 MIDDLEWARE = [
@@ -66,6 +67,8 @@ TEMPLATES = [
             ],
             'builtins': [
                 'django.templatetags.static',  # removes need for 'load static' in templates
+                'crispy_forms.templatetags.crispy_forms_tags',
+                'crispy_forms.templatetags.crispy_forms_field',
             ],
         },
     },

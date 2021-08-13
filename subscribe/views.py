@@ -65,7 +65,8 @@ def subscribe(request):
             template = "subscribe/subscribe.html"
             return render(request, template, context)
         
-    except Exception:
+    except Exception as e:
+        print(e)
         messages.error(
             request,
             "There was a server error. \

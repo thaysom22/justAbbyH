@@ -6,26 +6,37 @@
 {% endblock %}
 
 {% block navbar %}
+{# only brand fron navbar #}
 <nav class="navbar">
     <a class="navbar-brand" href="{% url 'index' %}">AbbyH Stories</a>
 </nav>
 {% endblock %}
 
 {% block content %}
-    <div id="loading-overlay" class="hidden"></div>
-    <h1>Subscribe</h1>
-
+    <div id="loading-overlay" class="hide"></div>
     <form method="post" id="subscribe-form">
         {% csrf_token %}
-        {{ user_form.as_p }}
+        <fieldset>
+            {{ user_form.first_name | as_crispy_field }}
+            {{ user_form.last_name | as_crispy_field }}
+            {{ user_form.email | as_crispy_field }}
+            {{ user_form.username | as_crispy_field }}
+            {{ user_form.password1 | as_crispy_field }}
+            {{ user_form.password2 | as_crispy_field }}
+        </fieldset>
         <hr>
-        {{ subscribe_form.as_p }}
+        <fieldset>
+            {{ subscribe_form.city | as_crispy_field }}
+            {{ subscribe_form.country | as_crispy_field }}
+        </fieldset>
         <hr>
-        <div id="card-element">
-            {# Stripe.js injects the Card Element #}
-        </div>
-        {# credit [2] #}
-        <p id="card-errors" role="alert"></p>
+        <fieldset>
+            <div id="card-element">
+                {# Stripe.js injects the Card Element here #}
+            </div>
+            {# credit [2] #}
+            <p id="card-errors" role="alert"></p>
+        </fieldset>
         <input type="hidden" value="{{ client_secret }}" name="client_secret">
         <button id="submit-button" type="submit" disabled>
             <div class="spinner hidden" id="spinner"></div>

@@ -9,10 +9,6 @@
 /* css for subscribe form UI with stripe based on 
 https://stripe.com/docs/payments/integration-builder */
 
-.hidden {
-    display: none;
-}
-
 #loading-overlay {
     position: fixed;
     top: 0;
