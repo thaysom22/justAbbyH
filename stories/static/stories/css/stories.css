@@ -1,0 +1,37 @@
+.stories-list-wrapper {
+    padding: calc(6rem + 1vw) calc(1rem + 1vw);
+    min-height: 100vh;
+}
+
+.story-wrapper {
+    width: 100%;
+    margin-bottom: 2rem;
+}
+
+.story-wrapper .story-img {
+    width: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+}
+
+/* CREDIT[11] */
+.story-wrapper .story-img::after {
+    content: "";
+    display: block;
+    padding-bottom: 100%;
+}
+
+.story-img .story-title {
+    font-family: var(--cursive);
+    color: var(--off-white);
+    font-size: calc(20px + .75vw);
+    font-weight: 900;
+    margin: auto;
+    position: absolute;
+    text-align: center;
+    top: 20%;
+    width: 100%;
+    padding: 1rem;
+}

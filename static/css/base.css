@@ -4,6 +4,15 @@
 
 /*** GLOBAL ***/
 
+/* css variables */
+:root {
+    --off-white: #FDF9F2;
+    --light-blue: #A4C0C4;
+    --dark-blue: #061234;
+    --cursive: 'Over the Rainbow', cursive;
+    --serif: 'Benne', serif;
+}
+
 * {
     box-sizing: border-box;
 }
@@ -13,14 +22,7 @@ a {
 }
 
 body {
-    font-family: 'Benne', serif;
-}
-
-/* colors */
-:root {
-    --off-white: #FDF9F2;
-    --light-blue: #A4C0C4;
-    --dark-blue: #061234;
+    font-family: var(--serif);
 }
 
 /*** UTILITY ***/
@@ -38,6 +40,8 @@ body {
 #hide-when-nav-expanded {
     position: absolute;
     top: 0;
+    width: 100vw;
+    min-height: 100vh;
 }
 
 .bg-off-white {
@@ -75,7 +79,7 @@ body {
 }
 
 .navbar .navbar-brand {
-    font-family: 'Over the Rainbow', cursive;
+    font-family: var(--cursive);
     font-size: 24px;
     color: var(--dark-blue);
 }
@@ -139,7 +143,7 @@ body {
 }
 
 .navbar-nav .nav-link.active {
-    border-bottom: .1px lightslategray solid;
+    border-bottom: .1px solid var(--light-blue);
     padding-bottom: 0;
 }
 
@@ -153,6 +157,8 @@ body {
     box-sizing: content-box;
     padding: .4rem 1.2rem;
     margin-bottom: 4rem;
+    margin-left: 0;
+    margin-top: 2rem;
 }
 
 .navbar-collapse.show .navbar-nav .nav-link.active,
@@ -160,28 +166,20 @@ body {
     margin-bottom: .5rem;
 }
 
+.navbar-collapse .navbar-nav .nav-link.nav-instagram {
+    display: none;
+}
+
 .navbar-collapse.show .navbar-nav .nav-link.nav-instagram,
 .navbar-collapse.collapsing .navbar-nav .nav-link.nav-instagram {
-    margin-top: 1.25rem;
+    margin-top: 4rem;
+    display: flex;
 }
 
 .navbar-collapse.show .navbar-nav .nav-link.nav-instagram i,
 .navbar-collapse.collapsing .navbar-nav .nav-link.nav-instagram i {
     font-size: 20px;
 }
-
-/* change navbar fonta for wider screen background image */
-@media screen and (min-width: 610px) {
-    .navbar .navbar-brand {
-        color: var(--off-white);
-    }
-
-    .navbar .navbar-toggler i {
-        color: var(--dark-blue);
-    }
-
-}
-
 
 /*** FOOTER ***/
 
@@ -190,7 +188,9 @@ footer {
     justify-content: center;
     align-items: center;
     background-color: var(--light-blue);
+    min-height: 40vh;
 }
+
 
 .footer-nav {
     display: flex;
@@ -212,7 +212,7 @@ footer {
 
 .footer-nav .nav-link:not(.btn) {
     color: var(--off-white);
-    font-size: 12px;
+    font-size: 16px;
     line-height: 30px;
     height: 30px;
     padding: .75rem .5rem;
@@ -223,7 +223,7 @@ footer {
 }
 
 .footer-nav .nav-link.nav-instagram i {
-    font-size: 16px;
+    font-size: 20px;
 }
 
 /*** MESSAGES ***/

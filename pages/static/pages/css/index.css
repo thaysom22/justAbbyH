@@ -32,11 +32,11 @@
     bottom: 0;
     margin-bottom: calc(3.5rem + 1vw);
     left: 50%;
-    transform: translate(-50%, 0);
+    transform: translate(-50%, 0); /* translate % relative to contained element's diemsions */
 }
 
 .main-text {
-    padding: 4rem calc(3rem + 1vw) 0 calc(3rem + 1vw);
+    padding: calc(4rem + 1vw) calc(3rem + 1vw) 0 calc(3rem + 1vw);
 }
 
 .main-text .row {
@@ -59,4 +59,15 @@
     #hero-img {
         background-image: url(/static/img/home-hero-landscape.jpg);
     }  
+}
+
+/* change navbar font colors for wider screen background image */
+@media screen and (min-width: 610px) {
+    .navbar .navbar-brand {
+        color: var(--off-white);
+    }
+
+    .navbar .navbar-toggler i {
+        color: var(--dark-blue);
+    }
 }

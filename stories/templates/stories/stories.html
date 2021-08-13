@@ -1,13 +1,28 @@
 {% extends "base.html" %}
 
-{% block content %}
-    <h1>Stories</h1>
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'stories/css/stories.css' %}">
+{% endblock %}
 
-    {% if stories %}
-        {% for story in stories %}
-            {{ story }}
-            <a href="{% url 'story_detail' story.id %}">Detail</a>
-        {% endfor %}
-    {% endif %}
+{% block content %}
+    <div class="stories-list-wrapper bg-off-white">
+        <div class="container-fluid">
+            <div class="row">
+                {% if stories %}
+                    {% for story in stories %}
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <div class="story-wrapper">
+                                <a href="{% url 'story_detail' story_id=story.id %}">
+                                    <div class="story-img" style="background-image: url({{ story.image.url }});">
+                                        <h6 class="story-title">{{ story.title }}</h6>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>  
+        </div>
+    </div>
 
 {% endblock %}
