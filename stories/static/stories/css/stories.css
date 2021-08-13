@@ -1,5 +1,5 @@
 .stories-list-wrapper {
-    padding: calc(6rem + 1vw) calc(1rem + 1vw);
+    padding: calc(6rem + 2vw) calc(4rem + 2vw);
     min-height: 100vh;
 }
 
@@ -16,11 +16,18 @@
     position: relative;
 }
 
+/* hover effect on story image link */
+.story-wrapper .story-img:hover {
+    box-shadow: 0 0 15px #888;
+}
+
 /* CREDIT[11] */
 .story-wrapper .story-img::after {
     content: "";
     display: block;
     padding-bottom: 100%;
+    background-color: black;
+    opacity: .3;
 }
 
 .story-img .story-title {
@@ -34,4 +41,5 @@
     top: 20%;
     width: 100%;
     padding: 1rem;
+    z-index: 10;
 }

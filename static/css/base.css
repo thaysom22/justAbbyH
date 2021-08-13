@@ -53,6 +53,7 @@ body {
 .btn.cta-btn {
     background-color: var(--light-blue);
     color: var(--off-white);
+    font-weight: bolder;
 }
 
 .btn.cta-btn.btn-color-inv {
@@ -82,6 +83,7 @@ body {
     font-family: var(--cursive);
     font-size: 24px;
     color: var(--dark-blue);
+    font-weight: 600;
 }
 
 .navbar .navbar-brand,

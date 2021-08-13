@@ -17,7 +17,7 @@ class StoryAdmin(admin.ModelAdmin):
                     'reading_time_mins',
                     'featured', 'image', '_pdf_download',)
     
-    readonly_fields = ('publish_date',)
+    readonly_fields = ('publish_date', 'reading_time_string',)
     
     ordering = ('-publish_date',)
 
@@ -25,8 +25,8 @@ class StoryAdmin(admin.ModelAdmin):
     def _pdf_download(self, obj):
         """ 
         download story view url which
-        provides signed url access to 
-        s3 bucket from admin list display 
+        provides signed url access to
+        s3 bucket from admin list display
         """
         url_string = reverse('download_story', args=[obj.id])
         return format_html(
