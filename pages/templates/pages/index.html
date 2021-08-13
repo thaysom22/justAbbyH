@@ -1,8 +1,25 @@
 {% extends "base.html" %}
 
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'pages/css/index.css' %}">
+{% endblock %}
+
 {% block extra_title %}Welcome{% endblock %}
 
 {% block content %}
-    <h1>Home</h1>
+    <div class="hero-wrapper">
+        <div id="hero-img">
+            <a class="subscribe-btn btn" href="{% url 'subscribe' %}">Read Now</a>
+        </div>
+    </div>
+    <div class="main-text-wrapper bg-off-white">
+        <div class="main-text container">
+            <div class="row">
+                <div class="col">
+                    Short stories exploring family, the ties that bind us together, race, and the experience of women. A small town in Arkansas, a wealthy English family, a group of friends entering college, and the wife of a Romanian dictator all feature in these stories.
+                </div>
+            </div>
+        </div>
+    </div>
     
 {% endblock %}

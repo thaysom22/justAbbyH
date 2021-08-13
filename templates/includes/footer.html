@@ -1,6 +1,8 @@
 <footer>
     <div class="footer-nav">
-        <a class="nav-link subscribe-btn btn btn-color-inv" href="{% url 'subscribe' %}">Subscribe</a>
+        {% if not user.is_authenticated %}
+            <a class="nav-link subscribe-btn btn btn-color-inv" href="{% url 'subscribe' %}">Subscribe</a>
+        {% endif %}
         <a class="nav-link" href="{% url 'stories' %}">Stories</a>
         <a class="nav-link" href="{% url 'about' %}">About</a>
         <a class="nav-link nav-instagram" href="https://www.instagram.com/">

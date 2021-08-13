@@ -35,6 +35,15 @@ body {
     justify-content: center;
 }
 
+#hide-when-nav-expanded {
+    position: absolute;
+    top: 0;
+}
+
+.bg-off-white {
+    background-color: var(--off-white);
+}
+
 /*** BUTTONS ***/
 
 .btn.subscribe-btn {
@@ -57,6 +66,7 @@ body {
 .navbar .navbar-collapse {
     justify-content: flex-end;
     align-items: center;
+    z-index: 10;
 }
 
 .navbar .navbar-collapse .navbar-nav {
@@ -67,28 +77,29 @@ body {
 .navbar .navbar-brand {
     font-family: 'Over the Rainbow', cursive;
     font-size: 24px;
+    color: var(--dark-blue);
+}
+
+.navbar .navbar-brand,
+.navbar .navbar-toggler {
+    border: none;
+    z-index: 100;
+    height: 50px;
+    padding: .25rem;
+    margin: 10px .75rem;
 }
 
 .navbar .navbar-brand,
 .navbar .navbar-toggler:not(.collapsed) {
-    z-index: 100;
-    height: 50px;
-    padding: .25rem;
-    margin: 10px .25rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--dark-blue);
-}
-}
-
-.navbar .navbar-toggler {
-    border: none;
+    
 }
 
 .navbar .navbar-toggler i {
     font-size: 30px;
-    color: var(--dark-blue);
+    color: var(--light-blue);
 }
 
 .navbar .navbar-toggler:focus {
@@ -97,10 +108,10 @@ body {
 
 .navbar .navbar-collapse.show,
 .navbar .navbar-collapse.collapsing {
-    z-index: 10;
     background-color: #FDF9F2;
     position: relative;
     top: -70px;
+    max-width: 100%;
 }
 
 .navbar .navbar-collapse.show .navbar-nav,
@@ -135,7 +146,7 @@ body {
     height: 60px;
     line-height: 60px;
     font-size: 20px;
-    margin-bottom: 4rem;;
+    margin-bottom: 4rem;
 }
 
 .navbar-collapse.show .navbar-nav .nav-link.active,
@@ -151,6 +162,18 @@ body {
 .navbar-collapse.show .navbar-nav .nav-link.nav-instagram i,
 .navbar-collapse.collapsing .navbar-nav .nav-link.nav-instagram i {
     font-size: 20px;
+}
+
+/* change navbar fonta for wider screen background image */
+@media screen and (min-width: 610px) {
+    .navbar .navbar-brand {
+        color: var(--off-white);
+    }
+
+    .navbar .navbar-toggler i {
+        color: var(--dark-blue);
+    }
+
 }
 
 
@@ -221,4 +244,6 @@ footer {
 .message .message-dismiss-icon i {
     font-size: 20px;
 }
+
+
 

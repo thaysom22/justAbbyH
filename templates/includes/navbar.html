@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-lg">
     <a class="navbar-brand" href="{% url 'index' %}">AbbyH Stories</a>
     <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon fa-icon-center"><i class="fas fa-bars"></i></span>
+        <span class="navbar-toggler-icon fa-icon-center"><i class="fas fa-ellipsis-h"></i></span>
     </button>
     <div class="navbar-collapse collapse" id="navbarSupportedContent">
         <div class="navbar-nav">
@@ -16,8 +16,8 @@
             {% else %}
                 {% url 'login' as url_login %}
                 <a class="nav-link{% if request.path == url_login %} active" aria-current="page"{% else %}"{% endif %} href="{{ url_login }}">Log in</a>
+                <a class="nav-link subscribe-btn btn" href="{% url 'subscribe' %}">Subscribe</a>
             {% endif %}
-            <a class="nav-link subscribe-btn btn" href="{% url 'subscribe' %}">Subscribe</a>
             <a class="nav-link nav-instagram hide" href="https://www.instagram.com/">
                 <span class="socialmedia-icon fa-icon-center"><i class="fab fa-instagram"></i></span>
             </a>

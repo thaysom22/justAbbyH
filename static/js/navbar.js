@@ -7,6 +7,6 @@ attach click event listener navbar toggler to:
 $('.navbar-toggler').click(() => {
     $('#hide-when-nav-expanded').toggleClass('hide');
     $('.navbar-nav .nav-instagram').toggleClass('hide');
-    $('.navbar-toggler-icon i').toggleClass(['fa-bars', 'fa-times']);
+    $('.navbar-toggler-icon i').toggleClass(['fa-ellipsis-h', 'fa-times']);
 });
 
