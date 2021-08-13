@@ -36,9 +36,15 @@ body {
 }
 
 /*** BUTTONS ***/
-.btn {
+
+.btn.subscribe-btn {
     background-color: var(--light-blue);
     color: var(--off-white);
+}
+
+.btn.subscribe-btn.btn-color-inv {
+    background-color: var(--off-white);
+    color: var(--light-blue);
 }
 
 /*** NAVBAR ***/
@@ -60,6 +66,7 @@ body {
 
 .navbar .navbar-brand {
     font-family: 'Over the Rainbow', cursive;
+    font-size: 24px;
 }
 
 .navbar .navbar-brand,
@@ -81,6 +88,7 @@ body {
 
 .navbar .navbar-toggler i {
     font-size: 30px;
+    color: var(--dark-blue);
 }
 
 .navbar .navbar-toggler:focus {
@@ -106,15 +114,84 @@ body {
     font-size: 16px;
     line-height: 40px;
     height: 40px;
-    padding: .2rem .5rem;
+    padding: 0 .5rem;
+    padding-top: 2px;
 }
 
 .navbar-nav .nav-link:not(.btn) {
     color: var(--dark-blue);
+    padding-top: 3px;
 }
 
-.nav-link.active {
-    border-bottom: .25px lightslategray solid;
+.navbar-nav .nav-link.active {
+    border-bottom: .1px lightslategray solid;
+    padding-bottom: 0;
+}
+
+.navbar-collapse.show .navbar-nav .btn.subscribe-btn,
+.navbar-collapse.collapsing .navbar-nav .btn.subscribe-btn {
+    order: -1;
+    padding: 3px 1rem 0 1rem;
+    height: 60px;
+    line-height: 60px;
+    font-size: 20px;
+    margin-bottom: 4rem;;
+}
+
+.navbar-collapse.show .navbar-nav .nav-link.active,
+.navbar-collapse.collapsing .navbar-nav .nav-link.active {
+    margin-bottom: .5rem;
+}
+
+.navbar-collapse.show .navbar-nav .nav-link.nav-instagram,
+.navbar-collapse.collapsing .navbar-nav .nav-link.nav-instagram {
+    margin-top: 1.25rem;
+}
+
+.navbar-collapse.show .navbar-nav .nav-link.nav-instagram i,
+.navbar-collapse.collapsing .navbar-nav .nav-link.nav-instagram i {
+    font-size: 20px;
+}
+
+
+/*** FOOTER ***/
+
+footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--light-blue);
+}
+
+.footer-nav {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 2rem;
+}
+
+.footer-nav .nav-link.btn {
+    font-size: 16px;
+    line-height: 40px;
+    height: 40px;
+    padding: .2rem .5rem;
+}
+
+.footer-nav .nav-link:not(.btn) {
+    color: var(--off-white);
+    font-size: 12px;
+    line-height: 30px;
+    height: 30px;
+    padding: .75rem .5rem;
+}
+
+.footer-nav .nav-link.nav-instagram {
+    margin-top: 1.25rem;
+}
+
+.footer-nav .nav-link.nav-instagram i {
+    font-size: 16px;
 }
 
 /*** MESSAGES ***/
