@@ -3,7 +3,7 @@
 }
 
 .subscribe-text-wrapper {
-    min-height: 33vh;
+    min-height: 33.3vh;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -29,6 +29,10 @@
 
 .subscribe-text .col-12 span {
     text-align: center;
+}
+
+.subscribe-form-wrapper{
+    min-height: 66.6vh;
 }
 
 .subscribe-form-inner {
@@ -74,9 +78,17 @@ https://stripe.com/docs/payments/integration-builder */
 }
 
 #card-errors {
-    color: #dc3545;
     height: 30px;
     padding: 4px;
+}
+
+.card-error {
+    color: #dc3545;
+}
+
+.card-error,
+.card-info {
+    margin-right: 4px;
 }
 
 #subscribe-form input {
@@ -132,8 +144,17 @@ select#id_country option:not([selected]) {
     background: var(--light-blue);
     z-index: 10000;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
+    padding: 2rem;
+}
+
+.loading-overlay-text {
+    color: var(--off-white);
+    font-size: 20px;
+    text-align: center;
+    padding: 4rem 2rem;
 }
 
 .spinner {

@@ -1,0 +1,20 @@
+.subscription-created-wrapper {
+    min-height: 100vh;
+    min-width: 100vw;
+    padding: calc(4rem + 1vw) calc(2rem + 3vw);
+}
+
+.subscription-created-inner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+.check-icon-wrapper {
+    padding: 2rem;
+}
+
+.subscription-created-wrapper .fa-check-circle {
+    font-size: 100px;
+    color: var(--light-blue);
+}

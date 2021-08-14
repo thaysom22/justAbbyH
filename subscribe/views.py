@@ -59,6 +59,7 @@ def subscribe(request):
             context = {
                 'user_form': user_form,
                 'subscribe_form': subscribe_form,
+                'subscription_cost': round(settings.SUBSCRIPTION_COST),
                 'stripe_public_key': stripe_public_key,
                 'client_secret': payment_intent.client_secret,
             }
@@ -243,7 +244,7 @@ def subscription_created(request):
         context[k] = urllib.parse.unquote(v)
 
     # add other data to context after decoding url params
-    context['subscription_cost'] = settings.SUBSCRIPTION_COST
+    context['subscription_cost'] = round(settings.SUBSCRIPTION_COST)
 
     template = "subscribe/subscription_created.html"
     return render(request, template, context)

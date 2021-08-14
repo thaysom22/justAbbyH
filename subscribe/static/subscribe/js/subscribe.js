@@ -50,22 +50,31 @@ $('select#id_country').on("change", function(event) {
     $(this).off(event);  // handler only runs once
 });
 
-// handle realtime validation errors on the card element
+// handle realtime validation feedback on the card element
 card.addEventListener('change', function(event) {
     var errorDiv = document.getElementById('card-errors');
+    var html;
     if (event.error) {
-        var html = `
-            <span class="icon" role="alert">
+        html = `
+            <span class="icon card-error" role="alert">
                 <i class="fas fa-times"></i>
             </span>
-            <span>${event.error.message}</span>
+            <span class="card-error">${event.error.message}</span>
         `;
-        errorDiv.innerHTML = html;
         document.getElementById('submit-button').disabled = true;
+    } else if (event.complete) {
+        html = `
+            <span class="icon card-info" role="alert">
+                <i class="fas fa-info"></i>
+            </span>
+            <span class="card-info">Your card will be charged $${document.getElementById('id_subscription_cost').text}</span>
+        `;
+        document.getElementById('submit-button').disabled = false;
     } else {
-        errorDiv.innerHTML = '';
-        document.getElementById('submit-button').disabled = event.empty; // will enable if not error and not empty
+        html = '';
+        document.getElementById('submit-button').disabled = true;
     }
+    errorDiv.innerHTML = html;
 });
 
 
@@ -73,10 +82,10 @@ card.addEventListener('change', function(event) {
 function showError(errorMsgText) {
     var errorDiv = document.getElementById("card-errors");
     var html = `
-        <span class="icon" role="alert">
+        <span class="icon card-error" role="alert">
             <i class="fas fa-times"></i>
         </span>
-        <span>${errorMsgText}</span>
+        <span class="card-error">${errorMsgText}</span>
     `;
     errorDiv.innerHTML = html;
 };

@@ -15,17 +15,20 @@
 {% block content %}
     <div id="loading-overlay" class="hidden">
         <div class="lds-ripple spinner"><div></div><div></div></div>
+        <div class="loading-overlay-text">
+            <span>Processing your payment now... just one moment please...</span>
+        </div>
     </div>
     <div class="subscribe-text-wrapper bg-light-blue">
         <div class="subscribe-text container">
             <div class="row">
                 <div class="col-12">
-                    <span>Get full access to all stories for just a $5 payment</span>
+                    <span>Get full access to all stories for just a ${{ subscription_cost }} payment</span>
                 </div>
             </div>
         </div>
     </div>
-    <div class="subscribe-form-wrapper .bg-off-white">
+    <div class="subscribe-form-wrapper bg-off-white">
         <div class="subscribe-form-inner container">
             <div class="row">
                 <div class="col-12">
@@ -61,6 +64,7 @@
 {% endblock %}
 
 {% block footer %}
+{# overwite parent block so footer is not displayed #}
 {% endblock %}
 
 {% block extra_postloadjs %}
@@ -69,5 +73,6 @@
     {# output template variables in script element accessible to external script via id attributes #}
     {{ stripe_public_key|json_script:"id_stripe_public_key" }}
     {{ client_secret|json_script:"id_client_secret" }}
+    {{ subscription_cost|json_script:"id_subscription_cost" }}
     <script src="{% static 'subscribe/js/subscribe.js' %}"></script>
 {% endblock %}

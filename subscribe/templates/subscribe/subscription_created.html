@@ -1,20 +1,40 @@
 {% extends "base.html" %}
 
-{% block content %}
-    <h1>Subscription Created!</h1>
-
-    <p>Your payment of ${{ subscription_cost }} was successful</p>
-
-    <ul>
-        <li>first_name = {{ first_name }}</li>
-        <li>last_name = {{ last_name }}</li>
-        <li>email = {{ email }}</li>
-        <li>city = {{ city }}</li>
-        <li>country_verbose = {{ country_verbose }}</li>
-    </ul>
-
-    <p>You are not logged in</p>
-    <a href="{% url 'login' %}">Log In</a>
-    
+{% block extra_css %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'subscribe/css/subscription_created.css' %}">
 {% endblock %}
 
+{% block navbar %}
+{# only brand from navbar #}
+<nav class="navbar subscribe-navbar">
+    <a class="navbar-brand" href="{% url 'index' %}">AbbyH Stories</a>
+</nav>
+{% endblock %}
+
+{% block content %}
+
+    <div class="subscription-created-wrapper bg-off-white">
+        <div class="container subscription-created-inner">
+            <div class="row">
+                <div class="col-12 check-icon-wrapper">
+                    <span class="check-icon fa-icon-center"><i class="far fa-check-circle"></i></span>
+                </div>
+                <div class="col-12">
+                    <span>Your payment of ${{ subscription_cost }} was successful</span>
+                </div>
+                <div class="col-12">
+                    <span>Welcome {{ first_name }}! Your subscription was successful and an email with your account activation link has been sent to {{ email }}</span>
+                </div>
+                <div class="col-12">
+                    <span>Email not received?</span>
+                    <span><a>Contact me</a> for help</span>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block footer %}
+{# overwite parent block so footer is not displayed #}
+{% endblock %}

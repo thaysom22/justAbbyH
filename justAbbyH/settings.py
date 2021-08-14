@@ -153,7 +153,7 @@ LOGOUT_REDIRECT_URL = 'index'
 
 # Stripe
 
-SUBSCRIPTION_COST = 5.00  # subscription cost
+SUBSCRIPTION_COST = 5  # subscription cost
 STRIPE_CURRENCY = 'usd'
 STRIPE_PUBLIC_KEY = env('STRIPE_PUBLIC_KEY')
 STRIPE_SECRET_KEY = env('STRIPE_SECRET_KEY')
