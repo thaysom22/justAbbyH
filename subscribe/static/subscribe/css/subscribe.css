@@ -31,12 +31,18 @@
     text-align: center;
 }
 
+.subscribe-form-inner {
+    padding: calc(4rem + 1vw);
+}
+
+
 
 
 /* remove default help text from fields*/
 #subscribe-form .helptext,
 #subscribe-form .help-block,
-#subscribe-form ul {
+#subscribe-form .controls ul,
+#subscribe-form .controls p {
     display: none;
 }
 
@@ -57,15 +63,19 @@ https://stripe.com/docs/payments/integration-builder */
     z-index: 10000;
 }
 
-input {
+input,
+select {
     border-radius: 6px;
-    margin-bottom: 6px;
-    padding: 12px;
+    margin: 8px 0;
+    padding: 6px 12px 0 12px;
     border: 1px solid rgba(50, 50, 93, 0.1);
     height: 44px;
+    line-height: 70px;
     font-size: 16px;
-    width: 100%;
+    overflow: visible;
+    width: calc(100% - 24px);
     background: white;
+    box-sizing: content-box;
 }
 
 #card-element {
