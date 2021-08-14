@@ -48,6 +48,10 @@ body {
     background-color: var(--off-white);
 }
 
+.bg-light-blue {
+    background-color: var(--light-blue);
+}
+
 /*** BUTTONS ***/
 
 .btn.cta-btn {
@@ -100,7 +104,6 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    
 }
 
 .navbar .navbar-toggler i {

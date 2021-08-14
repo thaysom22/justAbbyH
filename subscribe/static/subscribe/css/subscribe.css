@@ -1,10 +1,48 @@
-/* remove default help text from UserRegisterForm */
+.subscribe-navbar .navbar-brand{
+    color: var(--off-white);
+}
 
+.subscribe-text-wrapper {
+    min-height: 33vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.subscribe-text {
+    margin-top: 50px;
+    padding: calc(4rem + 1vw);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.subscribe-text .col-12 {
+    color: var(--off-white);
+    font-size: calc(20px + 1vw);
+    line-height: 1.5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.subscribe-text .col-12 span {
+    text-align: center;
+}
+
+
+
+/* remove default help text from fields*/
 #subscribe-form .helptext,
+#subscribe-form .help-block,
 #subscribe-form ul {
     display: none;
 }
 
+.hidden {
+    display: none;
+}
 
 /* css for subscribe form UI with stripe based on 
 https://stripe.com/docs/payments/integration-builder */
@@ -15,8 +53,8 @@ https://stripe.com/docs/payments/integration-builder */
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.25);
-    z-index: 9999;
+    background: var(--light-blue);
+    z-index: 10000;
 }
 
 input {

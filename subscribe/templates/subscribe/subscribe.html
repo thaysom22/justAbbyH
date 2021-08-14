@@ -6,43 +6,60 @@
 {% endblock %}
 
 {% block navbar %}
-{# only brand fron navbar #}
-<nav class="navbar">
+{# only brand from navbar #}
+<nav class="navbar subscribe-navbar">
     <a class="navbar-brand" href="{% url 'index' %}">AbbyH Stories</a>
 </nav>
 {% endblock %}
 
 {% block content %}
-    <div id="loading-overlay" class="hide"></div>
-    <form method="post" id="subscribe-form">
-        {% csrf_token %}
-        <fieldset>
-            {{ user_form.first_name | as_crispy_field }}
-            {{ user_form.last_name | as_crispy_field }}
-            {{ user_form.email | as_crispy_field }}
-            {{ user_form.username | as_crispy_field }}
-            {{ user_form.password1 | as_crispy_field }}
-            {{ user_form.password2 | as_crispy_field }}
-        </fieldset>
-        <hr>
-        <fieldset>
-            {{ subscribe_form.city | as_crispy_field }}
-            {{ subscribe_form.country | as_crispy_field }}
-        </fieldset>
-        <hr>
-        <fieldset>
-            <div id="card-element">
-                {# Stripe.js injects the Card Element here #}
+    <div id="loading-overlay" class="hidden"></div>
+    <div class="subscribe-text-wrapper bg-light-blue">
+        <div class="subscribe-text container">
+            <div class="row">
+                <div class="col-12">
+                    <span>Get full access to all stories for just a $5 card payment</span>
+                </div>
             </div>
-            {# credit [2] #}
-            <p id="card-errors" role="alert"></p>
-        </fieldset>
-        <input type="hidden" value="{{ client_secret }}" name="client_secret">
-        <button id="submit-button" type="submit" disabled>
-            <div class="spinner hidden" id="spinner"></div>
-            <span id="button-text">Subscribe</span>
-        </button>
-    </form>
+        </div>
+    </div>
+    <div class="subscribe-form-wrapper .bg-off-white">
+        <div class="subscribe-form-inner container">
+            <div class="row">
+                <div class="col-12">
+                    <form method="post" id="subscribe-form">
+                        {% csrf_token %}
+                        <fieldset>
+                            {{ user_form.first_name | as_crispy_field }}
+                            {{ user_form.last_name | as_crispy_field }}
+                            {{ user_form.email | as_crispy_field }}
+                            {{ user_form.username | as_crispy_field }}
+                            {{ user_form.password1 | as_crispy_field }}
+                            {{ user_form.password2 | as_crispy_field }}
+                        </fieldset>
+                        <hr>
+                        <fieldset>
+                            {{ subscribe_form.city | as_crispy_field }}
+                            {{ subscribe_form.country | as_crispy_field }}
+                        </fieldset>
+                        <hr>
+                        <fieldset>
+                            <div id="card-element">
+                                {# Stripe.js injects the Card Element here #}
+                            </div>
+                            {# credit [2] #}
+                            <p id="card-errors" role="alert"></p>
+                        </fieldset>
+                        <input type="hidden" value="{{ client_secret }}" name="client_secret">
+                        <button id="submit-button" type="submit" disabled>
+                            <div class="spinner hidden" id="spinner"></div>
+                            <span id="button-text">Subscribe</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 {% block footer %}
