@@ -35,9 +35,6 @@
     padding: calc(4rem + 1vw);
 }
 
-
-
-
 /* remove default help text from fields*/
 #subscribe-form .helptext,
 #subscribe-form .help-block,
@@ -47,144 +44,133 @@
 }
 
 .hidden {
-    display: none;
+    display: none !important;
 }
 
 /* css for subscribe form UI with stripe based on 
 https://stripe.com/docs/payments/integration-builder */
 
-#loading-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: var(--light-blue);
-    z-index: 10000;
-}
-
-input,
-select {
+#subscribe-form input,
+#subscribe-form  select,
+#card-element {
     border-radius: 6px;
     margin: 8px 0;
-    padding: 6px 12px 0 12px;
-    border: 1px solid rgba(50, 50, 93, 0.1);
+    padding: 4px 12px 0 12px;
+    border: 2px solid rgba(50, 50, 93, 0.1);
     height: 44px;
-    line-height: 70px;
+    line-height: 44px;
     font-size: 16px;
     overflow: visible;
     width: calc(100% - 24px);
-    background: white;
     box-sizing: content-box;
+    font-family: serif;
+    color: var(--dark-blue);
+    display: flex;
+    align-items: center;
 }
 
-#card-element {
-    border-radius: 4px 4px 0 0 ;
-    padding: 12px;
-    border: 1px solid rgba(50, 50, 93, 0.1);
-    height: 44px;
+#card-element .__PrivateStripeElement {
     width: 100%;
+}
+
+#card-errors {
+    color: #dc3545;
+    height: 30px;
+    padding: 4px;
+}
+
+#subscribe-form input {
     background: white;
 }
 
-button {
-    background: #5469d4;
-    color: #ffffff;
-    font-family: Arial, sans-serif;
-    border-radius: 0 0 4px 4px;
-    border: 0;
-    padding: 12px 16px;
-    font-size: 16px;
-    font-weight: 600;
+select#id_country {
+    color: #6c757d;
+}
+
+select#id_country option:not([selected]) {
+    color: var(--dark-blue);
+}
+
+#subscribe-form hr {
+    width: 60%;
+    margin-left: auto;
+    margin-right: auto;
+    color: var(--light-blue);
+    opacity: 0.8;
+}
+
+
+#submit-button {
     cursor: pointer;
     display: block;
     transition: all 0.2s ease;
     box-shadow: 0px 4px 5.5px 0px rgba(0, 0, 0, 0.07);
     width: 100%;
+    font-size: 20px;
+    line-height: 20px;
+    height: 60px;
+    padding: 4px 10px 0 10px;
 }
 
-button:hover {
+#submit-button:hover:not(:disabled) {
     filter: contrast(115%);
 }
 
-button:disabled {
-    opacity: 0.5;
+#submit-button:disabled {
+    opacity: 0.3;
     cursor: default;
 }
 
-/* spinner/processing state, errors */
+/* overlay and spinner */
 
-.spinner,
-.spinner:before,
-.spinner:after {
-    border-radius: 50%;
+#loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: var(--light-blue);
+    z-index: 10000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .spinner {
-    color: #ffffff;
-    font-size: 22px;
-    text-indent: -99999px;
-    margin: 0px auto;
+    color:  var(--off-white);
+}
+
+/* CREDIT[12] */
+.lds-ripple {
+    display: inline-block;
     position: relative;
-    width: 20px;
-    height: 20px;
-    box-shadow: inset 0 0 0 2px;
-    -webkit-transform: translateZ(0);
-    -ms-transform: translateZ(0);
-    transform: translateZ(0);
-}
-
-.spinner:before,
-.spinner:after {
+    width: 320px;
+    height: 320px;
+  }
+  .lds-ripple div {
     position: absolute;
-    content: "";
-}
-
-.spinner:before {
-    width: 10.4px;
-    height: 20.4px;
-    background: #5469d4;
-    border-radius: 20.4px 0 0 20.4px;
-    top: -0.2px;
-    left: -0.2px;
-    -webkit-transform-origin: 10.4px 10.2px;
-    transform-origin: 10.4px 10.2px;
-    -webkit-animation: loading 2s infinite ease 1.5s;
-    animation: loading 2s infinite ease 1.5s;
-}
-
-.spinner:after {
-    width: 10.4px;
-    height: 10.2px;
-    background: #5469d4;
-    border-radius: 0 10.2px 10.2px 0;
-    top: -0.1px;
-    left: 10.2px;
-    -webkit-transform-origin: 0px 10.2px;
-    transform-origin: 0px 10.2px;
-    -webkit-animation: loading 2s infinite ease;
-    animation: loading 2s infinite ease;
-}
-
-@-webkit-keyframes loading {
+    border: 4px solid #fff;
+    opacity: 1;
+    border-radius: 50%;
+    animation: lds-ripple 1s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+  }
+  .lds-ripple div:nth-child(2) {
+    animation-delay: -0.5s;
+  }
+  @keyframes lds-ripple {
     0% {
-        -webkit-transform: rotate(0deg);
-        transform: rotate(0deg);
+      top: 160px;
+      left: 160px;
+      width: 0;
+      height: 0;
+      opacity: 1;
     }
     100% {
-        -webkit-transform: rotate(360deg);
-        transform: rotate(360deg);
+      top: 0px;
+      left: 0px;
+      width: 320px;
+      height: 320px;
+      opacity: 0;
     }
-}
-
-@keyframes loading {
-    0% {
-        -webkit-transform: rotate(0deg);
-        transform: rotate(0deg);
-    }
-    100% {
-        -webkit-transform: rotate(360deg);
-        transform: rotate(360deg);
-    }
-}
+  }
 

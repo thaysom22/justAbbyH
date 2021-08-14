@@ -17,12 +17,11 @@ var elements = stripe.elements();
 // styles for card element
 var style = {
     base: {
-        color: '#000',
-        fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
-        fontSmoothing: 'antialiased',
+        color: '#061234',
+        fontFamily: 'serif',
         fontSize: '16px',
         '::placeholder': {
-            color: '#aab7c4'
+            color: '#6c757d'
         }
     },
     invalid: {
@@ -36,6 +35,74 @@ var card = elements.create('card', {
     style: style
 });
 card.mount('#card-element');
+
+
+/****** UI HELPERS ******/
+
+// country select widget UI
+$(document).ready(() => {
+    $('select#id_country').addClass('form-select');
+    $('select#id_country option[selected]').prop('disabled', true);
+})
+
+$('select#id_country').on("change", function(event) {
+    $(this).css("color", "#061234");
+    $(this).off(event);  // handler only runs once
+});
+
+// handle realtime validation errors on the card element
+card.addEventListener('change', function(event) {
+    var errorDiv = document.getElementById('card-errors');
+    if (event.error) {
+        var html = `
+            <span class="icon" role="alert">
+                <i class="fas fa-times"></i>
+            </span>
+            <span>${event.error.message}</span>
+        `;
+        errorDiv.innerHTML = html;
+        document.getElementById('submit-button').disabled = true;
+    } else {
+        errorDiv.innerHTML = '';
+        document.getElementById('submit-button').disabled = event.empty; // will enable if not error and not empty
+    }
+});
+
+
+// UI feedback for unsuccessful payment
+function showError(errorMsgText) {
+    var errorDiv = document.getElementById("card-errors");
+    var html = `
+        <span class="icon" role="alert">
+            <i class="fas fa-times"></i>
+        </span>
+        <span>${errorMsgText}</span>
+    `;
+    errorDiv.innerHTML = html;
+};
+
+
+function awaitingPaymentResult(isLoading) {
+    /**
+     * enable/disable UI on subscription page while Stripe attempts payment.
+     * display overlay, disable button and card element.
+     * @param {Boolean} isLoading - flag to enable or disable.
+     */
+    if (isLoading) {
+        document.getElementById('submit-button').disabled = true;
+        card.update({
+            'disabled': true
+        });
+        $("#loading-overlay").removeClass("hidden");
+        $(".subscribe-navbar,.subscribe-text-wrapper,.subscribe-form-wrapper").addClass("hidden"); 
+    } else {
+        card.update({
+            'disabled': false
+        });
+        $("#loading-overlay").addClass("hidden");
+        $(".subscribe-navbar,.subscribe-text-wrapper,.subscribe-form-wrapper").removeClass("hidden");
+    }
+};
 
 
 /****** PAYMENT PROCESS ******/
@@ -176,61 +243,3 @@ form.addEventListener("submit", function (event) {
     };
 });
 
-
-/****** UI HELPERS ******/
-
-// handle realtime validation errors on the card element
-card.addEventListener('change', function(event) {
-    var errorDiv = document.getElementById('card-errors');
-    if (event.error) {
-        var html = `
-            <span class="icon" role="alert">
-                <i class="fas fa-times"></i>
-            </span>
-            <span>${event.error.message}</span>
-        `;
-        errorDiv.innerHTML = html;
-        document.getElementById('submit-button').disabled = true;
-    } else {
-        errorDiv.innerHTML = '';
-        document.getElementById('submit-button').disabled = event.empty; // will enable if not error and not empty
-    }
-});
-
-
-// UI feedback for unsuccessful payment
-function showError(errorMsgText) {
-    var errorDiv = document.getElementById("card-errors");
-    var html = `
-        <span class="icon" role="alert">
-            <i class="fas fa-times"></i>
-        </span>
-        <span>${errorMsgText}</span>
-    `;
-    errorDiv.innerHTML = html;
-};
-
-
-function awaitingPaymentResult(isLoading) {
-    /**
-     * enable/disable UI on subscription page while Stripe attempts payment.
-     * display overlay, disable button and card element.
-     * @param {Boolean} isLoading - flag to enable or disable.
-     */
-    if (isLoading) {
-        document.getElementById('submit-button').disabled = true;
-        card.update({
-            'disabled': true
-        });
-        document.getElementById("spinner").classList.remove("hidden");
-        document.getElementById("button-text").classList.add("hidden");
-        document.getElementById("loading-overlay").classList.remove("hidden");
-    } else {
-        card.update({
-            'disabled': false
-        });
-        document.getElementById("spinner").classList.add("hidden");
-        document.getElementById("button-text").classList.remove("hidden");
-        document.getElementById("loading-overlay").classList.add("hidden");
-    }
-};

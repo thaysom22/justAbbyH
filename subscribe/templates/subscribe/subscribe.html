@@ -13,7 +13,9 @@
 {% endblock %}
 
 {% block content %}
-    <div id="loading-overlay" class="hidden"></div>
+    <div id="loading-overlay" class="hidden">
+        <div class="lds-ripple spinner"><div></div><div></div></div>
+    </div>
     <div class="subscribe-text-wrapper bg-light-blue">
         <div class="subscribe-text container">
             <div class="row">
@@ -33,14 +35,11 @@
                             {{ user_form.first_name | as_crispy_field }}
                             {{ user_form.last_name | as_crispy_field }}
                             {{ user_form.email | as_crispy_field }}
+                            {{ subscribe_form.city | as_crispy_field }}
+                            {{ subscribe_form.country | as_crispy_field }}
                             {{ user_form.username | as_crispy_field }}
                             {{ user_form.password1 | as_crispy_field }}
                             {{ user_form.password2 | as_crispy_field }}
-                        </fieldset>
-                        <hr>
-                        <fieldset>
-                            {{ subscribe_form.city | as_crispy_field }}
-                            {{ subscribe_form.country | as_crispy_field }}
                         </fieldset>
                         <hr>
                         <fieldset>
@@ -51,8 +50,7 @@
                             <p id="card-errors" role="alert"></p>
                         </fieldset>
                         <input type="hidden" value="{{ client_secret }}" name="client_secret">
-                        <button id="submit-button" type="submit" disabled>
-                            <div class="spinner hidden" id="spinner"></div>
+                        <button id="submit-button" class="btn cta-btn" type="submit" disabled>
                             <span id="button-text">Subscribe</span>
                         </button>
                     </form>

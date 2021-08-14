@@ -24,12 +24,12 @@ class UserRegisterForm(UserCreationForm):
         """
         super().__init__(*args, **kwargs)
         placeholders = {
-            'username': 'Username*',
-            'first_name': 'First Name*',
-            'last_name': 'Last Name*',
-            'email': 'Email Address*',
-            'password1': 'Password*',
-            'password2': 'Repeat Password*',
+            'username': 'Username',
+            'first_name': 'First Name',
+            'last_name': 'Last Name',
+            'email': 'Email Address',
+            'password1': 'Password',
+            'password2': 'Repeat Password',
         }
 
         for field in self.fields:
@@ -37,7 +37,7 @@ class UserRegisterForm(UserCreationForm):
             self.fields[field].widget.attrs['placeholder'] = placeholders[field]
             self.fields[field].required = True  # make all fields required by form validation
 
-        self.fields['username'].widget.attrs['autofocus'] = True
+        self.fields['first_name'].widget.attrs['autofocus'] = True
 
 
 class SubscriptionForm(forms.ModelForm):
