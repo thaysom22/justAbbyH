@@ -37,8 +37,6 @@ class UserRegisterForm(UserCreationForm):
             self.fields[field].widget.attrs['placeholder'] = placeholders[field]
             self.fields[field].required = True  # make all fields required by form validation
 
-        self.fields['first_name'].widget.attrs['autofocus'] = True
-
 
 class SubscriptionForm(forms.ModelForm):
     """

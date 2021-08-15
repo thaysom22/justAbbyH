@@ -1,0 +1,49 @@
+.add-story-form-wrapper{
+    min-height: 100vh;
+}
+
+.add-story-form-inner {
+    padding: calc(4rem + 1vw);
+}
+
+.add-story-form-inner .row {
+    margin-top: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* remove default help text from fields*/
+.add-story-form .helptext,
+.add-story-form .help-block,
+.add-story-form .controls ul,
+.add-story-form .controls p {
+    display: none;
+}
+
+#add-story-form input,
+#add-story-form  select,
+#add-story-form  textarea {
+    border-radius: 6px;
+    margin: 8px 0;
+    padding: 4px 12px 0 12px;
+    border: 2px solid rgba(50, 50, 93, 0.1);
+    height: 44px;
+    line-height: 44px;
+    font-size: 16px;
+    overflow: visible;
+    box-sizing: content-box;
+    font-family: serif;
+    color: var(--dark-blue);
+    display: flex;
+    align-items: center;
+}
+
+#add-story-form input:not(#id_image,#id_pdf) {
+    width: calc(100% - 24px);
+}
+
+/* CREDIT[13] */
+.asteriskField {
+    display: none;
+}

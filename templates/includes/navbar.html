@@ -9,6 +9,10 @@
             <a class="nav-link{% if request.path == url_index %} active" aria-current="page"{% else %}"{% endif %} href="{{ url_index }}">Home</a>
             {% url 'stories' as url_stories %}
             <a class="nav-link{% if request.path == url_stories %} active" aria-current="page"{% else %}"{% endif %} href="{{ url_stories }}">Stories</a>
+            {% if user.is_staff %}
+                {% url 'add_story' as url_add_story %}
+                <a class="nav-link{% if request.path == url_add_story %} active" aria-current="page"{% else %}"{% endif %} href="{{ url_add_story }}">Add story</a>
+            {% endif %}    
             {% url 'about' as url_about %}
             <a class="nav-link{% if request.path == url_about %} active" aria-current="page"{% else %}"{% endif %} href="{{ url_about }}">About</a>
             {% if user.is_authenticated %}

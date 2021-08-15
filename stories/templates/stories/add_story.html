@@ -1,11 +1,31 @@
 {% extends "base.html" %}
 
-{% block content %}
-    <h1>Add a Story</h1>
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'stories/css/add_story.css' %}">
+{% endblock %}
 
-    <form method="post" id="add-story-form" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ add_story_form.as_p }}
-        <button type="submit">Add Story</button>
-    </form>
+{% block content %}
+    <div class="add-story-form-wrapper bg-off-white">
+        <div class="add-story-form-inner container">
+            <div class="row">
+                <div class="col-12">
+                    <form method="post" id="add-story-form" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <fieldset>
+                            {{ add_story_form.title | as_crispy_field }}
+                            {{ add_story_form.reading_time_mins | as_crispy_field }}
+                            {{ add_story_form.description | as_crispy_field }}
+                            {{ add_story_form.image | as_crispy_field }}
+                            {{ add_story_form.pdf | as_crispy_field }}
+                            {{ add_story_form.genre | as_crispy_field }}
+                            {{ add_story_form.featured | as_crispy_field }}
+                        </fieldset>
+                        <button id="submit-button" class="btn cta-btn" type="submit">
+                            <span id="button-text">Add</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

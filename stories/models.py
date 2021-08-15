@@ -54,7 +54,7 @@ class Story(models.Model):
         )
     else:
         # use default local storage in development
-        image = models.ImageField(upload_to='public/story_images/', blank=True)
+        image = models.ImageField(upload_to='public/story_images/')
         pdf = models.FileField(upload_to='private/story_pdfs/')
 
     def __str__(self):

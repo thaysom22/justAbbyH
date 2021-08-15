@@ -11,7 +11,7 @@ class StoryForm(forms.ModelForm):
     class Meta:
         model = Story
         fields = ('title', 'description',
-                  'pdf', 'image', 
+                  'pdf', 'image',
                   'genre', 'featured',
                   'reading_time_mins',)
         
@@ -21,17 +21,23 @@ class StoryForm(forms.ModelForm):
         """
         super().__init__(*args, **kwargs)
         placeholders = {
-            'title': 'Title*',
-            'description': 'Enter description*',
+            'title': 'Title',
+            'description': 'Description',
+            'reading_time_mins': 'Reading time (mins)',
+        }
+
+        labels = {
+            'pdf': 'PDF',
+            'image': 'Image',
+            'featured': 'Featured',
         }
 
         for field in placeholders.keys():
-            self.fields[field].label = False
             self.fields[field].widget.attrs['placeholder'] = placeholders[field]
-            
-        self.fields['reading_time_mins'].label = 'Reading Time (Minutes)'
-        self.fields['pdf'].label = 'PDF*'
-        self.fields['genre'].label = 'Select genre'
-        self.fields['title'].widget.attrs['autofocus'] = True
+            self.fields[field].label = False
 
-    
+        for field in labels.keys():
+            self.fields[field].label = labels[field]
+            self.fields[field].placeholder = False
+        
+        self.fields['genre'].label = False
