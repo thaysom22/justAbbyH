@@ -21,6 +21,7 @@ class Story(models.Model):
     UNKNOWN = 'Unknown'
 
     GENRE_CHOICES = [
+        ('', 'Genre'),
         (FICTION, 'Fiction'),
         (NON_FICTION, 'Non-fiction'),
         (UNKNOWN, 'Unknown'),

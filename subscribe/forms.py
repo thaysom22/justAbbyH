@@ -19,8 +19,7 @@ class UserRegisterForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         """
         Add placeholders, remove labels,
-        set autofocus on first input, make 
-        all fields required
+        make all fields required
         """
         super().__init__(*args, **kwargs)
         placeholders = {
@@ -33,6 +32,7 @@ class UserRegisterForm(UserCreationForm):
         }
 
         for field in self.fields:
+            self.fields[field].widget.attrs.pop("autofocus", None)
             self.fields[field].label = False
             self.fields[field].widget.attrs['placeholder'] = placeholders[field]
             self.fields[field].required = True  # make all fields required by form validation
@@ -58,9 +58,12 @@ class SubscriptionForm(forms.ModelForm):
 
         for field in self.fields:
             self.fields[field].label = False
-            if field != 'country':
+            self.fields[field].widget.attrs.pop("autofocus", None)
+            if field == 'country':
+                current_classes = self.fields['country'].widget.attrs.get('class', '')
+                if current_classes:
+                    self.fields['country'].widget.attrs.update({'class': f'{current_classes} form-select'})
+                else:
+                    self.fields['country'].widget.attrs['class'] = 'form-select'
+            else:
                 self.fields[field].widget.attrs['placeholder'] = placeholders[field]
-        
-        
-
-    

@@ -41,7 +41,6 @@ card.mount('#card-element');
 
 // country select widget UI
 $(document).ready(() => {
-    $('select#id_country').addClass('form-select');
     $('select#id_country option[selected]').prop('disabled', true);
 })
 

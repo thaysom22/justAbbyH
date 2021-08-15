@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static 'stories/css/add_story.css' %}">
+    <link rel="stylesheet" href="{% static 'stories/css/story_form.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -28,4 +28,8 @@
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block extra_postloadjs %}
+    <script src="{% static 'stories/js/story_form.js' %}"></script>
 {% endblock %}

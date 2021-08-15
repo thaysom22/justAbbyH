@@ -1,0 +1,83 @@
+.add-story-form-wrapper{
+    min-height: 100vh;
+}
+
+.add-story-form-inner {
+    padding: calc(4rem + 1vw) calc(1rem + 2vw);
+}
+
+.add-story-form-inner .row {
+    margin-top: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* remove default help text from fields*/
+.add-story-form .helptext,
+.add-story-form .help-block,
+.add-story-form .controls ul,
+.add-story-form .controls p {
+    display: none;
+}
+
+#add-story-form input:not(#id_featured),
+#add-story-form select {
+    height: 44px;
+    line-height: 44px;
+    padding: 4px 12px 0 12px;
+}
+
+#add-story-form textarea {
+    line-height: 24px;
+    padding: 12px;
+}
+
+
+#add-story-form input:not(#id_featured),
+#add-story-form select,
+#add-story-form textarea {
+    border-radius: 6px;
+    margin: 10px 0;
+    border: 2px solid rgba(50, 50, 93, 0.1);
+    font-size: 16px;
+    overflow: visible;
+    box-sizing: content-box;
+    font-family: serif;
+    color: var(--dark-blue);
+    display: flex;
+    align-items: center;
+}
+
+#add-story-form input:not(#id_image,#id_pdf,#id_featured),
+#add-story-form textarea,
+#add-story-form select {
+    width: calc(100% - 24px);
+}
+
+#add-story-form input#id_featured {
+    height: 20px;
+    width: 20px;
+    margin: 0 10px 7px 0;
+}
+
+/* CREDIT[13] */
+.asteriskField {
+    display: none;
+}
+
+select#id_genre {
+    color: #6c757d;
+}
+
+select#id_genre option:not([selected]) {
+    color: var(--dark-blue);
+}
+
+.checkbox {
+    display: flex;
+    align-items: center;
+    height: 44px;
+    line-height: 44px;
+    padding: 0 4px;
+}

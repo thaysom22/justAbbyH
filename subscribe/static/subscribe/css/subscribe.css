@@ -36,7 +36,7 @@
 }
 
 .subscribe-form-inner {
-    padding: calc(4rem + 1vw);
+    padding: calc(4rem + 1vw) calc(1rem + 2vw);
 }
 
 /* remove default help text from fields*/
@@ -55,10 +55,10 @@
 https://stripe.com/docs/payments/integration-builder */
 
 #subscribe-form input,
-#subscribe-form  select,
+#subscribe-form select,
 #card-element {
     border-radius: 6px;
-    margin: 8px 0;
+    margin: 10px 0;
     padding: 4px 12px 0 12px;
     border: 2px solid rgba(50, 50, 93, 0.1);
     height: 44px;
@@ -80,6 +80,7 @@ https://stripe.com/docs/payments/integration-builder */
 #card-errors {
     height: 30px;
     padding: 4px;
+    margin: 0;
 }
 
 .card-error {
@@ -91,7 +92,8 @@ https://stripe.com/docs/payments/integration-builder */
     margin-right: 4px;
 }
 
-#subscribe-form input {
+#subscribe-form input,
+#subscribe-form #card-element {
     background: white;
 }
 
