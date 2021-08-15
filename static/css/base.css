@@ -52,10 +52,6 @@ body {
     background-color: var(--light-blue);
 }
 
-.nav-link:hover {
-    color: var(--light-blue) !important;
-}
-
 /*** BUTTONS ***/
 
 .btn.cta-btn {
@@ -163,6 +159,10 @@ body {
     padding-top: 3px;
 }
 
+.navbar-nav .nav-link:not(.btn):hover {
+    color: var(--light-blue);
+}
+
 .navbar-nav .nav-link.btn {
     margin-left: .5rem;
 }
@@ -191,7 +191,7 @@ body {
     margin-bottom: .5rem;
 }
 
-.navbar-collapse .navbar-nav .nav-link.nav-instagram {
+.navbar-collapse .navbar-nav .nav-social-media-links {
     display: none;
 }
 
@@ -312,6 +312,11 @@ footer {
     color: var(--dark-blue);
     padding-top: 3px;
 }
+
+.links-404 a.nav-link:hover {
+    color: var(--light-blue);
+}
+
 
 @media only screen and (min-width: 992px) {
     .inner-404 .row .col-12 {

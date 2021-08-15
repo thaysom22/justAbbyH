@@ -1,0 +1,44 @@
+.about-text-wrapper {
+    min-height: 70vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.about-text {
+    padding: calc(4rem + 2vw) calc(3rem + 4vw);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.about-text .row {
+    margin-top: 50px;
+}
+
+.about-text .col-12 {
+    color: var(--off-white);
+    font-size: calc(18px + 2vw);
+    line-height: 1.5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.about .col-12 span {
+    text-align: center;
+}
+
+.about-social-media-links {
+    display: flex;
+    align-items: center;
+}
+
+.photo-section-wrapper {
+
+}
+
+/* override navbar colors from base.css */
+.navbar .navbar-brand {
+    color: var(--off-white);
+}

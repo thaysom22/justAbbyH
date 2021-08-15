@@ -1,5 +1,47 @@
 {% extends "base.html" %}
 
+{% block extra_css %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'pages/css/about.css' %}">
+{% endblock %}
+
 {% block content %}
-    <h1>About</h1>
+    <div class="about-text-wrapper bg-light-blue">
+        <div class="about-text container">
+            <div class="row">
+                <div class="col-12">
+                    <span>Abby Haysom is a writer, English teacher and book lover. She has previously lived in Arkansas, Edinburgh, Dorset and Bucharest - locations which influence her creative work in interesting ways. She loves to cook and to Zumba.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="photo-section-wrapper bg-off-white">
+        <div class="photo-section-inner container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="photo-wrapper">
+                        <div id="photo-img"></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <span>Abby writes and teaches from Maryland, USA.</span>
+                        <span>Connect with her via Instagram, Twitter or email.</span>
+                        <div class="about-social-media-links">
+                            <a class="nav-link nav-instagram" target="_blank" href="https://www.instagram.com/">
+                                <span class="socialmedia-icon fa-icon-center"><i class="fab fa-instagram"></i></span>
+                            </a>
+                            <a class="nav-link nav-twitter" target="_blank" href="https://twitter.com/justabbyd">
+                                <span class="socialmedia-icon fa-icon-center"><i class="fab fa-twitter"></i></span>
+                            </a>
+                            <a class="nav-link nav-email" target="_blank" href="https://www.instagram.com/">
+                                <span class="socialmedia-icon fa-icon-center"><i class="fab fa-instagram"></i></span>
+                            </a>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
