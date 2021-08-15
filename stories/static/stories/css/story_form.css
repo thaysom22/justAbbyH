@@ -21,7 +21,7 @@
     display: none;
 }
 
-#add-story-form input:not(#id_featured),
+#add-story-form input:not(#id_featured,#id_image,#id_pdf),
 #add-story-form select {
     height: 44px;
     line-height: 44px;
@@ -60,6 +60,30 @@
     width: 20px;
     margin: 0 10px 7px 0;
 }
+
+#add-story-form input#id_image,
+#add-story-form input#id_pdf {
+    margin: 5px 0;
+    height: 44px;
+    line-height: 35px;
+    padding: 4px 12px 0 12px;
+    cursor: pointer;
+    width: 80%;
+    max-width: 300px;
+}
+
+#add-story-form input#id_image::-webkit-file-upload-button,
+#add-story-form input#id_pdf::-webkit-file-upload-button {
+    cursor: pointer;
+    margin-right: 12px;
+    
+}
+
+#div_id_image,
+#div_id_pdf {
+    margin: 10px 0;
+}
+
 
 /* CREDIT[13] */
 .asteriskField {

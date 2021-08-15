@@ -31,5 +31,6 @@
 {% endblock %}
 
 {% block extra_postloadjs %}
+    {{ block.super }}
     <script src="{% static 'stories/js/story_form.js' %}"></script>
 {% endblock %}
