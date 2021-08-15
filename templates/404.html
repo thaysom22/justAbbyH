@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="wrapper-404 bg-off-white">
+    <div class="container inner-404">
+        <div class="row">
+            <div class="col-12">
+                <h1>Oops!</h1>
+            </div>
+            <div class="col-12">
+                <h4><strong>404 error: </strong>The requested page could not be found on the server.</h4>
+            </div>
+            <div class="col-12">
+                <h6>Here are some places you might be looking for:</h6>
+                <div class="links-404">
+                    <a class="nav-link" href="{% url 'index' %}">Home</a>
+                    <a class="nav-link" href="{% url 'stories' %}">Stories</a>
+                    <a class="nav-link" href="{% url 'subscribe' %}">Subscribe</a>
+                    <a class="nav-link" href="{% url 'about' %}">About</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    
+
+    
+
+{% endblock %}
