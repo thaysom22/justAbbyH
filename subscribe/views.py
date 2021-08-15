@@ -235,8 +235,7 @@ def subscription_created(request):
         'first_name': request.GET.get('first_name', ''),
         'last_name': request.GET.get('last_name', ''),
         'email': request.GET.get('email', ''),
-        'city': request.GET.get('city', ''),
-        'country_verbose': request.GET.get('country_verbose', ''),
+        'username': request.GET.get('username', ''),
     }
     # decode query string values and pass to template context
     # CREDIT[8]
@@ -245,6 +244,7 @@ def subscription_created(request):
 
     # add other data to context after decoding url params
     context['subscription_cost'] = round(settings.SUBSCRIPTION_COST)
+    context['default_from_email'] = settings.DEFAULT_FROM_EMAIL
 
     template = "subscribe/subscription_created.html"
     return render(request, template, context)

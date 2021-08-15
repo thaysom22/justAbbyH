@@ -199,9 +199,8 @@ form.addEventListener("submit", function (event) {
                     var firstNameEncoded = encodeURIComponent(formData.first_name);  // encode url params credit[7]
                     var lastNameEncoded = encodeURIComponent(formData.last_name);
                     var emailEncoded = encodeURIComponent(formData.email);
-                    var cityEncoded = encodeURIComponent(formData.city);
-                    var countryVerboseEncoded = encodeURIComponent(formData.country_verbose);
-                    var redirectUrlQueryString = `?first_name=${firstNameEncoded}&last_name=${lastNameEncoded}&email=${emailEncoded}&city=${cityEncoded}&country_verbose=${countryVerboseEncoded}`;
+                    var usernameEncoded = encodeURIComponent(formData.username);
+                    var redirectUrlQueryString = `?first_name=${firstNameEncoded}&last_name=${lastNameEncoded}&email=${emailEncoded}&username=${usernameEncoded}`;
                     var redirectUrl = data.redirectUrlPath + redirectUrlQueryString;
                     // inactive user in database will be activated via webhook handler
                     window.location.replace(redirectUrl);

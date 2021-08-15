@@ -21,14 +21,22 @@
                     <span class="check-icon fa-icon-center"><i class="far fa-check-circle"></i></span>
                 </div>
                 <div class="col-12">
-                    <span>Your payment of ${{ subscription_cost }} was successful</span>
+                    <span>Your payment of ${{ subscription_cost }} was successful.</span>
                 </div>
                 <div class="col-12">
-                    <span>Welcome {{ first_name }}! Your subscription was successful and an email with your account activation link has been sent to {{ email }}</span>
+                    <span>Welcome {{ first_name }}! I hope you enjoy reading my stories.</span>
+                </div>
+                <div class="col-12">
+                    <span>An email with your account activation link has been sent to {{ email }}</span>
                 </div>
                 <div class="col-12">
                     <span>Email not received?</span>
-                    <span><a>Contact me</a> for help</span>
+                    <span>
+                        <a class="email-link" href = "mailto:{{ default_from_email }}?subject=Activation email not received for {{ username }}&body=Dear Abby, I subscribed to your website but I did not receive an activation email. My username is {{ username }}. Yours, {{ first_name }} {{ last_name }} ">
+                        Contact me
+                        </a> 
+                        for help.
+                    </span>
                 </div>
             </div>
         </div>
