@@ -102,10 +102,10 @@ def edit_story(request, story_id):
     else:
         # GET
         edit_story_form = StoryForm(instance=story)
-        messages.info(request, f'You are editing {story.title}')
         
     context = {
         'edit_story_form': edit_story_form,
+        'story': story,
     }
     template = "stories/edit_story.html"
     return render(request, template, context)

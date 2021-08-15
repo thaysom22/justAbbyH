@@ -27,8 +27,12 @@ class StoryForm(forms.ModelForm):
         }
 
         labels = {
+            'title': 'Title',
+            'description': 'Description',
+            'reading_time_mins': 'Reading time (mins)',
             'pdf': 'PDF',
             'image': 'Image',
+            'genre': 'Genre',
             'featured': 'Featured',
         }
         for field in self.fields:
@@ -36,13 +40,9 @@ class StoryForm(forms.ModelForm):
 
         for field in placeholders.keys():
             self.fields[field].widget.attrs['placeholder'] = placeholders[field]
-            self.fields[field].label = False
 
         for field in labels.keys():
             self.fields[field].label = labels[field]
-            self.fields[field].placeholder = False
-        
-        self.fields['genre'].label = False
 
         current_classes = self.fields['genre'].widget.attrs.get('class', '')
         if current_classes:

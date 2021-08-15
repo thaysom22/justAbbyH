@@ -5,11 +5,11 @@
 {% endblock %}
 
 {% block content %}
-    <div class="add-story-form-wrapper bg-off-white">
-        <div class="add-story-form-inner container">
+    <div class="story-form-wrapper bg-off-white">
+        <div class="story-form-inner container">
             <div class="row">
                 <div class="col-12">
-                    <form method="post" id="add-story-form" enctype="multipart/form-data">
+                    <form method="post" id="story-form" class="add-story-form" enctype="multipart/form-data">
                         {% csrf_token %}
                         <fieldset>
                             {{ add_story_form.title | as_crispy_field }}
@@ -21,7 +21,7 @@
                             {{ add_story_form.featured | as_crispy_field }}
                         </fieldset>
                         <button id="submit-button" class="btn cta-btn" type="submit">
-                            <span id="button-text">Add</span>
+                            <span id="button-text">Save</span>
                         </button>
                     </form>
                 </div>
