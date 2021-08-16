@@ -114,3 +114,24 @@
     display: none;
 }
 
+.delete-story {
+    margin: 2rem 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.delete-story #delete-story-link {
+    color: #dc3545;
+}
+
+.delete-story #delete-story-link:hover {
+    color: #b30f20;
+}
+
+@media screen and (min-width: 768px) {
+    .delete-story #delete-story-link {
+        font-size: 18px;
+    }
+}
+
