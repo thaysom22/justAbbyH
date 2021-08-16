@@ -1,5 +1,5 @@
 .stories-list-wrapper {
-    padding: calc(6rem + 2vw) calc(4rem + 2vw);
+    padding: calc(8rem + 2vw) calc(1rem + 2vw) calc(6rem + 2vw) calc(1rem + 2vw);
     min-height: 100vh;
 }
 

@@ -70,6 +70,10 @@ body {
     font-weight: bolder;
 }
 
+.btn.cta-btn:hover {
+    filter: brightness(110%);
+}
+
 .btn.cta-btn.btn-color-inv {
     background-color: var(--off-white);
     color: var(--light-blue);
@@ -200,6 +204,14 @@ body {
     margin-top: 2rem;
 }
 
+.navbar-collapse:not(.show) .navbar-nav .btn.cta-btn,
+.navbar-collapse:not(.collapsing) .navbar-nav .btn.cta-btn {
+    height: 50px;
+    padding-top: 7px;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
 .navbar-collapse.show .navbar-nav .nav-link.active,
 .navbar-collapse.collapsing .navbar-nav .nav-link.active {
     margin-bottom: .5rem;
@@ -289,7 +301,7 @@ footer {
     padding: .75rem 1rem;
     z-index: 10;
     color: var(--dark-blue);
-    background-color: var(--off-white);
+    background-color: #FFF;
 }
 
 .message .message-content {

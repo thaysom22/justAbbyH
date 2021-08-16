@@ -8,9 +8,12 @@
 
 {% block content %}
     <div class="hero-wrapper">
-        <div id="hero-img">
+        <div id="hero-img"></div>
+        {% if user.is_authenticated %}
+            <a class="cta-btn btn" href="{% url 'stories' %}">Read Now</a>
+        {% else %}
             <a class="cta-btn btn" href="{% url 'subscribe' %}">Read Now</a>
-        </div>
+        {% endif %}
     </div>
     <div class="main-wrapper bg-off-white">
         <div class="main-text container">
