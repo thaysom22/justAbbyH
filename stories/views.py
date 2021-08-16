@@ -26,16 +26,22 @@ def story_detail(request, story_id):
     if user is not authenicated.
     """
     story = get_object_or_404(Story, pk=story_id)
-    user_is_subscribed = False  # determine if download links will be in template
-    if request.user.is_authenticated:
+    user_is_subscribed = False
+    user_is_staff = False
+    # determine if download link and/or edit story link will be in template
+    if request.user.is_staff:
+        user_is_staff = True
+        user_is_subscribed = True
+    elif request.user.is_authenticated:
         user_is_subscribed = True
     else:
         # remove reference to pdf file from object passed to template (no change in database)
         story.pdf = None
-
+    
     context = {
         'story': story,
         'user_is_subscribed': user_is_subscribed,
+        'user_is_staff': user_is_staff,
     }
     template = "stories/story_detail.html"
     return render(request, template, context)

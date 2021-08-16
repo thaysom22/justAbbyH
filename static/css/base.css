@@ -67,7 +67,8 @@ body {
 
 /*** FORMS ***/
 
-#submit-button {
+#submit-button,
+#download-button {
     cursor: pointer;
     display: block;
     transition: all 0.2s ease;
@@ -79,6 +80,9 @@ body {
     padding: 8px 10px 0 10px;
     max-width: 400px;
     margin: 1rem auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 /*** NAVBAR ***/
