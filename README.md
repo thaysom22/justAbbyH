@@ -135,15 +135,13 @@ The site is designed to have a modern, warm, professional feel and to appeal to 
 
 * Lots of space around centered elements and text is used on all pages of the site so the user can enjoy an uncluttered and comfortable browsing experience on all device sizes.
 * Individual stories on the list stories page are presented with their images in familiar, clean, boxed elements on the page with a subtle and comfortable hover fade effect. Buttons and links also exhibit the same hover fade effect for consistency of interaction across all elements of the site. 
-* Website icon (used in navbar logo on larger screens) ???
-* Social media icon (Instagram)
-* Menu icon (bar)
+* Favicon icon
+* Social media icons (Instagram)
+* Menu icon
 * Close (times) icon
 * Confirmation icon
-* Section divider icon (as horizontal rule)
-* Download icon
 * Edit icon
-* Delete icon
+
 
 
 ## Wireframes
