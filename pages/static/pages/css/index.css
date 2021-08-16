@@ -35,6 +35,10 @@
     transform: translate(-50%, 0); /* translate % relative to contained element's diemsions */
 }
 
+.main-wrapper {
+    min-height: 90vh;
+}
+
 .main-text {
     padding: calc(4rem + 1vw) calc(3rem + 1vw) 0 calc(3rem + 1vw);
 }
