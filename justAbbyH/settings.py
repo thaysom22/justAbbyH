@@ -19,9 +19,6 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = 'DEVELOPMENT' in env
 
-#TEST
-DEBUG = False
-
 ALLOWED_HOSTS = ['just-abby-h.herokuapp.com', 'localhost']
 
 # Application definition

@@ -1,12 +1,12 @@
 .about-text-wrapper {
-    min-height: 70vh;
+    min-height: 50vh;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
 .about-text {
-    padding: calc(4rem + 2vw) calc(3rem + 4vw);
+    padding: calc(4rem + 2vw) calc(1.5rem + 4vw);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -18,11 +18,30 @@
 
 .about-text .col-12 {
     color: var(--off-white);
-    font-size: calc(18px + 2vw);
+    font-size: calc(20px + 2vw);
     line-height: 1.5;
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.about-text.contact-info .col-12 {
+    color: var(--dark-blue);
+    font-size: calc(16px + 1vw);
+    flex-direction: column;
+}
+
+.about-text.contact-info .col-12>span {
+    padding: calc(1.5rem + 1vh) 0;
+}
+
+.about-text.contact-info i {
+    font-size: 24px;
+    color: var(--dark-blue);
+}
+
+.about-text.contact-info i:hover {
+    color: var(--light-blue);
 }
 
 .about .col-12 span {
@@ -32,13 +51,40 @@
 .about-social-media-links {
     display: flex;
     align-items: center;
+    margin-top: 1rem;
 }
 
 .photo-section-wrapper {
+    min-height: 100vh;
+}
 
+.photo-wrapper {
+    height: 50vh;
+    margin-top: calc(80px + 3vw);
+}
+
+#photo-img {
+    height: 100%;
+    width: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-image: url(/static/img/about-author-portrait.jpg);
+    position: relative;
 }
 
 /* override navbar colors from base.css */
-.navbar .navbar-brand {
+.navbar .navbar-brand,
+.navbar .navbar-toggler i,
+.navbar-nav .nav-link:not(.btn) {
     color: var(--off-white);
+}
+
+.navbar-nav .nav-link:not(.btn):hover {
+    color: var(--dark-blue);
+}
+
+.btn.cta-btn {
+    background-color: var(--off-white);
+    color: var(--light-blue);
 }
