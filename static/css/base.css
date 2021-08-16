@@ -124,7 +124,7 @@ body {
 
 .navbar .navbar-toggler i {
     font-size: 30px;
-    color: var(--light-blue);
+    color: var(--dark-blue);
 }
 
 .navbar .navbar-toggler:focus {

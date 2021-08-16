@@ -66,8 +66,4 @@
     .navbar .navbar-brand {
         color: var(--off-white);
     }
-
-    .navbar .navbar-toggler i {
-        color: var(--dark-blue);
-    }
 }

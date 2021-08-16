@@ -82,28 +82,39 @@
 /* override navbar colors from base.css */
 .navbar .navbar-brand,
 .navbar .navbar-toggler i,
-.navbar-nav .nav-link:not(.btn) {
+.navbar-collapse:not(.show,.collapsing) .nav-link:not(.btn) {
     color: var(--off-white);
 }
 
-.navbar-nav .nav-link:not(.btn):hover {
+.navbar .navbar-toggler i.fa-times,
+.navbar-collapse:not(.show,.collapsing) .nav-link:not(.btn):hover {
     color: var(--dark-blue);
 }
 
-.btn.cta-btn {
+.navbar-collapse:not(.show,.collapsing) .btn.cta-btn {
     background-color: var(--off-white);
     color: var(--light-blue);
 }
 
+.navbar .navbar-collapse:not(.show,.collapsing) .nav-link.active {
+    border-color: var(--off-white);
+}
+
 
 /* change image height for wider screens */
-@media screen and (min-width: 576px) {
+@media screen and (min-width: 450px) {
+    .photo-wrapper {
+        height: 60vh;
+    }
+}
+
+@media screen and (min-width: 768px) {
     .photo-wrapper {
         height: 70vh;
     }
 }
 
-@media screen and (min-width: 992px) {
+@media screen and (min-width: 900px) {
     .photo-wrapper {
         height: 80vh;
     }
