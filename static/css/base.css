@@ -2,7 +2,7 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Benne&family=Over+the+Rainbow&display=swap');
 
-/*** GLOBAL ***/
+/*** GLOBAL OVERRIDES ***/
 
 /* css variables */
 :root {
@@ -23,6 +23,10 @@ a {
 
 body {
     font-family: var(--serif);
+}
+
+.nav-link {
+    padding: .5rem;
 }
 
 /*** UTILITY ***/

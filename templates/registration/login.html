@@ -1,11 +1,31 @@
 {% extends "base.html" %}
 
+{% block extra_css %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'css/registration/login.css' %}">
+{% endblock %}
+
+
 {% block content %}
-    <!-- SAMPLECODE FROM LEARNDJANGO.COM -->
-    <h2>Log In</h2>
-    <form method="post" id="login-form">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Log In</button>
-    </form>
+
+<div class="login-form-wrapper bg-off-white">
+    <div class="login-form-inner container">
+        <div class="row">
+            <div class="col-12">
+                <form method="post" id="login-form" class="login-form">
+                    {% csrf_token %}
+                    <fieldset>
+                        {% for field in form %}
+                            {{ field | as_crispy_field }}
+                        {% endfor %}
+                    </fieldset>
+                    <button id="submit-button" class="btn cta-btn" type="submit">
+                        <span id="button-text">Log in</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% endblock %}
