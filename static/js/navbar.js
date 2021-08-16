@@ -6,5 +6,6 @@ attach click event listener navbar toggler to:
 $('.navbar-toggler').click(() => {
     $('#hide-when-nav-expanded').toggleClass('hide');
     $('.navbar-toggler-icon i').toggleClass(['fa-ellipsis-h', 'fa-times']);
+    $('.messages').toggleClass('hide');  // smoothes transition of display/hide navbar
 });
 

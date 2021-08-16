@@ -36,11 +36,11 @@
         {% include 'includes/navbar.html' %}
     {% endblock %}
 
-    <div id="hide-when-nav-expanded">
+    <div class="messages">
+        {% include 'includes/messages.html' %}
+    </div>
 
-        <div id="navbar-collapsed-messages" class="messages">
-            {% include 'includes/messages.html' %}
-        </div>
+    <div id="hide-when-nav-expanded">
 
         {% block content %}
         {% endblock %}

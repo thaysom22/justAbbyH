@@ -286,16 +286,19 @@ footer {
     display: flex;
     width: 100%;
     justify-content: center;
-    margin-bottom: .5rem;
-    padding: 0 1rem;
+    padding: .75rem 1rem;
+    z-index: 10;
+    color: var(--dark-blue);
+    background-color: var(--off-white);
 }
 
 .message .message-content {
-    margin-left: auto;
+    padding-top: 3px;
 }
 
 .message .message-dismiss-icon {
-    margin-left: auto;
+    margin-left: 20px;
+    cursor: pointer;
 }
 
 .message .message-dismiss-icon i {
