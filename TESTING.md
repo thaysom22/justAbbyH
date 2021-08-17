@@ -68,25 +68,60 @@ New user:
 
 * The subscribe form button is disabled until valid payment information is entered. The user is shown realtime feedback before form submit if there are errors with payment information. When the payment information is valid, the user is shown the charge amount and the button is enabled. 
 * When valid subscribe form is submitted, the user is shown an overlay with a repeating animation and is informed that their payment is being processed. If the process is successful the user is shown a subscription successful page and given instructions for how to activate their account via email link.
-* If there is an error with authorizing user's payment the overlay is removed and the user is shown the specific error message from Stripe beneath payment input. 
-
+* If there is an error from Stripe  with authorizing user's payment on the client the overlay is removed and the user is shown the specific error message from Stripe beneath payment input. 
+* If there is an invalid input or server error when creating the inactive user and associated subscription in database or when deleting the previously created inactive user (if payment client has failed) then the subscribe page is reloaded with an appropriate error messages displayed.
+* If required fields are left blank the standard browser tool tips are displayed and the subscribe form will not submit.
 
 Subscribed user:
 
 7. As a subscribed user, I want to be able to browse all stories by the author, so that I can decide which stories I want to read.
+
+* As above (2).
+* Subscribed user is shown download story link when they click on a specific story link
+
 8. As a subscribed user, I want to be able to view information about a particular story, so that I can decide whether I want to read the story.
-10. As a subscribed user, I want to download a pdf of a full story, so that I can read the full story at my convenience.
-11. As a subscribed user, I want to be able to login to the site after subscribing, so that I can access existing and newly published stories.
+
+* Links to all stories are displayed on stories page and when subscribed user clicks on any story they are shown a page for that particular story with reading time, publish date, download story link and description of story.
+
+9. As a subscribed user, I want to download a pdf of a full story, so that I can read the full story at my convenience.
+
+* Each individual story details page has a download link to a pdf document hosted on AWS for the story. This can be downloaded by the user for later use. 
+* The link expires after 5 mins so it cannot be shared but the user can click the download story link again to generate a fresh link if they wish to access the story again.
+
+10. As a subscribed user, I want to be able to login to the site after subscribing, so that I can access existing and newly published stories.
+
+* The navigation bar displayed on the homepage and all other pages except subscribe pages has a link to login page where subscribed user can input credentials. 
+* Logged in users are shown 'download story' link on individual story pages 
 
 Site owner:
 
-12. As the site owner, I want to be able to add stories to the site, so that I can publish new stories when I write them and increase the amount of content available to subscribers.
-13. As the site owner, I want to be able to edit and delete stories, so that I can make necessary updates and curate the content available.
+11. As the site owner, I want to be able to add stories to the site, so that I can publish new stories when I write them and increase the amount of content available to subscribers.
+
+* logged in staff status users are shown a link to add story in navigation bar
+* add story page has a form where fields for story can be inputted and a submit button to save story to database so it will appear on stories list page.
+
+12. As the site owner, I want to be able to edit and delete stories, so that I can make necessary updates and curate the content available.
+
+* logged in staff status users are shown an edit icon on each individual story detail page linking to edit story page
+* edit story page displays a form which is prefilled with current field values from database which the user can update
+* form has a submit button to save story changes to database so they will take effect on stories list and details pages
+* edit story page has a delete story link to endpoint on server that removes story from database (first triggers a broswer confirm dialoge box)
 
 As any type of user:
 
-14. As a user, I want to naviagate a site that is attractive, well structured and user friendly on all device sizes easily navigate the site and achieve my goals. 
-15. As a user, I want to receive feedback messages from the site to inform me if my action was usccessful or an error has occurred, so that I am reassured my interactions are have the desired effect and what to do next if not.
+13. As a user, I want to naviagate a site that is attractive, well structured and user friendly on all device sizes easily navigate the site and achieve my goals. 
+
+* navigation is laid out clearly and consistently in an familiar way on all device sizes
+* color scheme and fonts are consistent across site
+* plenty of padding and margins create a comfortable and visually appealing user experience
+* where appropriate: layout, spacing, sizing of text and elements on page adjusts for device size
+* interactive elements exhibit unobtrusive, familiar and helpful effects
+
+14. As a user, I want to receive feedback messages from the site to inform me if my action was unsuccessful or an error has occurred, so that I am reassured my interactions are have the desired effect and what to do next if not.
+
+* server sends messages to be displayed at top of page whenever an error occurs or a user needs feedback or information about a previous action.
+* messages are displayed prominently but unobtrusively at top of page
+* messages can be hidden by clicking a dismiss icon or they time out.
 
 ## Manual testing
 

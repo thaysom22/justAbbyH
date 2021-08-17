@@ -122,9 +122,6 @@ def create_inactive_user(request):
                 "Please check your form for errors and try again."
             )
 
-            print("user form errors:", user_form.errors)  #TEST
-            print("subscription form errors:", subscription_form.errors)  #TEST
-
             return JsonResponse(
                 data={
                     "errors": {
@@ -165,8 +162,9 @@ def create_inactive_user(request):
 
         messages.error(
             request,
-            "Your account could not be created. \
-            Please try again or contact me for help!"
+            "Sorry, your account could not be created right now. \
+            Your card has not been charged. \
+            Please try again or contact for help."
         )
 
         print(error)  # TEST
@@ -206,7 +204,8 @@ def confirm_deletion_of_inactive_user(request):
             messages.error(
                 request,
                 "I'm sorry your payment was not successful. \
-                Please try again or contact me for help!"
+                Your card has not been charged. \
+                Please try again or contact for help."
             )
             return HttpResponse(
                 content="Request denied: User instance is active and \
@@ -217,7 +216,7 @@ def confirm_deletion_of_inactive_user(request):
         # page is reloaded by js, so inform user about failed payment
         messages.error(
             request,
-            "I'm sorry your payment was not successful. \
+            "I'm sorry your payment failed. \
             Please try again or contact me for help!"
         )
         return HttpResponse(

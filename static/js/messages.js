@@ -9,4 +9,4 @@ $('.message .message-dismiss-icon').click(function() {
 /* set timeout to hide messages automatically after delay */
 setTimeout(() => {
     $('.messages').addClass("hide");
-}, 8000)
+}, 15000)

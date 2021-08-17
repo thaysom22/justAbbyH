@@ -167,17 +167,14 @@ form.addEventListener("submit", function (event) {
 
         function createInactiveUserAjaxFailure() {
             // error message will be in django messages
-            console.log("Createinactiveuser failed"); //TEST
             window.location.reload();
         };
 
         function createInactiveUserAjaxSuccess(data) {
             /* ATTEMPT PAYMENT */
-            console.log("Createinactiveuser succeeded"); //TEST
             processPayment();
 
             function processPayment() {
-                console.log("processPayment ran"); //TEST
                 // if card requires authentication Stripe shows a pop-up modal
                 stripe.confirmCardPayment(
                     clientSecret, {
