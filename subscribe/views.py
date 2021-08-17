@@ -194,7 +194,7 @@ def confirm_deletion_of_inactive_user(request):
                 status=200,
             )
         # confirm that existing user instance to be deleted is inactive
-        # this prevents malicious POST requests to delete active users
+        # this negates malicious POST requests to delete active users
         if not user.is_active:
             user.delete()  # linked subscription also deleted by CASCADE
             return HttpResponse(

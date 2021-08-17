@@ -67,7 +67,9 @@ New user:
 6. As a new user, I want to be shown feedback on the status of my payment and subscription, so that I am resassured I have been provided with what I have paid for and I know what further action to take if necessary.
 
 * The subscribe form button is disabled until valid payment information is entered. The user is shown realtime feedback before form submit if there are errors with payment information. When the payment information is valid, the user is shown the charge amount and the button is enabled. 
-* When valid subscribe form is submitted, the user is shown an overlay with a repeating animation and is informed that their payment is being processed. If the process is successful the user is shown a subscription successful page and given instructions for how to activate their account
+* When valid subscribe form is submitted, the user is shown an overlay with a repeating animation and is informed that their payment is being processed. If the process is successful the user is shown a subscription successful page and given instructions for how to activate their account via email link.
+* If there is an error with authorizing user's payment the overlay is removed and the user is shown the specific error message from Stripe beneath payment input. 
+
 
 Subscribed user:
 
@@ -94,6 +96,7 @@ As any type of user:
 
 * form input elements too wide on large devices. fix: set max-width value on containers for all forms on site.
 * ambiguous error message for 'activate_user' endpoint. changed to inform that link could be already used, expired or invalid.
+* inactive user not being deleted during payment process when payment fails on client so the subscribe page just reloads and the inactive user is not reoved from the database and specific error message is not shown to user. fix: endpoint name corrected in ajax call from subscribe.js function.
 
 #### Unsolved bugs
 

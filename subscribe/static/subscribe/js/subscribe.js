@@ -167,14 +167,17 @@ form.addEventListener("submit", function (event) {
 
         function createInactiveUserAjaxFailure() {
             // error message will be in django messages
+            console.log("Createinactiveuser failed"); //TEST
             window.location.reload();
         };
 
         function createInactiveUserAjaxSuccess(data) {
             /* ATTEMPT PAYMENT */
+            console.log("Createinactiveuser succeeded"); //TEST
             processPayment();
 
             function processPayment() {
+                console.log("processPayment ran"); //TEST
                 // if card requires authentication Stripe shows a pop-up modal
                 stripe.confirmCardPayment(
                     clientSecret, {
@@ -186,6 +189,7 @@ form.addEventListener("submit", function (event) {
                     if (result.error) {
                         /* PAYMENT FAILED */
                         // createInactiveUser succeeded so inactive user exists in db
+                        showError(result.error.message); // update UI feedback for failed payment
                         confirmDeletionOfInactiveUser(data.inactiveUserId);
                     } else {
                         /* PAYMENT SUCCEEDED */
@@ -208,7 +212,7 @@ form.addEventListener("submit", function (event) {
                 function confirmDeletionOfInactiveUser(inactiveUserId) {
                     // send ajax post request to '/confirm-deletion-of-inactive-user/' url
                     $.ajax({
-                        url: '/subscribe/delete-inactive-user/',
+                        url: '/subscribe/confirm-deletion-of-inactive-user/',
                         method: 'POST',
                         data: getConfirmDeletionOfInactiveUserData(inactiveUserId),
                         success: confirmDeletionOfInactiveUserAjaxSuccess,
@@ -218,14 +222,15 @@ form.addEventListener("submit", function (event) {
 
                 function confirmDeletionOfInactiveUserAjaxSuccess() {
                     // confirmed inactive user not in DB 
-                    showError(result.error.message); // show feedback for failed payment
                     awaitingPaymentResult(false); // re-enable UI so user can reattempt payment
+                    console.log("confirmDeletionOfInactiveUserAjaxSuccess ran");
                 }
 
                 function confirmDeletionOfInactiveUserAjaxFailure() {
                     // could not confirm deletion of inactive user from database...
-                    // reload page to allow time for webhook handler to confirm delete
-                    // error message from server will be in django messages
+                    // reload page to allow time for webhook handler to confirm delete.
+                    // error message from server will be in django messages.
+
                     window.location.reload();
                 }
 
