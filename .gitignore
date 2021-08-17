@@ -10,4 +10,10 @@ core.python*
 env.py
 *.py[cod]
 .env
-db.sqlite3
+*.sqlite3
+media/private/story_pdfs/*
+# CREDIT[15]
+!media/private/story_pdfs/.gitkeep
+media/public/story_images/*
+!media/public/story_images/.gitkeep
+

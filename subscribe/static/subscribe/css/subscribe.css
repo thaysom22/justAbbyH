@@ -105,14 +105,6 @@ select#id_country option:not([selected]) {
     color: var(--dark-blue);
 }
 
-#subscribe-form hr {
-    width: 60%;
-    margin-left: auto;
-    margin-right: auto;
-    color: var(--light-blue);
-    opacity: 0.8;
-}
-
 #submit-button:hover:not(:disabled) {
     filter: contrast(115%);
 }

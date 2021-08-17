@@ -17,7 +17,7 @@
             </div>
         </div>
         <div class="row story-details">
-            <p>Reading time: {{ story.reading_time_mins }} minutes</p>
+            <p>Reading time: <strong>{{ story.reading_time_mins }} minutes</strong></p>
             <p>Published: {{ story.publish_date }}</p>
             {% if user_is_staff %}
                 <a class="nav-link nav-edit" href="{% url 'edit_story' story.id %}">
@@ -30,7 +30,15 @@
                 <a  id="download-button" class="cta-btn btn" target="_blank" href="{% url 'download_story' story.id %}">
                     <span id="button-text">Download Story</span>
                 </a>
+            {% else %}
+                <span id="subscribe-link">To access this story please <a href="{% url 'subscribe' %}"><strong>subscribe</strong></a></span>
             {% endif %}
+        </div>
+        <hr class="divider">
+        <div class="row story-desc">
+            <div class="col-12">
+                <p>{{ story.description }}</p>
+            </div>
         </div>
     </div>
 </div>

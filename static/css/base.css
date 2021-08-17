@@ -23,6 +23,7 @@ a {
 
 body {
     font-family: var(--serif);
+    color: var(--dark-blue);
 }
 
 .nav-link {
@@ -60,6 +61,14 @@ body {
 
 .bg-light-blue {
     background-color: var(--light-blue);
+}
+
+.divider {
+    width: 60%;
+    margin-left: auto;
+    margin-right: auto;
+    color: var(--light-blue);
+    opacity: 0.8;
 }
 
 /*** BUTTONS ***/

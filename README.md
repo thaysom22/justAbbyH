@@ -142,8 +142,6 @@ The site is designed to have a modern, warm, professional feel and to appeal to 
 * Confirmation icon
 * Edit icon
 
-
-
 ## Wireframes
 
 **Notes**
@@ -422,6 +420,8 @@ web: gunicorn justAbbyH.wsgi:application
 12. [spinner animation css after subscribe form submit](https://loading.io/css/)
 13. [hide * appended to form labels for required fields by django-crispy-forms](https://stackoverflow.com/questions/61058107/remove-char-from-the-required-field-label-in-form)
 14. [story title heavy text shadow effect css](https://www.massmediums.com/blog/134-create-great-looking-pure-css-text-shadows.html)
+15. [keep empty folder in vc commits](https://stackoverflow.com/questions/4250063/how-to-gitignore-all-files-folder-in-a-folder-but-not-the-folder-itself)
+
 ### Acknowledgements
 
 1. [Django login/out tutorial](https://learndjango.com/tutorials/django-login-and-logout-tutorial)
