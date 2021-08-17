@@ -220,14 +220,12 @@ form.addEventListener("submit", function (event) {
                 function confirmDeletionOfInactiveUserAjaxSuccess() {
                     // confirmed inactive user not in DB 
                     awaitingPaymentResult(false); // re-enable UI so user can reattempt payment
-                    console.log("confirmDeletionOfInactiveUserAjaxSuccess ran");
                 }
 
                 function confirmDeletionOfInactiveUserAjaxFailure() {
                     // could not confirm deletion of inactive user from database...
                     // reload page to allow time for webhook handler to confirm delete.
                     // error message from server will be in django messages.
-
                     window.location.reload();
                 }
 

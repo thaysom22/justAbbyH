@@ -82,7 +82,7 @@ New user:
 3. As a new user, I want to be able to contact the author and to connect via social media, so that can deicde whether I want to subscribe. 
 4. As a new user, I want to be informed about benefits subscribing and how to subscribe, so that I can decide whether I want to, and I know how to subscribe.
 
-6. As a new user, I want to be able to make a simple, scure payment to initiate a subscription, so that I can access author's stories.
+6. As a new user, I want to be able to make a simple, secure payment to initiate a subscription, so that I can access author's stories.
 7. As a new user, I want to be shown feedback on the status of my payment and subscription, so that I am resassured I have been provided with what I have paid for and I know what further action to take if necessary.
 
 Subscribed user:

@@ -37,15 +37,10 @@ class Stripe_WH_Handler:
         })
         user.email_user(subject, body, fail_silently=False)
 
-        print('activation email was sent') # TEST
-
     def handle_other_event(self, event):
         """
         Handle a generic/unknown/unexpected webhook event
         """
-
-        print("Generic webhook received")  # TEST
-
         return HttpResponse(
             content=f'Unhandled webhook received: {event["type"]}',
             status=200
@@ -59,9 +54,6 @@ class Stripe_WH_Handler:
         an activation email to email address provided by user in subscribe form,
         at 500ms intervals
         """
-
-        print("Payment intent succeeded webhook received")  # TEST
-
         try:
             # get id of inactive user in db from payment intent metadata
             intent = event.data.object
@@ -125,9 +117,6 @@ class Stripe_WH_Handler:
         metadata exists in the database, if so make up to 10 attempts
         to delete, at 500ms intervals
         """
-
-        print("Payment intent failed webhook received")  # TEST
-
         try:
             # get id of inactive user in db from payment intent metadata
             intent = event.data.object

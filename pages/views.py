@@ -17,4 +17,4 @@ def about(request):
         'page_title': 'About',
     }
     return render(request, template, context)
-
+    

@@ -68,7 +68,6 @@ def subscribe(request):
             return render(request, template, context)
         
     except Exception as e:
-        print(e)
         messages.error(
             request,
             "There was a server error. \
@@ -166,8 +165,6 @@ def create_inactive_user(request):
             Your card has not been charged. \
             Please try again or contact for help."
         )
-
-        print(error)  # TEST
 
         return JsonResponse(
             data={"error": str(error)},

@@ -145,7 +145,7 @@ def download_story(request, story_id):
 
     if settings.USE_AWS:
         object_key = 'media/private/' + filename
-        # generate presigned aws s3 url with expiry 
+        # generate presigned aws s3 url with expiry
         if request.user.is_staff:
             # staff can access s3 object until max expiry limit allowed
             presigned_url = create_presigned_url(

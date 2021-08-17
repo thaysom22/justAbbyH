@@ -1,5 +1,6 @@
 /*** IMPORTS ***/
 
+/* google fonts */
 @import url('https://fonts.googleapis.com/css2?family=Benne&family=Over+the+Rainbow&display=swap');
 
 /*** GLOBAL OVERRIDES ***/
@@ -364,7 +365,6 @@ footer {
 .links-404 a.nav-link:hover {
     color: var(--light-blue);
 }
-
 
 @media only screen and (min-width: 992px) {
     .inner-404 .row .col-12 {

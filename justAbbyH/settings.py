@@ -84,9 +84,6 @@ WSGI_APPLICATION = 'justAbbyH.wsgi.application'
 
 USE_PRODUCTION_DATABASE = 'DATABASE_URL' in env
 if USE_PRODUCTION_DATABASE:
-
-    print("Using posgres database URL:", env('DATABASE_URL'))  # TEST
-
     # use postgres remote
     DATABASES = {
         'default': dj_database_url.parse(env('DATABASE_URL')),
@@ -96,9 +93,6 @@ if USE_PRODUCTION_DATABASE:
         'stories': 'stories.migrations_production',
     }
 else:
-
-    print("Using sqlite database")  # TEST
-
     # use sqlite locally
     DATABASES = {
         'default': {
@@ -168,9 +162,6 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 USE_AWS = 'USE_AWS' in env
 if USE_AWS:
     # production settings
-
-    print("Using S3 storage")  # TEST
-
     AWS_S3_REGION_NAME = 'us-east-1'
     AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
     AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
@@ -203,24 +194,16 @@ if USE_AWS:
     PUBLIC_FILE_STORAGE = 'custom_storages.PublicFileStorage'
     PRIVATE_FILE_STORAGE = 'custom_storages.PrivateFileStorage'
 else:
-    # local filesystem storage
-
-    print("Using default local storage")  # TEST
-
     # static and media in development
     STATIC_URL = '/static/'  # url prefix for referring to static files in development
     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # where 'collect static' command will put static files locally
     MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
     MEDIA_URL = '/media/'
 
-
 # EMAIL
 USE_SMTP = 'USE_SMTP' in env
 if USE_SMTP:
-    # use gmail smtp server
-
-    print('sending activation emails using gmail smtp server')  # TEST
-    
+    # use gmail smtp server    
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
     EMAIL_USE_TLS = True
     EMAIL_USE_SSL = False
@@ -232,9 +215,6 @@ if USE_SMTP:
     CURRENT_SITE_DOMAIN = None  # webhook handler will get domain from request object
 else:
     # print email to terminal instead of sending
-    
-    print('printing activation emails to console')  # TEST
-
     CURRENT_SITE_DOMAIN = env('CURRENT_SITE_DOMAIN')  # from $gp url 8000
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
     DEFAULT_FROM_EMAIL = 'justabbyh.stories@example.com'

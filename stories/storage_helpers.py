@@ -26,5 +26,5 @@ def create_presigned_url(bucket_name, object_key, expiration):
     except ClientError:
         return None
 
-    # The response contains the presigned URL
+    # response contains the presigned URL
     return response
