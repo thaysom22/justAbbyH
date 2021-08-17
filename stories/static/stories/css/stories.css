@@ -32,7 +32,7 @@
 
 .story-img .story-title {
     font-family: var(--cursive);
-    color: var(--off-white);
+    color: #FFF;
     font-size: calc(20px + .75vw);
     font-weight: 900;
     margin: auto;

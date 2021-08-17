@@ -31,6 +31,7 @@ def story_detail(request, story_id):
     user_is_staff = False
     # determine if download link and/or edit story link will be in template
     if request.user.is_staff:
+        # for superuser, is_staff=True by default
         user_is_staff = True
         user_is_subscribed = True
     elif request.user.is_authenticated:

@@ -183,7 +183,15 @@ The site is designed to have a modern, warm, professional feel and to appeal to 
 * Messages appear as full screen width elements with text centered and a clickable times icon to hode the message.
 * Messages hide automatically after a delay.
 
+#### Buttons
+
+* Larger size than other links, off white font color and light blue background with subtle border radius smoothing.
+* Used to draw user's attention to key interactions on a page.
+* Exhibit increased brightness on hover.
+
 ### Home page
+
+![Homepage](https://i.ibb.co/3fLPkQy/reviews.png)
 
 #### Main hero image with Read Now link
 
@@ -234,27 +242,52 @@ The site is designed to have a modern, warm, professional feel and to appeal to 
 
 ### Subscription created page
 
-
+* Displays one section containing information that an email with an activation link has been sent to user's email.
+* Link to email author (opens in new tab)
 
 ### Login page
 
+* One section containing fields username and password and submit button.
+* If submit is unsuccessful page reloads and displays form errors. 
+
 ### Stories page
+
+* Contains one section which displays all stories in database. 
+* Each story is displayed as a square image (image field of model served from AWS) with a translucent dark overlay and the story title field value text displayed over image in white (for maximum contrast) cursive font. The image shows a subtle box shadow on hover. Clicking on an image link takes user to the individual story details page for the respective story.
+* Story image links are displayed as a single column on mobile, two columns on tablet and three columns on desktop device.
 
 ### Story details page
 
+* Title of story is displayed at top of page with a subtle font shadow effect above square story image which scales with viewport size.
+* Reading time and date published Story field values are displayed in small font beneath image.
+* If user is logged out the text: "To access this story please subscribe" is displayed above a light blue horizontal rule divider. "Subscribe" is a link to subscribe page which has a light blue color and color darkens on hover. 
+* If user is authenticated and does not have staff status a 'download story' link button is displayed above the divider instead. This link opens in a new tab and directs to a signed AWS S3 bucket url to access a private object in the bucket which is a pdf of the full story. This url is valid for 5 minutes. This pdf cannot be accessed by a non authenticated user.
+* If user is authenticated and has staff/superuser status, an edit icon link to edit the story is displayed above the download story button. Edit link chnages from light blue to dark blue color on hover.
+* Text from story's description field is displayed beneath the horizontal rule divider.
+
 ### Add story page
 
+* Add story form contains fields to create a new Story instance in database.
+* All fields (except pdf, image and featured) contain placeholders with grey font color which are replaced by darker text when not empty. pdf, image and featured fields display labels.
+* Image and pdf fields contain Django file upload widgets to select a file from system file broswer.
+* Submit button - if form is valid user is redirected to new story detials page of new story and an info message is displayed at top of page informing user that story was created. If form is not valid page is relaosed with form error messages displayed.
+
 ### Edit story page
+
+* As above for 'Add Story Page` but input fields are prefilled with current field values from database as placeholders. All fields display labels for identification when they have current value as placeholder.
+* Text at top of page: "You are editing: `story.title`".
+* 'Save changes' button to submit form. 
+* 'Delete story' link with red font color which darkens on hover to delete story endpoint. Link deletes story from database.
 
 ## Features left to implement
 
 * Reviews: subscribed users can create, edit and delete reviews for stories. Top reviewed stories displayed on homepage. Review details are displayed on story details page. Reviews Model with a many to one relationship to Stories Model.
 * Stories page filters and sort functionality: UI elements on stories page to filter stories by genre, reading time or reviews. A sort select element with options to sort stories. Pagination of stories so list on any one page does not become too long. 
-* Login is centered modal on all pages instead of separate page.
+* Login form is displayed as centered modal on all pages instead of on separate page.
 * Account page: allows user to edit account details and cancel subscription (functionality to remove user from list of registered users at end of current subscription period).
 * Recurring payments subscription: instead of a onetime payment, user signs up for monthly subscription periods with recurring payments using Stripe.
-* Footer: author contact and social media info and information about site developer with links to developer online presence
 * Section on homepage displaying latest social media posts of author: connect to twitter/instagram API to pull up to date posts. 
+* '# list' as Story model field and displayed below image for each story on story details page and/or below title over image for each story link on stories page.
 * Display similar stories on story detail page: list or carousel of other stories of same genre in database.
 * Password reset function: link on login page to request an email to reset password sent to registered email address.
 * Email newsletter: when user subscribes they are automatically (unless opt out) subscribed to emails that inform when new stories are posted. There is also a separate signup box to enter email address on homepage.
