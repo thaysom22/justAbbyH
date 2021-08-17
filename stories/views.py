@@ -14,6 +14,7 @@ def stories(request):
     stories = Story.objects.all()  # retrieve all Story instances from database
     context = {
         'stories': stories,
+        'page_title': 'Stories',
     }
     template = "stories/stories.html"
     return render(request, template, context)
@@ -42,6 +43,7 @@ def story_detail(request, story_id):
         'story': story,
         'user_is_subscribed': user_is_subscribed,
         'user_is_staff': user_is_staff,
+        'page_title': story.title,
     }
     template = "stories/story_detail.html"
     return render(request, template, context)
@@ -62,6 +64,7 @@ def add_story(request):
         add_story_form = StoryForm()
         context = {
             'add_story_form': add_story_form,
+            'page_title': 'Add Story',
         }
         template = "stories/add_story.html"
         return render(request, template, context)
@@ -112,6 +115,7 @@ def edit_story(request, story_id):
     context = {
         'edit_story_form': edit_story_form,
         'story': story,
+        'page_title': f'Edit: {story.title}',
     }
     template = "stories/edit_story.html"
     return render(request, template, context)

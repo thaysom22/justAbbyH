@@ -15,7 +15,7 @@ class StoryAdmin(admin.ModelAdmin):
     # replace 'pdf' field by '_pdf_download' return in list display
     list_display = ('title', 'publish_date', 'genre',
                     'reading_time_mins',
-                    'featured', 'image', '_pdf_download',)
+                    'featured', 'image', 'image_credit', '_pdf_download',)
     
     readonly_fields = ('publish_date', 'reading_time_string',)
     

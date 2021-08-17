@@ -10,6 +10,7 @@ core.python*
 env.py
 *.py[cod]
 .env
+production.env
 *.sqlite3
 media/private/story_pdfs/*
 # CREDIT[15]

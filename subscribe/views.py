@@ -62,6 +62,7 @@ def subscribe(request):
                 'subscription_cost': round(settings.SUBSCRIPTION_COST),
                 'stripe_public_key': stripe_public_key,
                 'client_secret': payment_intent.client_secret,
+                'page_title': 'Subscribe',
             }
             template = "subscribe/subscribe.html"
             return render(request, template, context)
@@ -236,6 +237,7 @@ def subscription_created(request):
         'last_name': request.GET.get('last_name', ''),
         'email': request.GET.get('email', ''),
         'username': request.GET.get('username', ''),
+        'page_title': 'Subscription Created',
     }
     # decode query string values and pass to template context
     # CREDIT[8]
@@ -276,5 +278,5 @@ def activate_user(request, uidb64, token):
         return redirect(reverse('login'))
     else:
         messages.warning(request,
-            "The activation link was invalid. Please contact me for assistance.")
+            "This activation link was already used, or is expired/invalid. Please contact me for assistance.")
         return redirect(reverse('index'))

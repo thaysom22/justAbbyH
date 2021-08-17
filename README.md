@@ -81,7 +81,7 @@ New user:
 2. As a new user, I want to be able to see a selection of stories by the author, so that I can decide whether I want to subscribe.
 3. As a new user, I want to be able to contact the author and to connect via social media, so that can deicde whether I want to subscribe. 
 4. As a new user, I want to be informed about benefits subscribing and how to subscribe, so that I can decide whether I want to, and I know how to subscribe.
-5. As a new user, I want to be able to view a preview of at least one story, so that I can decide whether I want to subscribe.
+
 6. As a new user, I want to be able to make a simple, scure payment to initiate a subscription, so that I can access author's stories.
 7. As a new user, I want to be shown feedback on the status of my payment and subscription, so that I am resassured I have been provided with what I have paid for and I know what further action to take if necessary.
 
@@ -186,7 +186,6 @@ The site is designed to have a modern, warm, professional feel and to appeal to 
 
 ## Features left to implement
 
-* Featured/sample stories: section on homepage displaying latest/featured stories.
 * Reviews: subscribed users can create, edit and delete reviews for stories. Top reviewed stories displayed on homepage. Review details are displayed on story details page. Reviews Model with a many to one relationship to Stories Model.
 * Stories page filters and sort functionality: UI elements on stories page to filter stories by genre, reading time or reviews. A sort select element with options to sort stories. Pagination of stories so list on any one page does not become too long. 
 * Login is centered modal on all pages instead of separate page.
@@ -200,6 +199,7 @@ The site is designed to have a modern, warm, professional feel and to appeal to 
 * Automated testing of Python functions and modules with unit tests within Django framework. Use of [Travis](https://www.travis-ci.com/) for continuous integration with deployed Heroku application.
 * A selected full story downloadable for free by all users from homepage. 
 * A blog page which displays the authors latest blog posts.
+* Show preview of featured stories to unsubscribed users. These stories are displayed in a section on homepage and are labelled as 'featured' on list stories page.
 
 # Information Architecture
 
@@ -299,7 +299,7 @@ See separate [**TESTING.md**](./TESTING.md) file.
 * Code editor such as [Gitpod](https://gitpod.io/) or [Visual Studio Code](https://code.visualstudio.com/) which offers ability to run a local server.
 * A browser to execute the front end code. [Google Chrome](https://www.google.com/intl/en_uk/chrome/) is recommended. 
 * [Python3](https://www.python.org/), [Pip](https://pypi.org/project/pip/) and [Git](https://git-scm.com/) installed on computer. 
-* Free test account set up with [Stripe](https://stripe.com/). Webhook endpoint url configured in Stripe dashboard using local server domain: `https://<local_domain>/subscribe/webhooks/` and necessary environment variables set up and retrieved in application as per documentation. 
+* Free test account set up with [Stripe](https://stripe.com/). Webhook endpoint url configured in Stripe dashboard using local server domain: `https://<local_domain>/subscribe/webhooks/` and necessary environment variables set up for application as per documentation. 
 
 1. Run the following command in a clean workspace terminal to download the project code:
 ```
@@ -319,13 +319,15 @@ STRIPE_WH_SECRET=<key>
 CURRENT_SITE_DOMAIN=<domain>
 ```
 *  `SECRET_KEY` is required by Django framework for certain functionalities. 
+* `STRIPE_PUBLIC_KEY` and `STRIPE_SECRET_KEY` from Stripe account.
+* `STRIPE_WH_SECRET` from webhook endpoint information configured within Stripe account.
 * `DEVELOPMENT` is set only within development environment and does not exist in production version - it controls whether `DEBUG` is set to `True` or `False` (`DEBUG` should ALWAYS be `False` in production otherwise sensitive information and server code can be exposed).
 * `CURRENT_SITE_DOMAIN` should be the root domain of the local server you will be using.
 4. Run the following command in the terminal to execute the existing app migrations and configure the database template (this should also create the local database file in the project root directory):
 ```
 python3 manage.py migrate
 ```
-5. Run the following command in the terminal to create a superuser account to access the admin panel and manipulate the database:
+5. Run the following command in the terminal to create a superuser account in the newly created local database:
  ```
 python manage.py createsuperuser
 ```
@@ -333,7 +335,7 @@ python manage.py createsuperuser
 ```
 python3 manage.py runserver
 ```
-7. Once the application is running in the browser, append `/admin` path to the local url provided and login using your superuser credentials. Create at least one instance of `Story` within the new database.
+7. Once the application is running in the browser, append `/admin` path to the local url provided and login using your superuser credentials. Create at least one instance of `Story` within the new database (this can also be done by logging in on the site and going to 'Add Story' in navbar).
 8. Remove the `/admin` path from the url to return to main page in browser and the application will function as expected.
 
 ### Deploy project to Heroku
@@ -402,11 +404,15 @@ web: gunicorn justAbbyH.wsgi:application
 
 ### Content and media
 
-* Text content on website; selection of colors, images and fonts; story data (descriptions, choice of images and actual pdf creative content) by Abby Haysom. 
+* Text content on website, selection of colors, images and fonts; story data (descriptions, choice of images and actual pdf stories) by the author Abby Haysom. 
+
+* Images used on homepage were used freely without attribution under the [Unsplash lisence](https://unsplash.com/license).
+
+* Photo of Abby Haysom used on about page was taken my the website developer.
 
 ### Code
 
-1.  [download_story view](https://djangoadventures.com/how-to-create-file-download-links-in-django/)
+1. [download_story view](https://djangoadventures.com/how-to-create-file-download-links-in-django/)
 2. [Stripe UI](https://stripe.com/docs/payments/integration-builder)
 3. [S3Boto3Storage source code](https://github.com/jschneier/django-storages/blob/master/storages/backends/s3boto3.py#L194)
 4. [separate s3 public and private storages](https://simpleisbetterthancomplex.com/tutorial/2017/08/01/how-to-setup-amazon-s3-in-a-django-project.html)

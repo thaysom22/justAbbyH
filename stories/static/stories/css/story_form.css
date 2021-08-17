@@ -4,6 +4,7 @@
 
 .story-form-inner {
     padding: calc(4rem + 1vw) calc(1rem + 2vw);
+    max-width: 800px;
 }
 
 .story-form-inner .row {
@@ -110,7 +111,8 @@
 .add-story-form #div_id_title label,
 .add-story-form #div_id_reading_time_mins label,
 .add-story-form #div_id_description label,
-.add-story-form #div_id_genre label {
+.add-story-form #div_id_genre label,
+.add-story-form #div_id_image_credit label {
     display: none;
 }
 

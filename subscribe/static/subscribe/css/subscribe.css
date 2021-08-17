@@ -37,6 +37,7 @@
 
 .subscribe-form-inner {
     padding: calc(4rem + 1vw) calc(1rem + 2vw);
+    max-width: 800px;
 }
 
 /* remove default help text from fields*/

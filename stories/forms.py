@@ -12,6 +12,7 @@ class StoryForm(forms.ModelForm):
         model = Story
         fields = ('title', 'description',
                   'pdf', 'image',
+                  'image_credit',
                   'genre', 'featured',
                   'reading_time_mins',)
         
@@ -24,6 +25,7 @@ class StoryForm(forms.ModelForm):
             'title': 'Title',
             'description': 'Description',
             'reading_time_mins': 'Reading time (mins)',
+            'image_credit': 'Image credit',
         }
 
         labels = {
@@ -32,6 +34,7 @@ class StoryForm(forms.ModelForm):
             'reading_time_mins': 'Reading time (mins)',
             'pdf': 'PDF',
             'image': 'Image',
+            'image_credit': 'Image credit',
             'genre': 'Genre',
             'featured': 'Featured',
         }
