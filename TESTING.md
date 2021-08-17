@@ -132,6 +132,7 @@ As any type of user:
 * form input elements too wide on large devices. fix: set max-width value on containers for all forms on site.
 * ambiguous error message for 'activate_user' endpoint. changed to inform that link could be already used, expired or invalid.
 * inactive user not being deleted during payment process when payment fails on client so the subscribe page just reloads and the inactive user is not reoved from the database and specific error message is not shown to user. fix: endpoint name corrected in ajax call from subscribe.js function.
+* Country field and card element placeholder color different to other input elements on non Chrome browsers. Fix: added css to set all same color.
 
 #### Unsolved bugs
 

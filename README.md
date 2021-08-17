@@ -162,27 +162,89 @@ The site is designed to have a modern, warm, professional feel and to appeal to 
 
 #### Navbar
 
+* Navbar has 'AbbyH Stories' link to homepage with handwritten style font on all pages on left. The color depends on the underlying background color to provide sufficient contrast.
+* To logged out users the navbar displays links for : Home, Stories, About, Login and Subscribe (subscribe link is a button). To authenticated users without extra permissions: Home, Stories, About and Logout. To authenticated staff and superusers: Home, Stories, Add Story, About and Logout. 
+* On desktop all links display horizontally at top right of page. Color of links depends on the underlying background color to provide sufficient contrast. Links change color on hover.
+* On tablet/mobile navbar displays clickable icon instead of links which triggers full page nav menu with off-white background color where respective links for each type of user are displayed vertically above social media icon links. If shown, subscribe link is shown as button above other links. A clickable dismiss button is shown in top right and 'AbbyH Stories' link remains at top left of page. 
+* The navbar is shown on all pages except subscribe pages where it might distract from the payment/account activation process.
+* For home, stories, login, add story and about pages: a subtle bottom border (color dependent on background color) is shown beneath corresponding nav link when respective page is active.
+
+
 #### Footer
+
+* Footer is shown on every page except subscribe pages where it might distract from the payment/account activation process.
+* Background color of footer is light blue and always different from background color of element immediately above.
+* Footer contains links to stories and about pages and social media icon links which change color on hover.
+* For logged out users footer also displays a subscribe link as a button.
 
 #### Messages
 
-### Home
+* Messages container element is part of everypage but is only shown if messages are sent from server after previous request.
+* Messages appear as full screen width elements with text centered and a clickable times icon to hode the message.
+* Messages hide automatically after a delay.
 
-### About
+### Home page
 
-### Subscribe 
+#### Main hero image with Read Now link
 
-### Login 
+* Image is always 100% of viewport height and width.
+* Different image (portrait/landscape) shown on mobile vs. tablet/desktop to achieve best image resolution for device dimensions. 
+* Image has subtle zoom in effect for a short period when page is loaded. 
+* A link to subscribe page (button) with text 'Read Now' is displayed near bottom of image.
 
-### Subscription created 
+#### Website introduction and stories link
 
-### Stories 
+* Section is always 90% of viewport height and 100% of width.
+* Contains an short textual summary of the website's purpose
+* A link to stories page (button) with text 'Stories' is displayed near bottom of section.
 
-### Story details 
+### About page
 
-### Add story 
+#### Headline creative summary section
 
-### Edit story
+* Section is always 90% of viewport height and 100% of width.
+* Section has a light blue background color and white font color. Font size is large for visual impact.
+
+#### Author photo and bio section with contact links
+
+* On desktop author image and bio/contact links section are displayed size by side. On mobile/tablet author image is displayed above bio/contact links section. 
+* Author image is always square and scales with device size. 
+* Bio/contact links section contains short bio and social media and email links which open external tabs and change color on hover.
+
+### Subscribe page
+
+#### Instruction headline
+
+* Section is always minimum of 33.3% of viewport height and 100% of width.
+* Section has a light blue background color and white font color. Font size is large for visual impact.
+* Text explains how to access stories and the benefit of subscribing.
+
+#### Subscribe form
+
+* Contains fields to create a new user account and subscription in database and a Stripe card element to process a clientside Stripe payment. 
+* Fields all contain placeholders with grey font color which are replaced by darker text when not empty
+* Country input is a select element which has a list of options provied by django-countries package.
+* Card element from Stripe has a card icon which indicates the type of card based on the card number prefix.
+* When a card number/expiration date/cvv number is entered but is incomplete or invalid a message with red font color is displayed beneath Card element input with error message and icon. When these inputs are valid a black info message displays a reminder of the amount of the payment to be made.
+* Form contains a large submit button (with text 'subscribe') which is disabled on load and when the card element input is invalid and enables when input is valid. When clicked the subscribe page content is hidden by a full page overlay with a repeating ripple animation and 'your payment is processing' text.
+* Submitting form first creates an inactive user and associated subscription in database via ajax request to server endpoint using form data; if this succeeds then an attempt to charge the user's card is made by the client; if this succeeds then the inactive user instance is activated by another ajax request to a different server endpoint; finally the page redirects to the 'subscription created' page. 
+* If create inactive user fails the overlay hides and error message(s) are shown to the user on form.
+* If create inactive user succeeds and payment fails a request is made to delete inactive user endpoint: if this request succeeds the overlay hides and payment error message from Stripe is shown on card element; if this request fails the page reloads and shows error message from server in messages element at top of page. Stripe will continue to send `paymentIntent.paymentFailed` webhooks to a webhook handler endpoint on server to confirm/retry deletion of the inactive user from database (this is primarily important to avoid username clashes)
+* If create inactive user succeeds and payment succeeds on client then page is redirected to subscription created page with some subscription form input field key-value pairs appended as url query parameters. An email is sent to the email address provided in the relevant subscribe form input which contains a link (with encoded user id and activation token appended) to a server endpoint 'activate_user' which changes the user instance's `is_active` flag to `True` and redirects to login page if the link is valid or redirects to homepage with error message displayed in messages if link is invalid/expired/already used.
+
+### Subscription created page
+
+
+
+### Login page
+
+### Stories page
+
+### Story details page
+
+### Add story page
+
+### Edit story page
 
 ## Features left to implement
 

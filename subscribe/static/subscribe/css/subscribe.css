@@ -98,6 +98,11 @@ https://stripe.com/docs/payments/integration-builder */
     background: white;
 }
 
+#subscribe-form input::placeholder,
+#subscribe-form #card-element {
+    color: #6c757d;
+}
+
 select#id_country {
     color: #6c757d;
 }
