@@ -104,6 +104,7 @@ function awaitingPaymentResult(isLoading) {
         $("#loading-overlay").removeClass("hidden");
         $(".subscribe-navbar,.subscribe-text-wrapper,.subscribe-form-wrapper").addClass("hidden"); 
     } else {
+        document.getElementById('submit-button').disabled = false;
         card.update({
             'disabled': false
         });
@@ -165,9 +166,22 @@ form.addEventListener("submit", function (event) {
             return postData;
         }
 
-        function createInactiveUserAjaxFailure() {
-            // error message will be in django messages
-            window.location.reload();
+        function createInactiveUserAjaxFailure(xhr) {
+            
+            displayFormErrors(xhr); // add form error messages returned in response data to DOM
+            awaitingPaymentResult(false);  // unhide overlay
+
+            function displayFormErrors(xhr) {
+                var formErrors = xhr.responseJSON.errors;
+                for (const [fieldName, errorsArray] of Object.entries(formErrors)) {
+                    $('.help-error').remove();  // remove error messages from previous submit attempts
+                    errorsArray.forEach((errorMsg, index) => {
+                        $(`#id_${fieldName}`).parent().append(
+                            `<p id="error_${index+1}_id_${fieldName}" class="help-block help-error"><strong>${errorMsg}</strong></p>`
+                        );
+                    });
+                }
+            }
         };
 
         function createInactiveUserAjaxSuccess(data) {

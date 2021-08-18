@@ -14,8 +14,16 @@
             <div class="col-12">
                 <form method="post" id="login-form" class="login-form">
                     {% csrf_token %}
+                    <div class="errors-wrapper">
+                        {% if form.errors %}
+                            {% for error in form.errors.values %}
+                                {{ error }}
+                            {% endfor %}
+                        {% endif %}
+                    </div>
                     <fieldset>
                         {% for field in form %}
+                            {{ field.errors }}
                             {{ field | as_crispy_field }}
                         {% endfor %}
                     </fieldset>

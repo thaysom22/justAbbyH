@@ -61,27 +61,27 @@ def add_story(request):
         messages.error(request, 'Sorry, only the author can do that!')
         return redirect(reverse('index'))
 
-    if request.method == "GET":
-        add_story_form = StoryForm()
-        context = {
-            'add_story_form': add_story_form,
-            'page_title': 'Add Story',
-        }
-        template = "stories/add_story.html"
-        return render(request, template, context)
-
-    # POST 
-    add_story_form = StoryForm(
-        request.POST,
-        request.FILES
-    )
-    if add_story_form.is_valid():
-        story = add_story_form.save() 
-        messages.success(request, 'Successfully added story!')
-        return redirect(reverse('story_detail', args=[story.id]))
+    # POST
+    if request.method == 'POST': 
+        add_story_form = StoryForm(
+            request.POST,
+            request.FILES
+        )
+        if add_story_form.is_valid():
+            story = add_story_form.save() 
+            messages.success(request, 'Successfully added story!')
+            return redirect(reverse('story_detail', args=[story.id]))
+    
     else:
-        messages.error(request, add_story_form.errors)
-        return redirect(reverse('add_story'))
+        # GET
+        add_story_form = StoryForm()
+        
+    context = {
+        'add_story_form': add_story_form,
+        'page_title': 'Add Story',
+    }
+    template = "stories/add_story.html"
+    return render(request, template, context)
 
 
 @login_required
@@ -105,9 +105,7 @@ def edit_story(request, story_id):
         if edit_story_form.is_valid():
             edit_story_form.save()
             messages.success(request, 'Successfully updated story!')
-            return redirect(reverse('story_detail', args=[story.id]))
-        else:
-            messages.error(request, 'Failed to update story - ensure form is valid.')
+            return redirect(reverse('story_detail', args=[story.id]))     
 
     else:
         # GET

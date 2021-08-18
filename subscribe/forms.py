@@ -18,11 +18,11 @@ class UserRegisterForm(UserCreationForm):
 
     def __init__(self, *args, **kwargs):
         """
-        Add placeholders, remove labels,
+        Add labels,
         make all fields required
         """
         super().__init__(*args, **kwargs)
-        placeholders = {
+        labels = {
             'username': 'Username',
             'first_name': 'First Name',
             'last_name': 'Last Name',
@@ -33,9 +33,7 @@ class UserRegisterForm(UserCreationForm):
 
         for field in self.fields:
             self.fields[field].widget.attrs.pop("autofocus", None)
-            self.fields[field].label = False
-            self.fields[field].widget.attrs['placeholder'] = placeholders[field]
-            self.fields[field].required = True  # make all fields required by form validation
+            self.fields[field].label = labels[field]
 
 
 class SubscriptionForm(forms.ModelForm):
@@ -49,21 +47,20 @@ class SubscriptionForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         """
-        Add placeholders, remove labels
+        Add labels and remove autofocus from all fields
         """
         super().__init__(*args, **kwargs)
-        placeholders = {
+        labels = {
             'city': 'City',
+            'country': 'Country',
         }
 
         for field in self.fields:
-            self.fields[field].label = False
             self.fields[field].widget.attrs.pop("autofocus", None)
+            self.fields[field].label = labels[field]
             if field == 'country':
                 current_classes = self.fields['country'].widget.attrs.get('class', '')
                 if current_classes:
                     self.fields['country'].widget.attrs.update({'class': f'{current_classes} form-select'})
                 else:
                     self.fields['country'].widget.attrs['class'] = 'form-select'
-            else:
-                self.fields[field].widget.attrs['placeholder'] = placeholders[field]

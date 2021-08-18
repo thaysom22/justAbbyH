@@ -1,5 +1,7 @@
 from django.db import models
 from django.conf import settings
+from django.core.validators import (MaxValueValidator, 
+    MinValueValidator, MaxLengthValidator, MinLengthValidator)
 
 from math import floor
 
@@ -21,7 +23,7 @@ class Story(models.Model):
     UNKNOWN = 'Unknown'
 
     GENRE_CHOICES = [
-        ('', 'Genre'),
+        ('', 'Select genre'),
         (FICTION, 'Fiction'),
         (NON_FICTION, 'Non-fiction'),
         (UNKNOWN, 'Unknown'),
@@ -34,13 +36,25 @@ class Story(models.Model):
     )
 
     title = models.CharField(max_length=254, default='')
-    publish_date = models.DateField(auto_now_add=True)
-    description = models.TextField(default='')
+    publish_date = models.DateField(auto_now_add=True)  # set automatically
+    description = models.TextField(
+        default='',
+        validators=[
+            MaxLengthValidator(10000),
+            MinLengthValidator(50),
+        ],
+    )
     featured = models.BooleanField(default=False)
-    reading_time_mins = models.PositiveIntegerField(null=True)
-    reading_time_string = models.CharField(max_length=254, default='')
+    reading_time_mins = models.PositiveIntegerField(
+        null=True,
+        validators=[
+            MaxValueValidator(60000),
+            MinValueValidator(1),
+        ],
+    )
+    reading_time_string = models.CharField(max_length=254, default='')  # set automatically
     image_credit = models.CharField(max_length=254, blank=True, default='')
-    
+
     if USE_AWS:
         # specify custom s3 storages in production
         # for story image and pdf fields

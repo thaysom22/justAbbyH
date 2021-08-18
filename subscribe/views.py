@@ -116,10 +116,6 @@ def create_inactive_user(request):
             subscription.save()  # start_date field is set when saved to DB
 
         else:
-            messages.error(
-                request,
-                "Please check your form for errors and try again."
-            )
 
             return JsonResponse(
                 data={

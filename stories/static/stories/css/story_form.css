@@ -8,7 +8,7 @@
 }
 
 .story-form-inner .row {
-    margin-top: 35px;
+    margin-top: 70px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -18,12 +18,12 @@
     margin-top: 20px;
 }
 
-/* remove default help text from fields*/
-.story-form .helptext,
-.story-form .help-block,
-.story-form .controls ul,
-.story-form .controls p {
-    display: none;
+.help-block {
+    margin-top: 1rem;
+}
+
+.help-block strong {
+    color: #dc3545;
 }
 
 #story-form input:not(#id_featured,#id_image,#id_pdf),
@@ -97,7 +97,7 @@
 }
 
 .control-group {
-    margin: 25px 0;
+    margin: 20px 0 30px 0;
 }
 
 .checkbox {
@@ -106,14 +106,6 @@
     height: 44px;
     line-height: 44px;
     padding: 0 4px;
-}
-
-.add-story-form #div_id_title label,
-.add-story-form #div_id_reading_time_mins label,
-.add-story-form #div_id_description label,
-.add-story-form #div_id_genre label,
-.add-story-form #div_id_image_credit label {
-    display: none;
 }
 
 .delete-story {
@@ -131,9 +123,21 @@
     color: #b30f20;
 }
 
+@media screen and (min-width: 610px) {
+    .control-group label {
+        font-size: 18px;
+    }
+}
+
 @media screen and (min-width: 768px) {
     .delete-story #delete-story-link {
         font-size: 18px;
+    }
+}
+
+@media screen and (min-width: 992px) {
+    .control-group label {
+        font-size: 20px;
     }
 }
 

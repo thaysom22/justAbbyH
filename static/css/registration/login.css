@@ -7,7 +7,7 @@
 }
 
 .login-form-inner .row {
-    margin-top: 35px;
+    margin-top: 70px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -35,7 +35,7 @@
 }
 
 #login-form fieldset {
-    margin: 3rem 0;
+    margin: 0 0 2rem 0;
 }
 
 /* CREDIT[13] */
@@ -57,4 +57,15 @@
     .control-group label {
         font-size: 20px;
     }
+}
+
+/* form errors*/
+
+.errors-wrapper {
+    height: 72px;
+}
+
+ul.errorlist {
+    padding-left: 12px;
+    color: #dc3545;
 }
