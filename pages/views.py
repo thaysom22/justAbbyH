@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.conf import settings
 
 
 def index(request):
@@ -15,6 +16,8 @@ def about(request):
     template = "pages/about.html"
     context = {
         'page_title': 'About',
+        'default_from_email': settings.DEFAULT_FROM_EMAIL,
     }
+
     return render(request, template, context)
     
