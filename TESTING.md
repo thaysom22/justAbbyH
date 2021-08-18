@@ -133,7 +133,16 @@ As any type of user:
 * ambiguous error message for 'activate_user' endpoint. changed to inform that link could be already used, expired or invalid.
 * inactive user not being deleted during payment process when payment fails on client so the subscribe page just reloads and the inactive user is not reoved from the database and specific error message is not shown to user. fix: endpoint name corrected in ajax call from subscribe.js function.
 * Country field and card element placeholder color different to other input elements on non Chrome browsers. Fix: added css to set all same color.
+* story form takes a long time to submit and form fields and button remain active while request is processing. Fix: added javascript to disable submit button and add readonly attribute to input fields (note unfixed aspect: select element does not respond to readonly attribute)
+* subscribe form not displaying error feedback when user/subscription data is not validated successfully by backend. Fix: added javascript to collect form errors from server json response and loop over these errors to add to DOM. 
+* subscribe form 'payment processing' overlay is shown before payment process begins. Fix: defined a different option to disable form while request to create user is sent then overlay is shown only if this request returns successfully.
+* image credit field displays label and placeholder when empty in edit story form. Fix: all placeholders for fields were removed to improve UX which fixed this issue.
+
 
 #### Unsolved bugs
 
-* django admin change form pdf FileField widget displays a non signed aws s3 url so permission to get object is denied from change form view. This was not fixed as it was taking too much time to properly update the widget used in admin given the project deadline. This bug will only be experienced by superusers and is negligible because user can still view object on the change list page in admin which provides a signed s3 url via application's 'download_story' view.
+* django default widget for story.pdf file input field displays a non signed aws s3 url as 'currently' value: therefore permission to get object is denied by AWS. This was not fixed as it was taking too much time to properly update the widget appearing in edit story form  and admin given the project deadline. The user can still view object on the change list page in admin which provides a signed s3 url via application's 'download_story' view.
+* elements on site with a background image (homepage hero images, author photo, story images) take along time to load and show as an unattractive gray color in container element while loading. Not fixed due to time contstraints. 
+* on iphone 12 safari browser the ripple loading animation on subscribe page is jerky and runs too quickly. Not fixed due to time contstraints. 
+* broswer console shows 'input elements should have autocomplete attributes'
+* 

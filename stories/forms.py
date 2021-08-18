@@ -18,7 +18,7 @@ class StoryForm(forms.ModelForm):
         
     def __init__(self, *args, **kwargs):
         """
-        Edit placeholders and labels for some inputs
+        Edit labels
         """
         super().__init__(*args, **kwargs)
 
@@ -32,7 +32,7 @@ class StoryForm(forms.ModelForm):
             'genre': 'Genre',
             'featured': 'Featured',
         }
-        
+
         for field in self.fields:
             self.fields[field].widget.attrs.pop("autofocus", None)
 

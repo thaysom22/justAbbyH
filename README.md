@@ -295,6 +295,7 @@ The site is designed to have a modern, warm, professional feel and to appeal to 
 * A selected full story downloadable for free by all users from homepage. 
 * A blog page which displays the authors latest blog posts.
 * Show preview of featured stories to unsubscribed users. These stories are displayed in a section on homepage and are labelled as 'featured' on list stories page.
+* Improve the visual appearance of pop up boxes/messages.
 
 # Information Architecture
 
@@ -375,6 +376,12 @@ The Subscription model is within the subscription app and holds all the required
 * [Bootstrap](https://www.bootstrapcdn.com/): to build a responsive UI efficiently.
 * [Google Fonts](https://fonts.google.com/): to provide and serve fonts used on site pages.
 * [Imgbb](https://imgbb.com) used to store and serve images related to documentation that were not uploaded by users and not entered into the database.
+* [django-crispy-forms](https://django-crispy-forms.readthedocs.io/en/latest/) package was used to improve appearance of all forms on site.
+* [coolors.co](https://coolors.co/) was used to select color pallette for site.
+* [Font Awesome](https://fontawesome.com/) was used for icons on site.
+* [GitHub](https://github.com/) was used as remite repository for version control and automatic deployment to Heroku.
+* [Git](https://git-scm.com/) was used for version control locally.
+
 
 ### Languages
 
@@ -522,6 +529,7 @@ web: gunicorn justAbbyH.wsgi:application
 13. [hide * appended to form labels for required fields by django-crispy-forms](https://stackoverflow.com/questions/61058107/remove-char-from-the-required-field-label-in-form)
 14. [story title heavy text shadow effect css](https://www.massmediums.com/blog/134-create-great-looking-pure-css-text-shadows.html)
 15. [keep empty folder in vc commits](https://stackoverflow.com/questions/4250063/how-to-gitignore-all-files-folder-in-a-folder-but-not-the-folder-itself)
+16. [update default django UserAdmin model](https://stackoverflow.com/questions/2552516/changing-user-modeladmin-for-django-admin)
 
 ### Acknowledgements
 
