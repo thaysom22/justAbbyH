@@ -90,27 +90,45 @@ function showError(errorMsgText) {
 };
 
 
-function awaitingPaymentResult(isLoading) {
+function awaitingResult(isLoading, payment) {
     /**
      * enable/disable UI on subscription page while Stripe attempts payment.
      * display overlay, disable button and card element.
      * @param {Boolean} isLoading - flag to enable or disable.
      */
-    if (isLoading) {
-        document.getElementById('submit-button').disabled = true;
-        card.update({
-            'disabled': true
-        });
-        $("#loading-overlay").removeClass("hidden");
-        $(".subscribe-navbar,.subscribe-text-wrapper,.subscribe-form-wrapper").addClass("hidden"); 
+    if (payment) {
+        if (isLoading) {
+            document.getElementById('submit-button').disabled = true;
+            card.update({
+                'disabled': true
+            });
+            $("#loading-overlay").removeClass("hidden");
+            $(".subscribe-navbar,.subscribe-text-wrapper,.subscribe-form-wrapper").addClass("hidden"); 
+        } else {
+            document.getElementById('submit-button').disabled = false;
+            card.update({
+                'disabled': false
+            });
+            $("#loading-overlay").addClass("hidden");
+            $(".subscribe-navbar,.subscribe-text-wrapper,.subscribe-form-wrapper").removeClass("hidden");
+        }
     } else {
-        document.getElementById('submit-button').disabled = false;
-        card.update({
-            'disabled': false
-        });
-        $("#loading-overlay").addClass("hidden");
-        $(".subscribe-navbar,.subscribe-text-wrapper,.subscribe-form-wrapper").removeClass("hidden");
+        if (isLoading) {
+            $('fieldset').find('input').prop('readonly', true);
+            document.getElementById('submit-button').disabled = true;
+            card.update({
+                'disabled': true
+            });
+        } else {
+            $('fieldset').find('input').prop('readonly', false);
+            document.getElementById('submit-button').disabled = false;
+            card.update({
+                'disabled': false
+            });
+        }
     }
+
+    
 };
 
 
@@ -120,7 +138,7 @@ function awaitingPaymentResult(isLoading) {
 var form = document.getElementById("subscribe-form");
 form.addEventListener("submit", function (event) {
     event.preventDefault();
-    awaitingPaymentResult(true);
+    awaitingResult(true, false);  // disable form
     createInactiveUser();
 
     function createInactiveUser() {
@@ -167,9 +185,9 @@ form.addEventListener("submit", function (event) {
         }
 
         function createInactiveUserAjaxFailure(xhr) {
-            
+
             displayFormErrors(xhr); // add form error messages returned in response data to DOM
-            awaitingPaymentResult(false);  // unhide overlay
+            awaitingResult(false, false);  // renable form
 
             function displayFormErrors(xhr) {
                 var formErrors = xhr.responseJSON.errors;
@@ -186,6 +204,8 @@ form.addEventListener("submit", function (event) {
 
         function createInactiveUserAjaxSuccess(data) {
             /* ATTEMPT PAYMENT */
+            awaitingResult(false, false);
+            awaitingResult(true, true);
             processPayment();
 
             function processPayment() {
@@ -233,7 +253,7 @@ form.addEventListener("submit", function (event) {
 
                 function confirmDeletionOfInactiveUserAjaxSuccess() {
                     // confirmed inactive user not in DB 
-                    awaitingPaymentResult(false); // re-enable UI so user can reattempt payment
+                    awaitingResult(false, true);; // re-enable UI so user can reattempt payment
                 }
 
                 function confirmDeletionOfInactiveUserAjaxFailure() {

@@ -80,6 +80,7 @@
 .story-detail-inner .story-desc p {
     font-size: 22px;
     line-height: 2;
+    overflow-wrap: break-word;
 }
 
 @media screen and (min-width: 576px) {
