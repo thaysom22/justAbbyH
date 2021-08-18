@@ -137,12 +137,12 @@ As any type of user:
 * subscribe form not displaying error feedback when user/subscription data is not validated successfully by backend. Fix: added javascript to collect form errors from server json response and loop over these errors to add to DOM. 
 * subscribe form 'payment processing' overlay is shown before payment process begins. Fix: defined a different option to disable form while request to create user is sent then overlay is shown only if this request returns successfully.
 * image credit field displays label and placeholder when empty in edit story form. Fix: all placeholders for fields were removed to improve UX which fixed this issue.
+* elements on site with a background image (homepage hero images, author photo, story images) take along time to load and show as an unattractive gray color in container element while loading. Fix: replace images with compressed versions using online compressor tool. (note unfixed aspect: story images are user determined and therefore slow loading cannot be easily prevented if images are large)
+* authenticated user can access login view and see page. fix: replaces all auth views with just login and logout class-based views and passed `redirect_authenticated_user=True` parameter to `LoginView`.
 
 
 #### Unsolved bugs
 
-* django default widget for story.pdf file input field displays a non signed aws s3 url as 'currently' value: therefore permission to get object is denied by AWS. This was not fixed as it was taking too much time to properly update the widget appearing in edit story form  and admin given the project deadline. The user can still view object on the change list page in admin which provides a signed s3 url via application's 'download_story' view.
-* elements on site with a background image (homepage hero images, author photo, story images) take along time to load and show as an unattractive gray color in container element while loading. Not fixed due to time contstraints. 
-* on iphone 12 safari browser the ripple loading animation on subscribe page is jerky and runs too quickly. Not fixed due to time contstraints. 
+* django default widget for story.pdf file input field displays a non signed aws s3 url as 'currently' value: therefore permission to get object is denied by AWS. This was not fixed as it was taking too much time to properly update the widget appearing in edit story form  and admin given the project deadline. The user can still view object on the change list page in admin which provides a signed s3 url via application's 'download_story' view. 
+* on iphone 12 safari browser the ripple loading animation on subscribe page is jerky and runs too quickly. Not fixed due to time constraints.
 * broswer console shows 'input elements should have autocomplete attributes'
-* 

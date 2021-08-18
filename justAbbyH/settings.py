@@ -140,7 +140,7 @@ USE_TZ = True
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Login and logout redirects
+# Login and logout redirect urls
 
 LOGIN_REDIRECT_URL = 'stories'
 LOGOUT_REDIRECT_URL = 'index'
