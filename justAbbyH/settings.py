@@ -85,6 +85,7 @@ WSGI_APPLICATION = 'justAbbyH.wsgi.application'
 USE_PRODUCTION_DATABASE = 'DATABASE_URL' in env
 if USE_PRODUCTION_DATABASE:
     # use postgres remote
+    print('using postgres database')
     DATABASES = {
         'default': dj_database_url.parse(env('DATABASE_URL')),
     }
@@ -162,6 +163,7 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 USE_AWS = 'USE_AWS' in env
 if USE_AWS:
     # production settings
+    print('using AWS storage')
     AWS_S3_REGION_NAME = 'us-east-1'
     AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
     AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
@@ -203,7 +205,8 @@ else:
 # EMAIL
 USE_SMTP = 'USE_SMTP' in env
 if USE_SMTP:
-    # use gmail smtp server    
+    # use gmail smtp server 
+    print('using smtp server')   
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
     EMAIL_USE_TLS = True
     EMAIL_USE_SSL = False

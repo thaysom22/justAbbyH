@@ -14,6 +14,7 @@
 4. [Bugs discovered](#bugs-discovered)
 	* Solved bugs
 	* Unsolved bugs
+5. [Other testing](#other-testing)
 
 ## Automated testing
 
@@ -125,6 +126,84 @@ As any type of user:
 
 ## Manual testing
 
+Manual testing of all elements and functionality of site was carried out in Chrome and Safari browsers using mobile, tablet and desktop emulators in dev tools on a chromebook and also on an iPhone.
+
+### Elements on every page
+
+#### Navbar
+
+* on all pages (except subscribe pages) of site navbar is expanded and nav links display horizontally at top right of page on desktop device and collapse to three dot menu icon on mobile and tablet devices.
+* nav links display change of color on hover on all pages. 
+* link corresponding to active page has underline effect on appropriate links
+* correct set of nav links display when user in session is anonymous/authenticated/staff
+* 'AbbyH Stories' text link displays at top left of all pages
+* all links in navbar work as expected and navigate to expected urls successfully.
+* on mobile/tablet devices clicking on menu icon triggers full page expanded menu and is replaced by a different dismiss icon. clicking this icon closes the full page menu as expected.
+* 'AbbyH Stories' text link is hidden when expanded navigation menu is shown
+* Expanded full page nav menu on mobile/tablet shows same links as shown in top right on desktop for anonymous/authenticated/staff users
+* Links in expanded nav menu show hover and active underline effects on all pages
+* If shown, subscribe button is shown above all other links arranged in a column in centre of page
+* Instagram and Twitter social media link icons are shown beneath internal nav links and exhibit change of color on hover. Links open in new tab and direct to expected location on all pages.
+* Expanded nav menu is full height of viewport on all mobile/tablet devices and does not scroll.
+* Font color of links in navigation has sufficient contrast with background on all pages at all times 
+
+#### Footer
+
+* Displays subscribe button link only to anonymous users
+* Displays story, about and Twitter/Instagram nav links on all pages and device sizes centred horizontally. These links all direct to expected locations and social media links open in new tab.
+* Footer is contasting color to section about and a minimum of 50% of device height
+
+#### Messages
+
+* Messages display beneath navbar at top of page when an error or invalid action occurs
+* Messages disappear automatically after a delay
+* Each message has a clickable dismiss icon that when clicked causes the message to hide.
+
+#### Buttons
+
+* Redirect to correct locations when clicked
+* Exhibit an increased brightness when hovered 
+
+### Homepage
+
+#### Main hero image with Read Now link
+
+#### Website introduction and stories link
+
+### About page
+
+#### Headline creative summary section
+
+
+#### Author photo and bio section with contact links
+
+
+### Subscribe page
+
+#### Instruction headline
+
+
+#### Subscribe form
+
+
+### Subscription created page
+
+
+### Login page
+
+
+### Stories page
+
+### Story details page
+
+### Add story page
+
+
+### Edit story page
+
+
+
+
 ## Bugs discovered
 
 #### Solved bugs
@@ -139,6 +218,7 @@ As any type of user:
 * image credit field displays label and placeholder when empty in edit story form. Fix: all placeholders for fields were removed to improve UX which fixed this issue.
 * elements on site with a background image (homepage hero images, author photo, story images) take along time to load and show as an unattractive gray color in container element while loading. Fix: replace images with compressed versions using online compressor tool. (note unfixed aspect: story images are user determined and therefore slow loading cannot be easily prevented if images are large)
 * authenticated user can access login view and see page. fix: replaces all auth views with just login and logout class-based views and passed `redirect_authenticated_user=True` parameter to `LoginView`.
+* Instagram link in footer does not open in new tab. Fix: `target="blank"` attribute added.
 
 
 #### Unsolved bugs
@@ -146,3 +226,7 @@ As any type of user:
 * django default widget for story.pdf file input field displays a non signed aws s3 url as 'currently' value: therefore permission to get object is denied by AWS. This was not fixed as it was taking too much time to properly update the widget appearing in edit story form  and admin given the project deadline. The user can still view object on the change list page in admin which provides a signed s3 url via application's 'download_story' view. 
 * on iphone 12 safari browser the ripple loading animation on subscribe page is jerky and runs too quickly. Not fixed due to time constraints.
 * broswer console shows 'input elements should have autocomplete attributes'
+
+## Other testing
+
+* The author used the website to view, add, edit and delete stories and tested the subscription process over a number of days during the testing process.
