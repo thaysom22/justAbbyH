@@ -48,8 +48,7 @@
 
 .hero-wrapper .btn.cta-btn {
     position: absolute;
-    bottom: 0;
-    margin-bottom: calc(3.5rem + 1vw);
+    bottom: 17.5%;
     left: 50%;
     transform: translate(-50%, 0); /* translate % relative to contained element's diemsions */
 }

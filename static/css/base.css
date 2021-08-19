@@ -250,7 +250,7 @@ footer {
     justify-content: center;
     align-items: center;
     background-color: var(--light-blue);
-    min-height: 50vh;
+    height: 33.3vh;
 }
 
 
@@ -259,7 +259,7 @@ footer {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin: 2rem;
+    margin: 1rem;
 }
 
 .footer-nav .nav-link.btn {
@@ -269,7 +269,7 @@ footer {
     width: 75px;
     box-sizing: content-box;
     padding: .4rem 1rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.25rem;
 }
 
 .footer-nav .nav-link:not(.btn) {
@@ -277,8 +277,8 @@ footer {
     line-height: 16px;
     height: 16px;
     padding: 0 .5rem;
-    margin: 5px;
-    margin-top: 16px;
+    margin: 3px;
+    margin-top: 10px;
     padding-top: 4px;
 }
 

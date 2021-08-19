@@ -30,10 +30,9 @@ def subscribe(request):
         if request.user.is_authenticated:
             messages.info(
                 request,
-                "Sorry, can't do that! \
-                Logout first to create a new subscription."
+                "Logout first to create a new subscription."
             )
-            return redirect(reverse('stories'))
+            return redirect(reverse('index'))
 
         # get Stripe credentials from environment
         stripe_public_key = settings.STRIPE_PUBLIC_KEY

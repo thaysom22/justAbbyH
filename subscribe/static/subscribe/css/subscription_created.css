@@ -27,7 +27,7 @@
 
 .email-link {
     color: var(--light-blue);
-    text-decoration: underline;
+    text-decoration: none;
 }
 
 .check-icon-wrapper {

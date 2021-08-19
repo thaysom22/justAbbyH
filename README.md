@@ -279,6 +279,11 @@ The site is designed to have a modern, warm, professional feel and to appeal to 
 * 'Save changes' button to submit form. 
 * 'Delete story' link with red font color which darkens on hover to delete story endpoint. Link deletes story from database.
 
+### 404 page
+
+* displays navbar and footer
+* displays 'home', 'stories', 'subscribe' (if user is anonymous) and 'about' links centered in a column in center of page - these nav links all exhibit color change on hover and direct to expected locations. 
+
 ## Features left to implement
 
 * Reviews: subscribed users can create, edit and delete reviews for stories. Top reviewed stories displayed on homepage. Review details are displayed on story details page. Reviews Model with a many to one relationship to Stories Model.

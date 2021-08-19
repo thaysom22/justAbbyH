@@ -151,7 +151,7 @@ Manual testing of all elements and functionality of site was carried out in Chro
 
 * Displays subscribe button link only to anonymous users
 * Displays story, about and Twitter/Instagram nav links on all pages and device sizes centred horizontally. These links all direct to expected locations and social media links open in new tab.
-* Footer is contasting color to section about and a minimum of 50% of device height
+* Footer is contasting color to section about and 33.3% of device height
 
 #### Messages
 
@@ -166,28 +166,58 @@ Manual testing of all elements and functionality of site was carried out in Chro
 
 ### Homepage
 
+* is accessible to all anonymous, authenticated and superusers.
+
 #### Main hero image with Read Now link
+
+* main hero image section displays appropriate landscape/portrait image on larger/smaller device sizes respectively
+* main hero image section exhibits 3 second zoom animation on page load on all devices
+* main hero image background is 100% of viewport height and width on all device sizes
+* 'read now' button link displays near bottom of image (and is visible on page load on all devices) and redirects correctly to subscribe page for anonymous users and to stories page instead for authenticated users.
 
 #### Website introduction and stories link
 
+* section is 90% of viewport height on all devices
+* text scales with device size and does not overflow
+* 'stories' button link displays near bottom of section and redirects correctly to stories page
+
 ### About page
+
+* is accessible to all anonymous, authenticated and superusers.
 
 #### Headline creative summary section
 
+* Section displays with light-blue background color at 90% viewport height for all device sizes.
+* header fonts have sufficient contrast on background color of this section
+* Font does not overflow and scales with device size
 
 #### Author photo and bio section with contact links
+
+* Author image displays clearly above short bio/contact links on mobile/tablet and adjacent to short bio/contact links on desktop. Image scales to maintain close to original proportions on all device sizes. 
+* Short bio text is legible, does not overflow and size scales with device width.
+* Contact links display below short bio, are sufficiently spaced and padded and exhibit change in color from dark blue to light blue on hover on desktop. Clicking on each socail media link icon opens up appropriate external link in a new tab. Clicking on email link icon opens up template email in new tab.
 
 
 ### Subscribe page
 
+* is accessible to all anonymous users. is not accessible to authenticated and superusers - these users are redirected to homepage.
+
 #### Instruction headline
+
+* Displays clearly at 33.3% viewport height on all device sizes and font size scales with device size
+* Section has light blue background and header fonts have sufficient contrast on this background 
 
 
 #### Subscribe form
 
+* On page load each input field displays at a comfortable width on every device size and does not exceed a max width on desktop. Each field displays a label above the input area and no text or placeholder in the inout area.
+*
 
 ### Subscription created page
 
+#### page content
+
+#### account activation link function
 
 ### Login page
 
@@ -201,6 +231,8 @@ Manual testing of all elements and functionality of site was carried out in Chro
 
 ### Edit story page
 
+
+### 404 page
 
 
 
@@ -219,13 +251,15 @@ Manual testing of all elements and functionality of site was carried out in Chro
 * elements on site with a background image (homepage hero images, author photo, story images) take along time to load and show as an unattractive gray color in container element while loading. Fix: replace images with compressed versions using online compressor tool. (note unfixed aspect: story images are user determined and therefore slow loading cannot be easily prevented if images are large)
 * authenticated user can access login view and see page. fix: replaces all auth views with just login and logout class-based views and passed `redirect_authenticated_user=True` parameter to `LoginView`.
 * Instagram link in footer does not open in new tab. Fix: `target="blank"` attribute added.
-
+* Read now button on homepage obscured by browser controls on mobile. Fix: moved button further from bottom of viewport.
+* 404 page displays subscribe link to authenticated users. Fix: if cluase added to 404 template to only display this link if user is anonymous.  
 
 #### Unsolved bugs
 
 * django default widget for story.pdf file input field displays a non signed aws s3 url as 'currently' value: therefore permission to get object is denied by AWS. This was not fixed as it was taking too much time to properly update the widget appearing in edit story form  and admin given the project deadline. The user can still view object on the change list page in admin which provides a signed s3 url via application's 'download_story' view. 
 * on iphone 12 safari browser the ripple loading animation on subscribe page is jerky and runs too quickly. Not fixed due to time constraints.
 * broswer console shows 'input elements should have autocomplete attributes'
+
 
 ## Other testing
 
