@@ -24,6 +24,14 @@
                         <button id="submit-button" class="btn cta-btn" type="submit">
                             <span id="button-text">Save</span>
                         </button>
+                        <div class="errors-wrapper">
+                            {% if add_story_form.errors %}
+                                <span class="error-icon icon" role="alert">
+                                    <i class="fas fa-times"></i>
+                                </span>
+                                <strong>Check the form for errors and re-attach files</strong>
+                            {% endif %}
+                        </div>
                     </form>
                 </div>
             </div>

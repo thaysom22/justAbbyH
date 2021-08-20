@@ -27,10 +27,17 @@
                     <button id="submit-button" class="btn cta-btn" type="submit">
                         <span id="button-text">Save changes</span>
                     </button>
+                    <div class="errors-wrapper">
+                        {% if edit_story_form.errors %}
+                            <span class="error-icon icon" role="alert">
+                                <i class="fas fa-times"></i>
+                            </span>
+                            <strong>Check the form for errors</strong>
+                        {% endif %}
+                    </div>
                     <div class="delete-story">
                         <a id="delete-story-link" href="{% url 'delete_story' story.id %}">Delete Story</a>
                     </div>
-                    
                 </form>
             </div>
         </div>

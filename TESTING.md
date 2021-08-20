@@ -247,22 +247,50 @@ Manual testing of all elements and functionality of site was carried out in Chro
 * username and password field inputs display with labels and without placeholders
 * sumbit button with text 'log in' displays below inputs
 * attempting to submit form with one or both fields empty results will not submit and browser default help messages are shown
-* If both inouts contains data, the form submits. If one or both fields are determined invlaid on the server an error message is displayed for the form (not indicating with field(s) are incorrect for security reasons)
-* 
+* If both inputs contain data, the form submits. If one or both fields are determined invalid on the server, page reloads and an error message is displayed for the form (not indicating with field(s) are incorrect for security reasons)
 
 
 ### Stories page
 
+* accessible to all users
+* story image links are displayed in appropriate layout on mobile/tablet/desktop device sizes
+* links exhibit box shadow effect on hover
+* all stories in database are displayed
+* clicking on each link directs to the expected 'details' page for that story
+* title fonts are readable over the image
+* image is slighly darkened by transluscent overlay to improve contrast 
+
+
 ### Story details page
+
+* page is asscessible to all users
+* download story link is only shown to authenticated users. clicking this link opens a url pointing to the pdf document of the full story in a private AWS S3 bucket. the url is signed to restrict access and times out after 5 mins (if the same url is visited after 5 mins have elapsed the request is denied access). if the address of the object is requested without an appended signature then access is denied. therefore, there is no way for a non staff user to access the pdf object in the S3 bucket without accessing the download_story endpoint which is accessible only to authenicated users (anonymous users are redirected to login page)
+* edit story link icon is only shown to staff/super users
+* anonymous users are shown  the text "To access this story please subscribe" with link to subscribe page in place of download story button. This link directs to subscribe page.
+* title is shown with text shadow effect, square image is shown, correct values for reading time and publish date fields description text are shown for each story in database.
+* content is centered horizontally and has maximum width on wider device screens
 
 ### Add story page
 
+* page only accessible to staff/super users - anonymous users are redirected to login page
+* form field inputs all display clearly with labels and no placeholders
+* If required field is left blank or fails browser validation then browser shows default help message on field input
+* When form is submitted by clikcing submit button, button disables and text changes from 'save' to 'processing'.
+* If form data fails server validation, appropriate error messages are displayed adjacent to form fields in red and an error message is displayed beneath submit button, button is reenabled
+* if form submits successfully, story instance with correct field values is added to database and story image and pdf objects are added to public and private s3 buckets respectively. user is redirected to respective story_details page with a message that the story has been added successfully.
+* 
 
 ### Edit story page
 
+* page only accessible to staff/super users - anonymous users are redirected to login page
+
+### Delete story functionality
+
+* url only accessible to staff/super users - anonymous users are redirected to login page
 
 ### 404 page
 
+* page is accessible to all users
 
 
 ## Bugs discovered

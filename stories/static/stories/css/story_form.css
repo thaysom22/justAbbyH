@@ -26,6 +26,19 @@
     color: #dc3545;
 }
 
+.errors-wrapper {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.errors-wrapper i {
+    color: #dc3545;
+}
+
+.errors-wrapper strong{
+    color: #dc3545;
+}
+
 #story-form input:not(#id_featured,#id_image,#id_pdf),
 #story-form select {
     height: 44px;
