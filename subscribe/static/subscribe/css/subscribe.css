@@ -79,13 +79,18 @@ https://stripe.com/docs/payments/integration-builder */
 }
 
 #card-errors {
-    height: 30px;
+    min-height: 30px;
     padding: 4px;
     margin: 0;
 }
 
-.card-error {
+.card-error,
+.error-icon {
     color: #dc3545;
+}
+
+#error_id_subscribe_form {
+    text-align: center;
 }
 
 .card-error,

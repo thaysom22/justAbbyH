@@ -28,7 +28,7 @@ class Stripe_WH_Handler:
         else:
             current_site_domain = settings.CURRENT_SITE_DOMAIN  # get local domain from settings
         
-        subject = 'Just a Message From JustAbbyH: Please Activate Your Account To Start Reading Now!'
+        subject = 'A Message From Abby H Stories: Please Activate Your Account To Start Reading Now!'
         body = render_to_string('subscribe/emails/account_activation_email.html', {
             'user': user,
             'domain': current_site_domain,

@@ -187,23 +187,39 @@ form.addEventListener("submit", function (event) {
         function createInactiveUserAjaxFailure(xhr) {
 
             displayFormErrors(xhr); // add form error messages returned in response data to DOM
-            awaitingResult(false, false);  // renable form
+            awaitingResult(false, false);  // re-enable form
 
             function displayFormErrors(xhr) {
                 var formErrors = xhr.responseJSON.errors;
-                for (const [fieldName, errorsArray] of Object.entries(formErrors)) {
+                if (formErrors) {
                     $('.help-error').remove();  // remove error messages from previous submit attempts
-                    errorsArray.forEach((errorMsg, index) => {
-                        $(`#id_${fieldName}`).parent().append(
-                            `<p id="error_${index+1}_id_${fieldName}" class="help-block help-error"><strong>${errorMsg}</strong></p>`
-                        );
-                    });
+                    $('#submit-button').after(
+                        `<p id="error_id_subscribe_form" class="help-block help-error">
+                            <span class="error-icon icon" role="alert">
+                                <i class="fas fa-times"></i>
+                            </span>
+                            <strong>Please check the form for errors</strong>
+                        </p>`
+                    ); // add error message below submit button
+                    for (const [fieldName, errorsArray] of Object.entries(formErrors)) {
+                        errorsArray.forEach((errorMsg, index) => {
+                            $(`#id_${fieldName}`).parent().append(
+                                `<p id="error_${index+1}_id_${fieldName}" class="help-block help-error">
+                                    <span class="error-icon icon" role="alert">
+                                        <i class="fas fa-times"></i>
+                                    </span>
+                                    <strong>${errorMsg}</strong>
+                                </p>`
+                            );
+                        });
+                    }
                 }
             }
         };
 
         function createInactiveUserAjaxSuccess(data) {
             /* ATTEMPT PAYMENT */
+            $('.help-error').remove();  // remove error messages from previous form submit attempts
             awaitingResult(false, false);
             awaitingResult(true, true);
             processPayment();
@@ -254,6 +270,8 @@ form.addEventListener("submit", function (event) {
                 function confirmDeletionOfInactiveUserAjaxSuccess() {
                     // confirmed inactive user not in DB 
                     awaitingResult(false, true);; // re-enable UI so user can reattempt payment
+                    var cardErrorsElem = document.getElementById("card-errors");
+                    cardErrorsElem.scrollIntoView();
                 }
 
                 function confirmDeletionOfInactiveUserAjaxFailure() {

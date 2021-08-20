@@ -200,7 +200,7 @@ Manual testing of all elements and functionality of site was carried out in Chro
 
 ### Subscribe page
 
-* is accessible to all anonymous users. is not accessible to authenticated and superusers - these users are redirected to homepage.
+* is accessible to all anonymous users. is not accessible to authenticated and superusers - these users are redirected to homepage with a message shown in messages section.
 
 #### Instruction headline
 
@@ -210,10 +210,23 @@ Manual testing of all elements and functionality of site was carried out in Chro
 
 #### Subscribe form
 
-* On page load each input field displays at a comfortable width on every device size and does not exceed a max width on desktop. Each field displays a label above the input area and no text or placeholder in the inout area.
-*
+* On page load each input field displays at a comfortable width on every device size and does not exceed a max width on desktop. Each field displays a label above the input area and no text or placeholder in the input area.
+* Username and password fields display help text below input area.
+* Country select element displays 'select country' placeholder with gray color, when clicked a dropdown list of country options displays (select country original value is disabled) and when an option is clicked the dropdown list hides and the selected value appears in the input area in darker color font matching other inputs' text color.
+* Stripe card element displays with gray color placeholders for: card number, expiry date, CVC and postcode; and card icon on left.
+* Submit button displays at bottom of form and is disabled and faded on page load.
+* The submit button does not enable unless user inputs valid card number and expiration date in the future. If the user leaves card number or expiration date incomplete or invalid or cvv/postcode incomplete the submit button remains disabled and an appropriate error message displays below card element. If the card information is valid and complete the submit button enables and and info message containing the amount to be charged displays beneath the card element. If any of the card inputs again become invalid/incomplete the submit button re-disables, info message hides and error message displays.
+* When required (non card) input fields are left empty or do not satisfy default browser validation the form will not submit and show default browser help messages.
+* If all the form inputs are valid from browser's perspective, the page sends a request to 'create-inactive-user' endpoint on server: if form data fails server validation from this endpoint a 400 response is received and error messages are displayed below invalid fields as well as an error message indicating there are form errors beneath the submit button at the bottom of the form.
+* If form data passes server validation a 200 response from 'create-inactive-user' endpoint is received and a full screen overlay is shown with a pulsing ripple icon and 'payment processing' message. While this is displaying a call to the Stripe API is made from the client to confirm the payment information entered. 
+* If this is successful (the payment input authorizes) then the user is redirected to the 'subscription created' page and an INACTIVE user with the information from the subscribe form is in the database and related subscription (the session user remains anonymous). If this payment is declined by the Stripe API then overlay hides and subscribe form is shown again with card error message shown just above submit button and scrolled into view.
+* if card requires extra authorization, the modal from stripe appears on top of payment processing overlay - if this extra authentication fails user is returned to subscribe form with 'card authorization failed' error message displayed and scrolled into view. if extra authorization passes then user is redirected to 'subscription created page' and inactive user is added to database as described above.
+* if card payment fails for any reason there is no respective inactive user remaining in the database at the end of process (call to 'delete-inactive-user' endpoint was made sucessfully)
+
 
 ### Subscription created page
+
+* accessible to all users 
 
 #### page content
 
@@ -248,18 +261,22 @@ Manual testing of all elements and functionality of site was carried out in Chro
 * subscribe form not displaying error feedback when user/subscription data is not validated successfully by backend. Fix: added javascript to collect form errors from server json response and loop over these errors to add to DOM. 
 * subscribe form 'payment processing' overlay is shown before payment process begins. Fix: defined a different option to disable form while request to create user is sent then overlay is shown only if this request returns successfully.
 * image credit field displays label and placeholder when empty in edit story form. Fix: all placeholders for fields were removed to improve UX which fixed this issue.
-* elements on site with a background image (homepage hero images, author photo, story images) take along time to load and show as an unattractive gray color in container element while loading. Fix: replace images with compressed versions using online compressor tool. (note unfixed aspect: story images are user determined and therefore slow loading cannot be easily prevented if images are large)
+* elements on site with a background image (homepage hero images, author photo, story images) take along time to load and show as an unattractive gray color in container element while loading. Fix: replace images with compressed versions using online compressor tool. (note unfixed aspect: story images are staff user determined and therefore slow loading cannot be easily prevented if images are large - site author has been advised to mitigate this)
 * authenticated user can access login view and see page. fix: replaces all auth views with just login and logout class-based views and passed `redirect_authenticated_user=True` parameter to `LoginView`.
 * Instagram link in footer does not open in new tab. Fix: `target="blank"` attribute added.
 * Read now button on homepage obscured by browser controls on mobile. Fix: moved button further from bottom of viewport.
 * 404 page displays subscribe link to authenticated users. Fix: if cluase added to 404 template to only display this link if user is anonymous.  
+* when subscribe form is submitted with errors in the user or subscription form inputs, the submit button disables and errors shown adjacent to respective fields but it is not clesr to the user that there are errors if the respectiv inputs are not in viewport (it appears as if page has frozen). fix: added an error message to inform user there are errors in from to correct directly below the submit button.
+* when form passes validation (after previously failing and showing errors) but card payment is not authorized, form is shown again (overlay hides) with previous irrelevant error messages remaining. fix: added JS to clear non card errors from form when confriming card payment since user and subscribe forms have already validated. 
+* when form passes validation (after previously failing and showing errors) but card payment is not authorized, form is shown again (overlay hides) but viewport is at top of document so card errors cannot be seen by user and it is unclear what the problem is! fix: added JS to scroll card error messages into view after card payment fails.
 
 #### Unsolved bugs
 
-* django default widget for story.pdf file input field displays a non signed aws s3 url as 'currently' value: therefore permission to get object is denied by AWS. This was not fixed as it was taking too much time to properly update the widget appearing in edit story form  and admin given the project deadline. The user can still view object on the change list page in admin which provides a signed s3 url via application's 'download_story' view. 
+* django default widget for story.pdf file input field displays a non signed aws s3 url as 'currently' value: therefore permission to get object is denied by AWS. This was not fixed as it was taking too much time to properly update the widget appearing in edit story form  and admin given the project deadline and this bug will only effect staff/superusers so will have limited impact. The user can still view object on the change list page in admin which provides a signed s3 url via application's 'download_story' view. 
 * on iphone 12 safari browser the ripple loading animation on subscribe page is jerky and runs too quickly. Not fixed due to time constraints.
 * broswer console shows 'input elements should have autocomplete attributes'
-
+* '*' asterisks after some required fields on subscribe form do not hide on mobile browser
+* subscription created page is accessible to all users at all times - ideally a call to this url would redirect unless coming from subscribe page after just creating a new subscription. This is harmless as no senstive information can be exposed (user data all comes in url query parameters from subscribe page redirect) and users cannot use it to gain access to stories or activate an inactive account without first subscribing (since this is done by a webhook from Stripe not by 'subscription-created' endpoint logic).
 
 ## Other testing
 
