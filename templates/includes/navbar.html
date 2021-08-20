@@ -6,27 +6,27 @@
     <div class="navbar-collapse collapse" id="navbarSupportedContent">
         <div class="navbar-nav">
             {% url 'index' as url_index %}
-            <a class="nav-link{% if request.path == url_index %} active" aria-current="page"{% else %}"{% endif %} href="{{ url_index }}">Home</a>
+            <a title="Home" class="nav-link{% if request.path == url_index %} active" aria-current="page"{% else %}"{% endif %} href="{{ url_index }}">Home</a>
             {% url 'stories' as url_stories %}
-            <a class="nav-link{% if request.path == url_stories %} active" aria-current="page"{% else %}"{% endif %} href="{{ url_stories }}">Stories</a>
+            <a title="Stories" class="nav-link{% if request.path == url_stories %} active" aria-current="page"{% else %}"{% endif %} href="{{ url_stories }}">Stories</a>
             {% if user.is_staff %}
                 {% url 'add_story' as url_add_story %}
-                <a class="nav-link{% if request.path == url_add_story %} active" aria-current="page"{% else %}"{% endif %} href="{{ url_add_story }}">Add story</a>
+                <a title="Add Story" class="nav-link{% if request.path == url_add_story %} active" aria-current="page"{% else %}"{% endif %} href="{{ url_add_story }}">Add story</a>
             {% endif %}    
             {% url 'about' as url_about %}
-            <a class="nav-link{% if request.path == url_about %} active" aria-current="page"{% else %}"{% endif %} href="{{ url_about }}">About</a>
+            <a title="About" class="nav-link{% if request.path == url_about %} active" aria-current="page"{% else %}"{% endif %} href="{{ url_about }}">About</a>
             {% if user.is_authenticated %}
-                <a class="nav-link" href="{% url 'logout' %}">Log out</a>
+                <a title="Log out" class="nav-link" href="{% url 'logout' %}">Log out</a>
             {% else %}
                 {% url 'login' as url_login %}
-                <a class="nav-link{% if request.path == url_login %} active" aria-current="page"{% else %}"{% endif %} href="{{ url_login }}">Log in</a>
-                <a class="nav-link cta-btn btn" href="{% url 'subscribe' %}">Subscribe</a>
+                <a title="Log in" class="nav-link{% if request.path == url_login %} active" aria-current="page"{% else %}"{% endif %} href="{{ url_login }}">Log in</a>
+                <a title="Subscribe" class="nav-link cta-btn btn" href="{% url 'subscribe' %}">Subscribe</a>
             {% endif %}
             <div class="nav-social-media-links">
-                <a class="nav-link nav-instagram" target="_blank" href="https://www.instagram.com/justabbyh/">
+                <a title="Instagram" class="nav-link nav-instagram" target="_blank" href="https://www.instagram.com/justabbyh/">
                     <span class="socialmedia-icon fa-icon-center"><i class="fab fa-instagram"></i></span>
                 </a>
-                <a class="nav-link nav-twitter" target="_blank" href="https://twitter.com/justabbyd">
+                <a title="Twitter" class="nav-link nav-twitter" target="_blank" href="https://twitter.com/justabbyd">
                     <span class="socialmedia-icon fa-icon-center"><i class="fab fa-twitter"></i></span>
                 </a>
             </div>

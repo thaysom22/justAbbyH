@@ -1,15 +1,15 @@
 <footer>
     <div class="footer-nav">
         {% if not user.is_authenticated %}
-            <a class="nav-link cta-btn btn btn-color-inv" href="{% url 'subscribe' %}">Subscribe</a>
+            <a title="Subscribe" class="nav-link cta-btn btn btn-color-inv" href="{% url 'subscribe' %}">Subscribe</a>
         {% endif %}
-        <a class="nav-link" href="{% url 'stories' %}">Stories</a>
-        <a class="nav-link" href="{% url 'about' %}">About</a>
+        <a title="Stories" class="nav-link" href="{% url 'stories' %}">Stories</a>
+        <a title="About" class="nav-link" href="{% url 'about' %}">About</a>
         <div class="nav-social-media-links">
-            <a class="nav-link nav-instagram" target="_blank" href="https://www.instagram.com/justabbyh/">
+            <a title="Instagram" class="nav-link nav-instagram" target="_blank" href="https://www.instagram.com/justabbyh/">
                 <span class="socialmedia-icon fa-icon-center"><i class="fab fa-instagram"></i></span>
             </a>
-            <a class="nav-link nav-twitter" target="_blank" href="https://twitter.com/justabbyd">
+            <a title="Twitter" class="nav-link nav-twitter" target="_blank" href="https://twitter.com/justabbyd">
                 <span class="socialmedia-icon fa-icon-center"><i class="fab fa-twitter"></i></span>
             </a>
         </div>

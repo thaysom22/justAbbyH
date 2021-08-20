@@ -4,10 +4,6 @@
 login details for code institute assessor - provided in project submission form
 ###############################################################################
 
-
-
-
-
 [justAbbyH Stories](https://just-abby-h.herokuapp.com/) was designed and built by Thomas Haysom in order to promote and potentially generate financial support for the writing of his wife, Abby Haysom who is an amateur author and English teacher in Maryland, USA. The website is designed to offer a convenient and scalable platform conbined with an easy to use interface, for readers and followers of the author to find out more about her work and download and read her latest stories in full. This project also constitutes the final project for the developer on the Code Institute Full Stack Diploma. 
 
 ## Table of contents
@@ -331,12 +327,12 @@ The Story model is within the stories app and holds all required data about a st
 
 | Name | Key in DB | Options | Field Type
 | --- | --- | --- | --- |
-| Title | `title` | `max_length=254` | `CharField` |
+| Title | `title` | `max_length=254`, `default=''` | `CharField` |
 | Genre | `genre` | `choices=GENRE_CHOICES`, `max_length=254`, `default=''` | `CharField` |
 | Publish Date | `publish_date` | `auto_now_add=True` | DateField |
-| Description | `description` | `default=''` | `TextField` |
+| Description | `description` | `default=''`, `validators=[MaxLengthValidator(10000),MinLengthValidator(50),]` | `TextField` |
 | Featured | `featured` | `default=False` | BooleanField |
-| Reading Time (Minutes) | reading_time_mins | `null=True` | `PositiveIntegerField` |
+| Reading Time (Minutes) | reading_time_mins | `null=True`, `validators=[MaxValueValidator(60000),MinValueValidator(1)]` | `PositiveIntegerField` |
 | Reading Time String | `reading_time_string` | `max_length=254`, `default=''` | `CharField` |
 | Image | `image` | `upload_to='story_images/'`, `storage=PublicFileStorage()` | `ImageField` |
 | Image Credit | `image_credit` | `max_length=254`, `blank=True`, `default=''` | `CharField` |
@@ -355,7 +351,7 @@ The Subscription model is within the subscription app and holds all the required
 | --- | --- | --- | --- |
 | User | `user` | `on_delete=models.CASCADE` | `OneToOneField` to `User` |
 | Start Date | `start_date` | `auto_now_add=True` | `DateField` |
-| Country | `country` | `blank_label='Country'` | `CountryField` |
+| Country | `country` | `blank_label='Select country'` | `CountryField` |
 | City | `city` | `max_length=100`, `default=''` | `CharField` |
 | Stripe Payment ID | `stripe_pid` | `max_length=254`, `unique=True`, `default=''` | `CharField` |
 
@@ -394,6 +390,7 @@ The Subscription model is within the subscription app and holds all the required
 * [Font Awesome](https://fontawesome.com/) was used for icons on site.
 * [GitHub](https://github.com/) was used as remite repository for version control and automatic deployment to Heroku.
 * [Git](https://git-scm.com/) was used for version control locally.
+* [autopep8](https://pypi.org/project/autopep8/) code formatter tool used recursively on project directory with `--aggressive` flag to format all python files to pep8 standards.
 
 
 ### Languages
