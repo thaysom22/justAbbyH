@@ -282,15 +282,25 @@ Manual testing of all elements and functionality of site was carried out in Chro
 
 ### Edit story page
 
+* as above for 'add story page'
 * page only accessible to staff/super users - anonymous users are redirected to login page
+* when accessed from story detail page, fields are populated with correct values for respective stories
+* when accessed by manually entering url with story id as argument, correct data values are displayed
+* if form submits successfully, story instance in database is correctly updated with new values and new s3 objects are created if pdf/image field files are updated. user is redirected to respective story_details page with a message that the story has been updated successfully.
+
 
 ### Delete story functionality
 
 * url only accessible to staff/super users - anonymous users are redirected to login page
+* clicking link on story details page or accessing url manually (with story id passed as argument) sucessfully deletes story instance from database and redirects to stories page with message that delete was successful.
 
 ### 404 page
 
 * page is accessible to all users
+* displays whenever a non-existant url is entered manually on the site domain
+* displays error message
+* displays nav links which exhibit color change on hover and direct to expected pages
+* subscribe nav link only displays to anonymous users.
 
 
 ## Bugs discovered
