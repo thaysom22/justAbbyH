@@ -14,6 +14,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='story',
             name='reading_time_mins',
-            field=models.PositiveIntegerField(null=True, validators=[django.core.validators.MaxValueValidator(600000), django.core.validators.MinValueValidator(1)]),
+            field=models.PositiveIntegerField(null=True, validators=[django.core.validators.MaxValueValidator(
+                600000), django.core.validators.MinValueValidator(1)]),
         ),
     ]

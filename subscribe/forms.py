@@ -12,8 +12,8 @@ class UserRegisterForm(UserCreationForm):
     """
     class Meta:
         model = User
-        fields = ("username", "first_name", 
-                  "last_name", "email", 
+        fields = ("username", "first_name",
+                  "last_name", "email",
                   "password1", "password2")
 
     def __init__(self, *args, **kwargs):
@@ -60,8 +60,10 @@ class SubscriptionForm(forms.ModelForm):
             self.fields[field].widget.attrs.pop("autofocus", None)
             self.fields[field].label = labels[field]
             if field == 'country':
-                current_classes = self.fields['country'].widget.attrs.get('class', '')
+                current_classes = self.fields['country'].widget.attrs.get(
+                    'class', '')
                 if current_classes:
-                    self.fields['country'].widget.attrs.update({'class': f'{current_classes} form-select'})
+                    self.fields['country'].widget.attrs.update(
+                        {'class': f'{current_classes} form-select'})
                 else:
                     self.fields['country'].widget.attrs['class'] = 'form-select'

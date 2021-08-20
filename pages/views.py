@@ -20,4 +20,3 @@ def about(request):
     }
 
     return render(request, template, context)
-    

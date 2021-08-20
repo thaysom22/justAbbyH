@@ -184,13 +184,14 @@ if USE_AWS:
     AWS_S3_CUSTOM_PRIVATE_DOMAIN = f"{AWS_STORAGE_PRIVATE_BUCKET_NAME}.s3.amazonaws.com"
 
     # static files in production
-    STATICFILES_STORAGE = 'custom_storages.StaticStorage'  # where 'collect static' command will put static files in production
+    # where 'collect static' command will put static files in production
+    STATICFILES_STORAGE = 'custom_storages.StaticStorage'
     STATICFILES_LOCATION = 'static'
     STATIC_URL = f'https://{AWS_S3_CUSTOM_PUBLIC_DOMAIN}/{STATICFILES_LOCATION}/'
 
     # media files in production
-    MEDIAFILES_PUBLIC_LOCATION = 'media/public'   
-    MEDIAFILES_PRIVATE_LOCATION = 'media/private'    
+    MEDIAFILES_PUBLIC_LOCATION = 'media/public'
+    MEDIAFILES_PRIVATE_LOCATION = 'media/private'
     MEDIA_PUBLIC_URL = f'https://{AWS_S3_CUSTOM_PUBLIC_DOMAIN}/{MEDIAFILES_PUBLIC_LOCATION}/'
     MEDIA_PRIVATE_URL = f'https://{AWS_S3_CUSTOM_PRIVATE_DOMAIN}/{MEDIAFILES_PRIVATE_LOCATION}/'
     PUBLIC_FILE_STORAGE = 'custom_storages.PublicFileStorage'
@@ -198,22 +199,24 @@ if USE_AWS:
 else:
     # static and media in development
     STATIC_URL = '/static/'  # url prefix for referring to static files in development
-    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # where 'collect static' command will put static files locally
+    # where 'collect static' command will put static files locally
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
     MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
     MEDIA_URL = '/media/'
 
 # EMAIL
 USE_SMTP = 'USE_SMTP' in env
 if USE_SMTP:
-    # use gmail smtp server 
-    print('using smtp server')   
+    # use gmail smtp server
+    print('using smtp server')
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
     EMAIL_USE_TLS = True
     EMAIL_USE_SSL = False
     EMAIL_PORT = 587
     EMAIL_HOST = 'smtp.gmail.com'  # OR 'smtp-relay.sendinblue.com'
     EMAIL_HOST_USER = env('EMAIL_HOST_USER')
-    EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')  # using app password with 2FA
+    # using app password with 2FA
+    EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
     DEFAULT_FROM_EMAIL = env('EMAIL_HOST_USER')
     CURRENT_SITE_DOMAIN = None  # webhook handler will get domain from request object
 else:

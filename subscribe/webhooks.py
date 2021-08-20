@@ -50,7 +50,7 @@ def webhook_listener(request):
     # get appropriate event handler function using event map
     # use generic handler by default
     event_handler = event_map.get(event_type, wh_handler.handle_other_event)
-    
+
     # call event handler with the event
     response = event_handler(event)
     return response

@@ -14,11 +14,13 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='story',
             name='description',
-            field=models.TextField(default='', validators=[django.core.validators.MaxLengthValidator(10000), django.core.validators.MinLengthValidator(50)]),
+            field=models.TextField(default='', validators=[django.core.validators.MaxLengthValidator(
+                10000), django.core.validators.MinLengthValidator(50)]),
         ),
         migrations.AlterField(
             model_name='story',
             name='reading_time_mins',
-            field=models.PositiveIntegerField(null=True, validators=[django.core.validators.MaxValueValidator(60000), django.core.validators.MinValueValidator(1)]),
+            field=models.PositiveIntegerField(null=True, validators=[
+                                              django.core.validators.MaxValueValidator(60000), django.core.validators.MinValueValidator(1)]),
         ),
     ]

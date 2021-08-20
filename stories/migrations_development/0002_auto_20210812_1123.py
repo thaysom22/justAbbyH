@@ -28,7 +28,8 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='story',
             name='genre',
-            field=models.CharField(choices=[('Fiction', 'Fiction'), ('Non-fiction', 'Non-fiction'), ('Unknown', 'Unknown')], default='', max_length=254),
+            field=models.CharField(choices=[('Fiction', 'Fiction'), (
+                'Non-fiction', 'Non-fiction'), ('Unknown', 'Unknown')], default='', max_length=254),
         ),
         migrations.AlterField(
             model_name='story',

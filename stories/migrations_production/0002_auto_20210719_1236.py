@@ -14,11 +14,13 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='story',
             name='image',
-            field=models.ImageField(blank=True, storage=custom_storages.PublicFileStorage(), upload_to='story_images/'),
+            field=models.ImageField(
+                blank=True, storage=custom_storages.PublicFileStorage(), upload_to='story_images/'),
         ),
         migrations.AlterField(
             model_name='story',
             name='pdf',
-            field=models.FileField(storage=custom_storages.PrivateFileStorage(), upload_to='story_pdfs/'),
+            field=models.FileField(
+                storage=custom_storages.PrivateFileStorage(), upload_to='story_pdfs/'),
         ),
     ]

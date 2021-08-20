@@ -1,7 +1,7 @@
 from django.db import models
 from django.conf import settings
-from django.core.validators import (MaxValueValidator, 
-    MinValueValidator, MaxLengthValidator, MinLengthValidator)
+from django.core.validators import (MaxValueValidator,
+                                    MinValueValidator, MaxLengthValidator, MinLengthValidator)
 
 from math import floor
 
@@ -17,7 +17,7 @@ class Story(models.Model):
 
     class Meta:
         verbose_name_plural = "Stories"
-    
+
     FICTION = 'Fiction'
     NON_FICTION = 'Non-fiction'
     UNKNOWN = 'Unknown'
@@ -28,7 +28,7 @@ class Story(models.Model):
         (NON_FICTION, 'Non-fiction'),
         (UNKNOWN, 'Unknown'),
     ]  # widget is select box
-    
+
     genre = models.CharField(
         choices=GENRE_CHOICES,
         max_length=254,
@@ -52,7 +52,8 @@ class Story(models.Model):
             MinValueValidator(1),
         ],
     )
-    reading_time_string = models.CharField(max_length=254, default='')  # set automatically
+    reading_time_string = models.CharField(
+        max_length=254, default='')  # set automatically
     image_credit = models.CharField(max_length=254, blank=True, default='')
 
     if USE_AWS:
@@ -79,7 +80,7 @@ class Story(models.Model):
             return "Unsaved Story object"
 
     def save(self, *args, **kwargs):
-        """ 
+        """
         Override inherited save() method to set
         reading_time_string attribute on class
         """

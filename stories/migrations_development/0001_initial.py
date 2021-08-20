@@ -14,15 +14,20 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Story',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('genre', models.CharField(blank=True, choices=[('Fiction', 'Fiction'), ('Non-fiction', 'Non-fiction'), ('Unknown', 'Unknown'), ('Other', 'Other')], max_length=100, null=True)),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
+                ('genre', models.CharField(blank=True, choices=[('Fiction', 'Fiction'), (
+                    'Non-fiction', 'Non-fiction'), ('Unknown', 'Unknown'), ('Other', 'Other')], max_length=100, null=True)),
                 ('title', models.CharField(max_length=254)),
                 ('publish_date', models.DateField(auto_now_add=True)),
-                ('description', models.TextField(blank=True, max_length=6000, null=True)),
+                ('description', models.TextField(
+                    blank=True, max_length=6000, null=True)),
                 ('featured', models.BooleanField(blank=True, default=False)),
-                ('reading_time_mins', models.PositiveIntegerField(blank=True, null=True)),
+                ('reading_time_mins', models.PositiveIntegerField(
+                    blank=True, null=True)),
                 ('reading_time_string', models.CharField(max_length=254, null=True)),
-                ('image', models.ImageField(blank=True, upload_to='public/story_images/')),
+                ('image', models.ImageField(
+                    blank=True, upload_to='public/story_images/')),
                 ('pdf', models.FileField(upload_to='private/story_pdfs/')),
             ],
             options={

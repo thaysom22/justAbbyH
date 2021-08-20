@@ -22,7 +22,7 @@ import stripe
 
 @require_GET
 def subscribe(request):
-    """ 
+    """
     GET: Display User and Subscribe forms and
     create Stripe paymentIntent.
     """
@@ -65,7 +65,7 @@ def subscribe(request):
             }
             template = "subscribe/subscribe.html"
             return render(request, template, context)
-        
+
     except Exception as e:
         messages.error(
             request,
@@ -79,7 +79,7 @@ def subscribe(request):
 def create_inactive_user(request):
     """
     Create user and linked subscription records in
-    database before attempting payment on client. 
+    database before attempting payment on client.
     Set user.is_active field is set to False.
     """
     user = None  # avoid later error when checking if user is in db
@@ -101,7 +101,7 @@ def create_inactive_user(request):
         subscription_form = SubscriptionForm(subscription_data)
 
         # validates city and country fields only for subscription_form
-        if user_form.is_valid() and subscription_form.is_valid():      
+        if user_form.is_valid() and subscription_form.is_valid():
             user = user_form.save(commit=False)
             user.is_active = False  # deactivate user to prevent login
             user.save()  # user must be saved in db before it is used as subscription's foreign key
@@ -126,7 +126,7 @@ def create_inactive_user(request):
                 status=400,
             )
 
-        # add inactive_user_id as metadata to paymentIntent to 
+        # add inactive_user_id as metadata to paymentIntent to
         # facilitate webhook handler functionality
         stripe.api_key = settings.STRIPE_SECRET_KEY
         stripe.PaymentIntent.modify(
@@ -142,7 +142,7 @@ def create_inactive_user(request):
             data={
                 "inactiveUserId": inactive_user_id,
                 "redirectUrlPath": "/subscribe/subscription-created",
-                },
+            },
             status=200,
         )
 
@@ -170,14 +170,16 @@ def create_inactive_user(request):
 @require_POST
 def confirm_deletion_of_inactive_user(request):
     """
-    Delete or confirm non-existance of inactive User record 
+    Delete or confirm non-existance of inactive User record
     (and associated Subscription record by cascade) after payment
     attempt was unsuccessful on client
     """
     try:
-        inactive_user_id = int(request.POST.get('inactive_user_id'))  # id for inactive user
+        inactive_user_id = int(request.POST.get(
+            'inactive_user_id'))  # id for inactive user
         try:
-            user = User.objects.get(id=inactive_user_id)  # get inactive user instance
+            # get inactive user instance
+            user = User.objects.get(id=inactive_user_id)
         except User.DoesNotExist:
             return HttpResponse(
                 content=f"Confirmed that no user with id:{inactive_user_id} exists in database",
@@ -219,7 +221,7 @@ def confirm_deletion_of_inactive_user(request):
 
 @require_GET
 def subscription_created(request):
-    """ 
+    """
     Render user and subscription details in template
     """
     # parse raw url query parameters
@@ -265,9 +267,11 @@ def activate_user(request, uidb64, token):
         user.is_active = True
         user.save()
         messages.success(request,
-            "Your account has been activated. Please login to start reading!")
+                         "Your account has been activated. Please login to start reading!")
         return redirect(reverse('login'))
     else:
-        messages.warning(request,
-            "This activation link was already used, or is expired/invalid. Please contact me for assistance.")
+        messages.warning(
+            request,
+            "This activation link was already used, or is expired/invalid. Please contact me for assistance."
+        )
         return redirect(reverse('index'))

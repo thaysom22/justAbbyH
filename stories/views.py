@@ -21,7 +21,7 @@ def stories(request):
 
 
 def story_detail(request, story_id):
-    """ 
+    """
     Display detail about a particular story in database.
     Remove reference to pdf file from Story instance
     if user is not authenicated.
@@ -37,9 +37,10 @@ def story_detail(request, story_id):
     elif request.user.is_authenticated:
         user_is_subscribed = True
     else:
-        # remove reference to pdf file from object passed to template (no change in database)
+        # remove reference to pdf file from object passed to template (no
+        # change in database)
         story.pdf = None
-    
+
     context = {
         'story': story,
         'user_is_subscribed': user_is_subscribed,
@@ -52,7 +53,7 @@ def story_detail(request, story_id):
 
 @login_required
 def add_story(request):
-    """ 
+    """
     GET: Display add story form.
     POST: Add a story to the database.
     Access: staff only
@@ -62,20 +63,20 @@ def add_story(request):
         return redirect(reverse('index'))
 
     # POST
-    if request.method == 'POST': 
+    if request.method == 'POST':
         add_story_form = StoryForm(
             request.POST,
             request.FILES
         )
         if add_story_form.is_valid():
-            story = add_story_form.save() 
+            story = add_story_form.save()
             messages.success(request, 'Successfully added story!')
             return redirect(reverse('story_detail', args=[story.id]))
-    
+
     else:
         # GET
         add_story_form = StoryForm()
-        
+
     context = {
         'add_story_form': add_story_form,
         'page_title': 'Add Story',
@@ -86,31 +87,31 @@ def add_story(request):
 
 @login_required
 def edit_story(request, story_id):
-    """ 
-    GET: Find story and populate edit story form 
+    """
+    GET: Find story and populate edit story form
     POST: Edit a story in the database
     (staff only)
     """
     if not request.user.is_staff:
         messages.error(request, 'Sorry, only the author can do that!')
         return redirect(reverse('index'))
-    
+
     story = get_object_or_404(Story, pk=story_id)
     if request.method == 'POST':
         edit_story_form = StoryForm(
             request.POST,
             request.FILES,
             instance=story)
-        
+
         if edit_story_form.is_valid():
             edit_story_form.save()
             messages.success(request, 'Successfully updated story!')
-            return redirect(reverse('story_detail', args=[story.id]))     
+            return redirect(reverse('story_detail', args=[story.id]))
 
     else:
         # GET
         edit_story_form = StoryForm(instance=story)
-        
+
     context = {
         'edit_story_form': edit_story_form,
         'story': story,
@@ -126,7 +127,7 @@ def delete_story(request, story_id):
     if not request.user.is_staff:
         messages.error(request, 'Sorry, only the author can do that!')
         return redirect(reverse('index'))
-    
+
     story = get_object_or_404(Story, pk=story_id)
     story.delete()
     messages.success(request, 'Story was deleted.')
@@ -171,4 +172,3 @@ def download_story(request, story_id):
         # file on local server
         file_url = story.pdf.url
         return redirect(file_url)
-

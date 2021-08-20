@@ -15,7 +15,7 @@ class StoryForm(forms.ModelForm):
                   'image_credit',
                   'genre', 'featured',
                   'reading_time_mins',)
-        
+
     def __init__(self, *args, **kwargs):
         """
         Edit labels
@@ -41,6 +41,7 @@ class StoryForm(forms.ModelForm):
 
         current_classes = self.fields['genre'].widget.attrs.get('class', '')
         if current_classes:
-            self.fields['genre'].widget.attrs.update({'class': f'{current_classes} form-select'})
+            self.fields['genre'].widget.attrs.update(
+                {'class': f'{current_classes} form-select'})
         else:
             self.fields['genre'].widget.attrs['class'] = 'form-select'

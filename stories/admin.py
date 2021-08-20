@@ -16,14 +16,14 @@ class StoryAdmin(admin.ModelAdmin):
     list_display = ('title', 'publish_date', 'genre',
                     'reading_time_mins',
                     'featured', 'image', 'image_credit', '_pdf_download',)
-    
+
     readonly_fields = ('publish_date', 'reading_time_string',)
-    
+
     ordering = ('-publish_date',)
 
     # CREDIT[10]
     def _pdf_download(self, obj):
-        """ 
+        """
         download story view url which
         provides signed url access to
         s3 bucket from admin list display

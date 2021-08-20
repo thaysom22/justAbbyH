@@ -29,12 +29,14 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='story',
             name='genre',
-            field=models.CharField(choices=[('Fiction', 'Fiction'), ('Non-fiction', 'Non-fiction'), ('Unknown', 'Unknown')], default='', max_length=254),
+            field=models.CharField(choices=[('Fiction', 'Fiction'), (
+                'Non-fiction', 'Non-fiction'), ('Unknown', 'Unknown')], default='', max_length=254),
         ),
         migrations.AlterField(
             model_name='story',
             name='image',
-            field=models.ImageField(storage=custom_storages.PublicFileStorage(), upload_to='story_images/'),
+            field=models.ImageField(
+                storage=custom_storages.PublicFileStorage(), upload_to='story_images/'),
         ),
         migrations.AlterField(
             model_name='story',

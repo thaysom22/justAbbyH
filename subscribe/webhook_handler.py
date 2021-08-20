@@ -19,15 +19,16 @@ class Stripe_WH_Handler:
 
     def _send_activation_email(self, user):
         """
-        Send an email to user with a secure 
+        Send an email to user with a secure
         link which activates their account
         """
         # CREDIT[9]
         if settings.USE_SMTP:
             current_site_domain = get_current_site(self.request).domain
         else:
-            current_site_domain = settings.CURRENT_SITE_DOMAIN  # get local domain from settings
-        
+            # get local domain from settings
+            current_site_domain = settings.CURRENT_SITE_DOMAIN
+
         subject = 'A Message From Abby H Stories: Please Activate Your Account To Start Reading Now!'
         body = render_to_string('subscribe/emails/account_activation_email.html', {
             'user': user,
@@ -50,7 +51,7 @@ class Stripe_WH_Handler:
         """
         Handle the payment_intent.succeeded webhook from Stripe
         Check if a record identified by inactive_user_id from payment intent's
-        metadata exists in the database, if so make up to 10 attempts to send 
+        metadata exists in the database, if so make up to 10 attempts to send
         an activation email to email address provided by user in subscribe form,
         at 500ms intervals
         """
@@ -63,7 +64,8 @@ class Stripe_WH_Handler:
             attempt = 1
             while attempt <= 10:
                 try:
-                    user = User.objects.get(id=inactive_user_id)  # get inactive user instance
+                    # get inactive user instance
+                    user = User.objects.get(id=inactive_user_id)
                     user_found = True
                 except User.DoesNotExist:
                     attempt += 1
@@ -72,7 +74,7 @@ class Stripe_WH_Handler:
 
                 if not user.is_active:
                     try:
-                        # send email with link to activate user instance 
+                        # send email with link to activate user instance
                         # via separate 'activate_user' endpoint
                         self._send_activation_email(user)
                         activation_email_sent = True
@@ -80,7 +82,8 @@ class Stripe_WH_Handler:
                     except Exception as e:
                         email_error = e  # capture Exception info
                         attempt += 1
-                        time.sleep(.5)  # wait 500 ms before reattempt to send email
+                        # wait 500 ms before reattempt to send email
+                        time.sleep(.5)
                         continue
                 else:
                     return HttpResponse(
@@ -102,9 +105,9 @@ class Stripe_WH_Handler:
                         status=500,)
             else:
                 return HttpResponse(
-                        content=f"Webhook received: {event['type']} | FAILED \
+                    content=f"Webhook received: {event['type']} | FAILED \
                             Inactive user instance could not be found in database",
-                        status=400,)
+                    status=400,)
         except Exception as e:
             return HttpResponse(
                 content=f"Webhook received: {event['type']} | ERROR {str(e)}",
@@ -125,7 +128,8 @@ class Stripe_WH_Handler:
             attempt = 1
             while attempt <= 10:
                 try:
-                    user = User.objects.get(id=inactive_user_id)  # get inactive user instance
+                    # get inactive user instance
+                    user = User.objects.get(id=inactive_user_id)
                 except User.DoesNotExist:
                     confirm_inactive_user_deleted = True
                     break
