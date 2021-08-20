@@ -219,9 +219,10 @@ Manual testing of all elements and functionality of site was carried out in Chro
 * When required (non card) input fields are left empty or do not satisfy default browser validation the form will not submit and show default browser help messages.
 * If all the form inputs are valid from browser's perspective, the page sends a request to 'create-inactive-user' endpoint on server: if form data fails server validation from this endpoint a 400 response is received and error messages are displayed below invalid fields as well as an error message indicating there are form errors beneath the submit button at the bottom of the form.
 * If form data passes server validation a 200 response from 'create-inactive-user' endpoint is received and a full screen overlay is shown with a pulsing ripple icon and 'payment processing' message. While this is displaying a call to the Stripe API is made from the client to confirm the payment information entered. 
-* If this is successful (the payment input authorizes) then the user is redirected to the 'subscription created' page and an INACTIVE user with the information from the subscribe form is in the database and related subscription (the session user remains anonymous). If this payment is declined by the Stripe API then overlay hides and subscribe form is shown again with card error message shown just above submit button and scrolled into view.
+* If this is successful (the payment input authorizes) then the user is redirected to the 'subscription created' page and an INACTIVE user with the information from the subscribe form is in the database and related subscription (the session user remains anonymous). A payment_intent.succeeded webhook is sent by stripe and received a success reponse indicating the user was sent an activation email.
+* If this payment is declined by the Stripe API then overlay hides and subscribe form is shown again with card error message shown just above submit button and scrolled into view.
 * if card requires extra authorization, the modal from stripe appears on top of payment processing overlay - if this extra authentication fails user is returned to subscribe form with 'card authorization failed' error message displayed and scrolled into view. if extra authorization passes then user is redirected to 'subscription created page' and inactive user is added to database as described above.
-* if card payment fails for any reason there is no respective inactive user remaining in the database at the end of process (call to 'delete-inactive-user' endpoint was made sucessfully)
+* if card payment fails for any reason there is no respective inactive user remaining in the database at the end of process (call to 'delete-inactive-user' endpoint is made with successful response)
 
 
 ### Subscription created page
@@ -230,9 +231,19 @@ Manual testing of all elements and functionality of site was carried out in Chro
 
 #### page content
 
+* data in url query parameters passed in url redirected to from subscribe page is displayed correctly in message on page.
+* contact link is displayed in text and exhibits change in color on hover. clicking on link opens new tab to templte email with expected content
+
 #### account activation link function
 
+* when subscription form is validated and payment is successful then user is redirected to 'subscription created' page and an email is sent to the email address provided in the subscribe form. This email contains the expected template text; an activation link url with an encoded user id and token; a link to the homepage and the username. Stripe dashboard logs show a payment_intent.succeeded webhook was sent and received a successful response indicating webhook handler has sent activation email to user's email.
+* clicking the activation link after accessing the email in the respective email account directs user to login page and a message is shown in messages section at top of page informing that the account was activated successfully. The respective user now has `is_active` flag set to `True` in the database. Entering the username and password provided in the subscribe form results in successful login.
+* Trying to access the same activation link more than once results in the server redirecting to the homepage and a message informing the user that the link is invalid/expired/already used. This also happens if the activation link is invalid (i.e if a user tries to access the server endpoint manually without correct token code)
+
+
 ### Login page
+
+
 
 
 ### Stories page
@@ -277,6 +288,7 @@ Manual testing of all elements and functionality of site was carried out in Chro
 * broswer console shows 'input elements should have autocomplete attributes'
 * '*' asterisks after some required fields on subscribe form do not hide on mobile browser
 * subscription created page is accessible to all users at all times - ideally a call to this url would redirect unless coming from subscribe page after just creating a new subscription. This is harmless as no senstive information can be exposed (user data all comes in url query parameters from subscribe page redirect) and users cannot use it to gain access to stories or activate an inactive account without first subscribing (since this is done by a webhook from Stripe not by 'subscription-created' endpoint logic).
+* Story pdfs and images remain in AWS s3 bucket after respective story modelf fields are updated/story instance is deleted- ideally these objects would be replaced/deleted to make most efficient use of s3 bucket space. However, given the small scale and likely limited use of the application this was not a priority given the project's time constraints.
 
 ## Other testing
 
