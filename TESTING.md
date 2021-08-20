@@ -243,7 +243,12 @@ Manual testing of all elements and functionality of site was carried out in Chro
 
 ### Login page
 
-
+* is only accessible to anonymous users. authenticated users are redirected to 'stories' page
+* username and password field inputs display with labels and without placeholders
+* sumbit button with text 'log in' displays below inputs
+* attempting to submit form with one or both fields empty results will not submit and browser default help messages are shown
+* If both inouts contains data, the form submits. If one or both fields are determined invlaid on the server an error message is displayed for the form (not indicating with field(s) are incorrect for security reasons)
+* 
 
 
 ### Stories page
@@ -280,6 +285,7 @@ Manual testing of all elements and functionality of site was carried out in Chro
 * when subscribe form is submitted with errors in the user or subscription form inputs, the submit button disables and errors shown adjacent to respective fields but it is not clesr to the user that there are errors if the respectiv inputs are not in viewport (it appears as if page has frozen). fix: added an error message to inform user there are errors in from to correct directly below the submit button.
 * when form passes validation (after previously failing and showing errors) but card payment is not authorized, form is shown again (overlay hides) with previous irrelevant error messages remaining. fix: added JS to clear non card errors from form when confriming card payment since user and subscribe forms have already validated. 
 * when form passes validation (after previously failing and showing errors) but card payment is not authorized, form is shown again (overlay hides) but viewport is at top of document so card errors cannot be seen by user and it is unclear what the problem is! fix: added JS to scroll card error messages into view after card payment fails.
+* rendering of error messages on login form inconsistent with other forms on site (errors listed at top) fix: error messages moved to below submit button in red font.
 
 #### Unsolved bugs
 
