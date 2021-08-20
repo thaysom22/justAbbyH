@@ -39,7 +39,9 @@
     color: #dc3545;
 }
 
-#story-form input:not(#id_featured,#id_image,#id_pdf),
+#story-form input:not(#id_featured),
+#story-form input:not(#id_image),
+#story-form input:not(#id_pdf),
 #story-form select {
     height: 44px;
     line-height: 44px;
@@ -67,7 +69,9 @@
     align-items: center;
 }
 
-#story-form input:not(#id_image,#id_pdf,#id_featured),
+#story-form input:not(#id_image),
+#story-form input:not(#id_pdf),
+#story-form input:not(#id_featured),
 #story-form textarea,
 #story-form select {
     width: calc(100% - 24px);

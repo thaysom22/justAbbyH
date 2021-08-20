@@ -20,15 +20,15 @@
 
 #### Validation Services
 
-* [W3C Markup Validation]() for HTML.
-* [W3C CSS Validation]() for CSS.
-* [JSHint]() for JavaScript.
+* [W3C Markup Validation](https://validator.w3.org/nu/) for HTML. Passes with no errors or significant warnings. 
+* [W3C CSS Validation](https://jigsaw.w3.org/css-validator/) for CSS. Passes with no errors or significant warnings.
+* [JSHint](https://jshint.com/) for JavaScript. Passes with no errors or significant warnings.
 
 #### Note on testing for this project
 
 With more time and experience I would like to write Python unit tests for the code in Django apps for this project aiming for highest coverage as possible. I would also have liked to include Jasmine unit tests for the significantly complex Javascript functions in Stripe.js file.
 
-In the interests of time and to focus my efforts on the areas that the project assessment criteria reward, I decided that unit testing was not a priority for this project submission but should certainly be added in future. Ideally, I would have followed a Test Driven Development (TDD) approach of writing failing tests befoe implementing respective functions: however time did not allow for this project. This is a process I will seek to follow in my future Django devlopement work. 
+In the interests of time and to focus my efforts on the areas that the project assessment criteria reward, I decided that unit testing was not a priority for this project submission but should certainly be added in future. Ideally, I would have followed a Test Driven Development (TDD) approach of writing failing tests befoe implementing respective functions: however lack of experience with the Django framework and limited time did not allow for this project. This is a process I will seek to follow in my future Django devlopement work when I have a better understanding of the mechanics of the framework so I know how to write effective and meaningful tests.
 
 ## User stories testing
 
@@ -324,6 +324,7 @@ Manual testing of all elements and functionality of site was carried out in Chro
 * when form passes validation (after previously failing and showing errors) but card payment is not authorized, form is shown again (overlay hides) with previous irrelevant error messages remaining. fix: added JS to clear non card errors from form when confriming card payment since user and subscribe forms have already validated. 
 * when form passes validation (after previously failing and showing errors) but card payment is not authorized, form is shown again (overlay hides) but viewport is at top of document so card errors cannot be seen by user and it is unclear what the problem is! fix: added JS to scroll card error messages into view after card payment fails.
 * rendering of error messages on login form inconsistent with other forms on site (errors listed at top) fix: error messages moved to below submit button in red font.
+* HTML validator shows error on subscrivbe page due to `ul` nested inside `p` element in Django widget for `User.password1 field`. Fix: adjust `help_text` attribute of field in form class.   
 
 #### Unsolved bugs
 

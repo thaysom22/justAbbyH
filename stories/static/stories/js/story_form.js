@@ -4,7 +4,7 @@ $(document).ready(() => {
     if ($('#id_genre').children('option[selected]').attr('value') != '') {
         $("#id_genre").css("color", "#061234");
     }
-})
+});
 
 $('.add-story-form #id_genre').on("change", function(event) {
     $(this).css("color", "#061234");

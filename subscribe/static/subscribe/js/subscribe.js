@@ -1,5 +1,3 @@
-"use strict";
-
 /* CREDIT: client js logic below extended from Stripe custom payment flow:
  https://stripe.com/docs/payments/integration-builder */
 
@@ -42,7 +40,7 @@ card.mount('#card-element');
 // country select widget UI
 $(document).ready(() => {
     $('select#id_country option[selected]').prop('disabled', true);
-})
+});
 
 $('select#id_country').on("change", function(event) {
     $(this).css("color", "#061234");
@@ -87,7 +85,7 @@ function showError(errorMsgText) {
         <span class="card-error">${errorMsgText}</span>
     `;
     errorDiv.innerHTML = html;
-};
+}
 
 
 function awaitingResult(isLoading, payment) {
@@ -126,10 +124,8 @@ function awaitingResult(isLoading, payment) {
                 'disabled': false
             });
         }
-    }
-
-    
-};
+    }  
+}
 
 
 /****** PAYMENT PROCESS ******/
@@ -215,7 +211,7 @@ form.addEventListener("submit", function (event) {
                     }
                 }
             }
-        };
+        }
 
         function createInactiveUserAjaxSuccess(data) {
             /* ATTEMPT PAYMENT */
@@ -231,7 +227,7 @@ form.addEventListener("submit", function (event) {
                         payment_method: {
                             card: card,
                         },
-                    },
+                    }
                 ).then(function (result) {
                     if (result.error) {
                         /* PAYMENT FAILED */
@@ -265,11 +261,11 @@ form.addEventListener("submit", function (event) {
                         success: confirmDeletionOfInactiveUserAjaxSuccess,
                         error: confirmDeletionOfInactiveUserAjaxFailure,
                     });
-                };
+                }
 
                 function confirmDeletionOfInactiveUserAjaxSuccess() {
                     // confirmed inactive user not in DB 
-                    awaitingResult(false, true);; // re-enable UI so user can reattempt payment
+                    awaitingResult(false, true); // re-enable UI so user can reattempt payment
                     var cardErrorsElem = document.getElementById("card-errors");
                     cardErrorsElem.scrollIntoView();
                 }
@@ -296,9 +292,8 @@ form.addEventListener("submit", function (event) {
                         'inactive_user_id': inactiveUserId,
                     };
                     return postData;
-                };
-            };
-        };
-    };
+                }
+            }
+        }
+    }
 });
-

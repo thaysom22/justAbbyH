@@ -31,6 +31,7 @@ class UserRegisterForm(UserCreationForm):
             'password2': 'Repeat Password',
         }
 
+        self.fields["password1"].help_text = 'Your password must contain at least 8 characters.'
         for field in self.fields:
             self.fields[field].widget.attrs.pop("autofocus", None)
             self.fields[field].label = labels[field]

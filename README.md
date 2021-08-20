@@ -1,5 +1,13 @@
 # justAbbyH Stories
 
+###############################################################################
+login details for code institute assessor - provided in project submission form
+###############################################################################
+
+
+
+
+
 [justAbbyH Stories](https://just-abby-h.herokuapp.com/) was designed and built by Thomas Haysom in order to promote and potentially generate financial support for the writing of his wife, Abby Haysom who is an amateur author and English teacher in Maryland, USA. The website is designed to offer a convenient and scalable platform conbined with an easy to use interface, for readers and followers of the author to find out more about her work and download and read her latest stories in full. This project also constitutes the final project for the developer on the Code Institute Full Stack Diploma. 
 
 ## Table of contents
